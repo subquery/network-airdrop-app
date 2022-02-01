@@ -1,0 +1,82 @@
+.container {
+  background-image: linear-gradient(
+    293.04deg,
+    rgba(255, 69, 129, 0.1) 4.09%,
+    rgba(67, 136, 221, 0.1) 70.16%
+  );
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.content {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.airdropDetails {
+  border-radius: 1rem;
+  background: white;
+  display: flex;
+  justify-content: center;
+}
+
+.walletActionContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  align-items: center;
+}
+
+.title {
+  background: var(--sq-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding: 1rem;
+}
+
+.walletActionTitle {
+  color: var(--sq-gray700);
+  font-size: 20px;
+  line-height: 24px;
+  display: inline;
+}
+
+.airdropDetails {
+  width: 70%;
+}
+
+.walletActionButton {
+  height: 111px;
+  border: 1px solid;
+  border-image-slice: 1;
+  border-image-source: var(--sq-gradient);
+  margin-top: 2rem;
+  padding: 1rem;
+  width: 350px;
+
+  border-radius: 1rem;
+  text-align: start;
+}
+
+.walletSignButton {
+  margin-top: 40px;
+}
+
+.walletActionText {
+  margin-top: 0.5rem;
+  color: var(--sq-gray700);
+  font-size: 14px;
+}
+
+.supportText {
+  color: var(--sq-gray700);
+  margin: 1.2rem 0 0;
+}
+
+.linkText {
+  color: var(--sq-info);
+}

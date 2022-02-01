@@ -1,15 +1,31 @@
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import { Airdrop, ErrorPgae } from './pages';
+import './i18n';
+import { Home, ErrorPgae } from './pages';
+import { Header, Footer } from './components';
+import {
+  Web3Provider
+  // IPFSProvider,
+  // ProjectMetadataProvider,
+  // QueryRegistryProvider,
+  // ContractsProvider,
+  // QueryRegistryProjectProvider,
+  // UserProjectsProvider,
+  // IndexerRegistryProvider,
+} from './containers';
 
 function App() {
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<Airdrop />} />
-        <Route path="/error" element={<ErrorPgae />} />
-      </Routes>
-    </div>
+    <Web3Provider>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/error" element={<ErrorPgae />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Web3Provider>
   );
 }
 
