@@ -1,0 +1,91 @@
+name: Deploy
+on:
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build for development - rococo
+        if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
+        run: npm run build
+        env:
+          STAGE: rococo
+          EMAIL_GATEWAY: ${{ secrets.LAMBDA_DEV_EMAIL_GATEWAY }}
+
+      - name: Deploy to dev - rococo
+        if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: public
+          bucket: rococo.${{ secrets.DEV_DOMAIN }}
+          bucket-region: ${{ secrets.S3_DEV_BUCKET_REGION }}
+          invalidation: /
+          delete-removed: false
+          no-cache: true
+          private: true
+
+      - name: Build for development - kusama
+        if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
+        run: npm run build
+        env:
+          STAGE: kusama
+          EMAIL_GATEWAY: ${{ secrets.LAMBDA_DEV_EMAIL_GATEWAY }}
+
+      - name: Deploy to dev - kusama
+        if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: public
+          bucket: kusama.${{ secrets.DEV_DOMAIN }}
+          bucket-region: ${{ secrets.S3_DEV_BUCKET_REGION }}
+          invalidation: /
+          delete-removed: false
+          no-cache: true
+          private: true
+
+
+      - name: Build for production - rococo
+        if: github.event.inputs.environment == 'prod'
+        run: npm run build
+        env:
+          STAGE: rococo
+          EMAIL_GATEWAY: ${{ secrets.LAMBDA_PROD_EMAIL_GATEWAY }}
+
+      - name: Deploy to prod - rococo
+        if: github.event.inputs.environment == 'prod'
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: public
+          bucket: rococo.${{ secrets.PROD_DOMAIN }}
+          bucket-region: ${{ secrets.S3_PROD_BUCKET_REGION }}
+          invalidation: /
+          delete-removed: false
+          no-cache: true
+          private: true
+
+      - name: Build for production - kusama
+        if: github.event.inputs.environment == 'prod'
+        run: npm run build
+        env:
+          STAGE: kusama
+          EMAIL_GATEWAY: ${{ secrets.LAMBDA_PROD_EMAIL_GATEWAY }}
+
+      - name: Deploy to prod - kusama
+        if: github.event.inputs.environment == 'prod'
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: public
+          bucket: kusama.${{ secrets.PROD_DOMAIN }}
+          bucket-region: ${{ secrets.S3_PROD_BUCKET_REGION }}
+          invalidation: /
+          delete-removed: false
+          no-cache: true
+          private: true
