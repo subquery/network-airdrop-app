@@ -2,6 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --sq-primary-pink: #ff4581;
+  --sq-primary-blue: #4388dd;
+  --sq-gradient: linear-gradient(
+    96.26deg,
+    var(--sq-primary-blue) 13.8%,
+    var(--sq-primary-pink) 82.83%
+  );
+  --sq-background-gradient: linear-gradient(
+    96.26deg,
+    rgba(var(--sq-primary-blue-rgb), 0.08) 13.8%,
+    rgba(var(--sq-primary-pink-rgb), 0.08) 82.83%
+  );
+
+  /* Gray */
+  --sq-gray100: #f9fafb;
+  --sq-gray200: #f4f6f8;
+  --sq-gray300: #dfe3e8;
+  --sq-gray400: #c4cdd5;
+  --sq-gray500: #919eab;
+  --sq-gray600: #637381;
+  --sq-gray700: #454f58;
+  --sq-gray800: #212b36;
+  --sq-gray900: #1a202c;
+
+  /* Semantic  */
+  --sq-success: #65cd45;
+  --sq-warning: #f87c4f;
+  --sq-error: #f1585b;
+  --sq-info: #3aa0ff;
+
+  /* RGB versions to allow adding opacity */
+  --sq-primary-blue-rgb: 67, 136, 221;
+  --sq-primary-pink-rgb: 255, 69, 129;
+  --sq-gray500-rgb: 145, 158, 171;
+  --sq-success-rgb: 101, 205, 69;
+  --sq-warning-rgb: 248, 124, 79;
+  --sq-error-rgb: 241, 88, 91;
+  --sq-info-rgb: 58, 160, 255;
+
+  --sq-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+  --sq-shadow2: 0px 3px 6px -4px rgba(0, 0, 0, 0.12), 0px 6px 16px rgba(0, 0, 0, 0.08),
+    0px 9px 28px 8px rgba(0, 0, 0, 0.05);
+
+  /* Sizes */
+
+  --sq-font-medium: 14px;
+  --sq-line-medium: 22px;
+
+  --sq-font-body: 16px;
+  --sq-line-body: 24px;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',

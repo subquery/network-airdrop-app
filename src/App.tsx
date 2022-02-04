@@ -1,24 +1,31 @@
-import logo from './logo.svg';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
+import './i18n';
+import { Home, ErrorPgae } from './pages';
+import { Header, Footer } from './components';
+import {
+  Web3Provider
+  // IPFSProvider,
+  // ProjectMetadataProvider,
+  // QueryRegistryProvider,
+  // ContractsProvider,
+  // QueryRegistryProjectProvider,
+  // UserProjectsProvider,
+  // IndexerRegistryProvider,
+} from './containers';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Web3Provider>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/error" element={<ErrorPgae />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Web3Provider>
   );
 }
 
