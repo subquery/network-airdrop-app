@@ -51,7 +51,7 @@ export const Footer: React.VFC = () => {
         </div>
         <div className={styles.iconsContainer}>
           {links.map((l) => (
-            <LinkButton {...l} key={`key-${l}`} />
+            <LinkButton {...l} key={`key-${l.icon}`} />
           ))}
         </div>
       </div>

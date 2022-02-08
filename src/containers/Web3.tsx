@@ -17,12 +17,12 @@ const RPC_URLS: Record<number, string> = {
 };
 
 export const injectedConntector = new InjectedConnector({
-  supportedChainIds: [/* 1, 1281, 1285, */ 42, 0]
+  supportedChainIds: [/* 1, 1281, 1285, */ 1, 42]
 });
 
 const networkConnector = new NetworkConnector({
   urls: RPC_URLS,
-  defaultChainId: 42
+  defaultChainId: 1
 });
 
 // export const NETWORK_CONFIGS = {

@@ -18,13 +18,13 @@
 }
 
 .airdropDetails {
-  border-radius: 1rem;
-  background: white;
   display: flex;
   justify-content: center;
 }
 
 .walletActionContainer {
+  border-radius: 1rem;
+  background: white;
   display: flex;
   flex-direction: column;
   padding: 2rem;

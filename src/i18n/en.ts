@@ -27,7 +27,21 @@ const en = {
       signature: 'by signing a signature.',
       doOnce: 'You only need to do this once.',
       signOnMetamask: 'Sign on Metamask',
-      yourAirDrop: 'Your airdrop'
+      yourAirDrop: 'Your airdrop',
+      category: 'category',
+      amount: 'amount',
+      status: 'status',
+      testnetParticipant: 'Testnet Participant',
+      acalaTop100: 'Acala top 100 user',
+      addition: 'Addition',
+      locked: 'Locked',
+      total: 'Total',
+      claimDateTBA: 'Claim date to be announced'
+    },
+    subscription: {
+      getNotified: 'Get notified when the claim date is announced',
+      enterEmail: 'Enter email',
+      subscribe: 'Subscribe'
     },
     faq: {
       title: 'FAQs',
