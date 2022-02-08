@@ -48,8 +48,6 @@ export const Airdrop: VFC = () => {
   const { account, active, activate, library } = useWeb3();
   const { t } = useTranslation();
 
-  console.log('chainId', useWeb3());
-
   useEffect(() => {
     setTCsigned(false);
   }, []);

@@ -26,6 +26,7 @@
     "@typescript-eslint/no-shadow": ["error"],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     "no-unused-vars": "off",
+    "no-console": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
