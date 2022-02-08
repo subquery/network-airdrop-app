@@ -1,7 +1,7 @@
 .container {
   width: 100%;
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   flex-direction: column;
 }
 
@@ -19,7 +19,7 @@
   width: 100%;
   padding: 1rem 2rem;
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   flex-direction: column;
 }
 
