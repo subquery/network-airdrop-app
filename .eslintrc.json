@@ -25,7 +25,7 @@
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/no-shadow": ["error"],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
-    "no-unused-vars": "warn",
+    "no-unused-vars": "off",
     "import/extensions": [
       "error",
       "ignorePackages",

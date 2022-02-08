@@ -7,6 +7,7 @@ import { Button, Typography } from '@subql/react-ui';
 import { useWeb3 } from '../../containers';
 import { injectedConntector } from '../../containers/Web3';
 import styles from './Airdrop.module.css';
+import { AirdropClam } from './AirdropClaim';
 
 const AskWalletConnection = ({ handClick, t }: any) => (
   <div className={styles.walletActionContainer}>
@@ -42,18 +43,12 @@ const AskWalletSignTC = ({ handClick, t }: any) => (
   </div>
 );
 
-const AirDropClaim = ({ handClick, t }: any) => (
-  <div className={styles.walletActionContainer}>
-    <div>
-      <Typography className={styles.walletActionTitle}>{t('airdrop.yourAirDrop')}</Typography>
-    </div>
-  </div>
-);
-
 export const Airdrop: VFC = () => {
   const [TCSigned, setTCsigned] = useState<boolean>(false);
   const { account, active, activate, library } = useWeb3();
   const { t } = useTranslation();
+
+  console.log('chainId', useWeb3());
 
   useEffect(() => {
     setTCsigned(false);
@@ -75,20 +70,25 @@ export const Airdrop: VFC = () => {
 
   const handleSignWallet = async () => {
     try {
-      await library
+      const signResult = await library
         ?.getSigner()
         .signMessage('Sign this message to agree with the Terms & Conditions.');
 
+      console.log('signResult', signResult);
       setTCsigned(true);
     } catch (e) {
       console.log('Failed to sign the wallet', e);
     }
   };
 
+  const toConnectWallet = !account;
+  const toSignWallet = account && !TCSigned;
+  const signedWallet = account && TCSigned;
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {!TCSigned && (
+        {!signedWallet && (
           <div className={styles.titleContainer}>
             <Typography variant="h3" className={styles.title}>
               {t('airdrop.check')}
@@ -96,11 +96,12 @@ export const Airdrop: VFC = () => {
           </div>
         )}
 
-        <img src="static/airdropImg.svg" alt="airdrop page img" />
+        {!signedWallet && <img src="static/airdropImg.svg" alt="airdrop page img" />}
+
         <div className={styles.airdropDetails}>
-          {!account && <AskWalletConnection handClick={handleConnectWallet} t={t} />}
-          {account && !TCSigned && <AskWalletSignTC handClick={handleSignWallet} t={t} />}
-          {account && TCSigned && <AirDropClaim handClick={handleSignWallet} t={t} />}
+          {toConnectWallet && <AskWalletConnection handClick={handleConnectWallet} t={t} />}
+          {toSignWallet && <AskWalletSignTC handClick={handleSignWallet} t={t} />}
+          {signedWallet && <AirdropClam />}
         </div>
         <div>
           <Typography className={styles.supportText}>

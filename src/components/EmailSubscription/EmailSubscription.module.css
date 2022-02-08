@@ -1,0 +1,21 @@
+.container {
+  width: 100%;
+  padding: 1rem 2rem;
+  display: flex;
+  background: white;
+  border-radius: 1rem;
+  margin-top: 1rem;
+  flex-direction: column;
+}
+
+.emailTextInput {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+}
+
+.emailSubmitButton {
+  background: var(--sq-primary-blue);
+  margin-top: 1rem;
+}

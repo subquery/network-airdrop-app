@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import './i18n';
 import { Home, ErrorPgae } from './pages';
@@ -19,10 +19,13 @@ function App() {
     <Web3Provider>
       <div className="App">
         <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/error" element={<ErrorPgae />} />
-        </Routes>
+        <div className="AppBody">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/error" element={<ErrorPgae />} />
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </div>
         <Footer />
       </div>
     </Web3Provider>
