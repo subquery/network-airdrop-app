@@ -38,6 +38,10 @@ const en = {
       total: 'Total',
       claimDateTBA: 'Claim date to be announced'
     },
+    wallet: {
+      connectionErr: 'Unfortunately we did not recceive the confirmation, Please try again.',
+      connectAndSigned: 'You’ve agreed with the Terms and Conditions.'
+    },
     subscription: {
       getNotified: 'Get notified when the claim date is announced',
       enterEmail: 'Enter email',

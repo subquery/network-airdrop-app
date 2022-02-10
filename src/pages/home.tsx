@@ -5,8 +5,6 @@ import { FAQ } from '../components/FAQ';
 export function Home() {
   return (
     <div>
-      {/* <div>airdrop</div>
-      <Link to="/error">Error</Link> */}
       <Airdrop />
       <FAQ />
     </div>

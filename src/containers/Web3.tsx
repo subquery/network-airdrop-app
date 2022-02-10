@@ -1,74 +1,76 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
+// // Copyright 2020-2021 OnFinality Limited authors & contributors
+// // SPDX-License-Identifier: Apache-2.0
 
-import { useWeb3React, Web3ReactProvider } from '@web3-react/core';
-import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
-import { InjectedConnector } from '@web3-react/injected-connector';
-// import { NetworkConnector } from '@web3-react/network-connector';
-import { providers } from 'ethers';
-import React from 'react';
-import { NetworkConnector } from '../NetworkConnector';
+// import { useWeb3React, Web3ReactProvider } from '@web3-react/core';
+// import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
+// import { InjectedConnector } from '@web3-react/injected-connector';
+// // import { NetworkConnector } from '@web3-react/network-connector';
+// import { providers } from 'ethers';
+// import React from 'react';
+// import { NetworkConnector } from '../NetworkConnector';
 
-const RPC_URLS: Record<number, string> = {
-  // 1285: 'wss://moonriver.api.onfinality.io/public-ws',
-  // 1287: 'https://moonbeam-alpha.api.onfinality.io/public',
-  // 1281: 'http://127.0.0.1:9933'
-  42: 'https://kovan.infura.io'
-};
-
-export const injectedConntector = new InjectedConnector({
-  supportedChainIds: [/* 1, 1281, 1285, */ 1, 42]
-});
-
-const networkConnector = new NetworkConnector({
-  urls: RPC_URLS,
-  defaultChainId: 1
-});
-
-// export const NETWORK_CONFIGS = {
-//   'moonbase-alpha': {
-//     chainId: `0x${Number(1287).toString(16)}`,
-//     chainName: 'Moonbase Alpha',
-//     nativeCurrency: {
-//       name: 'DEV',
-//       symbol: 'DEV',
-//       decimals: 18
-//     },
-//     rpcUrls: ['https://moonbeam-alpha.api.onfinality.io/public'],
-//     blockExplorerUrls: ['https://moonbase-blockscout.testnet.moonbeam.network/']
-//   }
+// const RPC_URLS: Record<number, string> = {
+//   // 1285: 'wss://moonriver.api.onfinality.io/public-ws',
+//   // 1287: 'https://moonbeam-alpha.api.onfinality.io/public',
+//   // 1281: 'http://127.0.0.1:9933'
+//   42: 'https://kovan.infura.io'
 // };
 
-function getLibrary(provider: providers.ExternalProvider): providers.Web3Provider {
-  // Acala would use https://github.com/AcalaNetwork/bodhi.js here
-  return new providers.Web3Provider(provider);
-}
+// export const injectedConntector = new InjectedConnector({
+//   supportedChainIds: [/* 1, 1281, 1285, */ 1, 42]
+// });
 
-export const useWeb3 = (): Web3ReactContextInterface<providers.Web3Provider> => useWeb3React();
+// const networkConnector = new NetworkConnector({
+//   urls: RPC_URLS,
+//   defaultChainId: 1
+// });
 
-const InitProvider: React.VFC = () => {
-  const { activate } = useWeb3();
+// // export const NETWORK_CONFIGS = {
+// //   'moonbase-alpha': {
+// //     chainId: `0x${Number(1287).toString(16)}`,
+// //     chainName: 'Moonbase Alpha',
+// //     nativeCurrency: {
+// //       name: 'DEV',
+// //       symbol: 'DEV',
+// //       decimals: 18
+// //     },
+// //     rpcUrls: ['https://moonbeam-alpha.api.onfinality.io/public'],
+// //     blockExplorerUrls: ['https://moonbase-blockscout.testnet.moonbeam.network/']
+// //   }
+// // };
 
-  const activateInitialConnector = React.useCallback(async () => {
-    if (await injectedConntector.isAuthorized()) {
-      activate(injectedConntector);
+// function getLibrary(provider: providers.ExternalProvider): providers.Web3Provider {
+//   // Acala would use https://github.com/AcalaNetwork/bodhi.js here
+//   return new providers.Web3Provider(provider);
+// }
 
-      return;
-    }
+// export const useWeb3 = (): Web3ReactContextInterface<providers.Web3Provider> => useWeb3React();
 
-    activate(networkConnector);
-  }, [activate]);
+// const InitProvider: React.VFC = () => {
+//   const { activate } = useWeb3();
 
-  React.useEffect(() => {
-    activateInitialConnector();
-  }, [activateInitialConnector]);
+//   const activateInitialConnector = React.useCallback(async () => {
+//     if (await injectedConntector.isAuthorized()) {
+//       activate(injectedConntector);
 
-  return null;
-};
+//       return;
+//     }
 
-export const Web3Provider: React.FC = (props) => (
-  <Web3ReactProvider getLibrary={getLibrary}>
-    <InitProvider />
-    {props?.children}
-  </Web3ReactProvider>
-);
+//     activate(networkConnector);
+//   }, [activate]);
+
+//   React.useEffect(() => {
+//     activateInitialConnector();
+//   }, [activateInitialConnector]);
+
+//   return null;
+// };
+
+// export const Web3Provider: React.FC = (props) => (
+//   <Web3ReactProvider getLibrary={getLibrary}>
+//     <InitProvider />
+//     {props?.children}
+//   </Web3ReactProvider>
+// );
+
+export const Web3Provider = () => <div />;
