@@ -5,29 +5,33 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Address, Button, Dropdown, Typography } from '@subql/react-ui';
-import { useWeb3 } from '../../containers';
-import { injectedConntector } from '../../containers/Web3';
 import styles from './Header.module.css';
+import { hooks, metaMask } from '../../containers/metamask';
+import { getAddChainParameters } from '../../containers/chains';
 
 export const Header: React.VFC = () => {
-  const { account, activate, deactivate } = useWeb3();
   const { t } = useTranslation();
-  const handleConnectWallet = React.useCallback(async () => {
-    if (account) {
-      deactivate();
-      return;
-    }
+  const { useChainId, useAccounts, useIsActive } = hooks;
 
+  const chainId = useChainId();
+  const accounts = useAccounts();
+  const isActive = useIsActive();
+
+  const handleConnectWallet = () => {
     try {
-      await activate(injectedConntector);
-    } catch (e) {
-      console.log('Failed to activate wallet', e);
+      if (!isActive) {
+        const result = getAddChainParameters(chainId || 1);
+
+        metaMask.activate(result);
+      }
+    } catch (e: any) {
+      console.log('error', e.message);
     }
-  }, [activate, account, deactivate]);
+  };
 
   const handleSelected = (key: string) => {
     if (key === 'disconnect') {
-      deactivate();
+      metaMask.deactivate();
     }
   };
 
@@ -42,12 +46,12 @@ export const Header: React.VFC = () => {
           <Typography className={styles.hostedText}>{t('header.airdrop')}</Typography>
         </div>
         <div className={styles.right}>
-          {account ? (
+          {isActive && accounts ? (
             <Dropdown
               items={[{ key: 'disconnect', label: 'Disconnect' }]}
               onSelected={handleSelected}
               colorScheme="gradient">
-              <Address address={account} size="large" />
+              <Address address={accounts[0]} size="large" />
             </Dropdown>
           ) : (
             <Button

@@ -1,4 +1,4 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-export { useWeb3, Web3Provider } from './Web3';
+export { Web3Provider } from './Web3';

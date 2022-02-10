@@ -1,13 +1,15 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
+// // Copyright 2020-2021 OnFinality Limited authors & contributors
+// // SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState, VFC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Typography } from '@subql/react-ui';
-import { useWeb3 } from '../../containers';
-import { injectedConntector } from '../../containers/Web3';
+// import { useWeb3 } from '../../containers';
+// import { injectedConntector } from '../../containers/Web3';
+import { hooks, metaMask } from '../../containers/metamask';
 import styles from './Airdrop.module.css';
 import { AirdropClam } from './AirdropClaim';
+import { getAddChainParameters } from '../../containers/chains';
 
 const AskWalletConnection = ({ handClick, t }: any) => (
   <div className={styles.walletActionContainer}>
@@ -45,30 +47,40 @@ const AskWalletSignTC = ({ handClick, t }: any) => (
 
 export const Airdrop: VFC = () => {
   const [TCSigned, setTCsigned] = useState<boolean>(false);
-  const { account, active, activate, library } = useWeb3();
   const { t } = useTranslation();
+
+  const { useChainId, useAccounts, useIsActive, useProvider } = hooks;
+
+  const chainId = useChainId();
+  const accounts = useAccounts();
+  const isActive = useIsActive();
+  const provider = useProvider();
 
   useEffect(() => {
     setTCsigned(false);
   }, []);
 
   useEffect(() => {
-    if (!active) {
+    if (!isActive) {
       setTCsigned(false);
     }
-  }, [active]);
+  }, [isActive]);
 
-  const handleConnectWallet = async () => {
+  const handleConnectWallet = () => {
     try {
-      await activate(injectedConntector);
-    } catch (e) {
-      console.log('Failed to activate wallet', e);
+      if (!isActive) {
+        const result = getAddChainParameters(chainId || 1);
+
+        metaMask.activate(result);
+      }
+    } catch (e: any) {
+      console.log('error', e.message);
     }
   };
 
   const handleSignWallet = async () => {
     try {
-      const signResult = await library
+      const signResult = await provider
         ?.getSigner()
         .signMessage('Sign this message to agree with the Terms & Conditions.');
 
@@ -79,9 +91,9 @@ export const Airdrop: VFC = () => {
     }
   };
 
-  const toConnectWallet = !account;
-  const toSignWallet = account && !TCSigned;
-  const signedWallet = account && TCSigned;
+  const toConnectWallet = !isActive;
+  const toSignWallet = isActive && !TCSigned;
+  const signedWallet = isActive && TCSigned;
 
   return (
     <div className={styles.container}>
