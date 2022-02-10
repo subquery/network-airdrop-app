@@ -3,9 +3,7 @@
 
 import { useEffect, useState, VFC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Typography } from '@subql/react-ui';
-// import { useWeb3 } from '../../containers';
-// import { injectedConntector } from '../../containers/Web3';
+import { Button, Typography, Toast } from '@subql/react-ui';
 import { hooks, metaMask } from '../../containers/metamask';
 import styles from './Airdrop.module.css';
 import { AirdropClam } from './AirdropClaim';
@@ -47,47 +45,60 @@ const AskWalletSignTC = ({ handClick, t }: any) => (
 
 export const Airdrop: VFC = () => {
   const [TCSigned, setTCsigned] = useState<boolean>(false);
+  const [walletError, setWalletError] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  const { useChainId, useAccounts, useIsActive, useProvider } = hooks;
+  const { useChainId, useIsActive, useProvider, useError } = hooks;
 
   const chainId = useChainId();
-  const accounts = useAccounts();
   const isActive = useIsActive();
   const provider = useProvider();
+  const error = useError();
 
   useEffect(() => {
     setTCsigned(false);
+    setWalletError(false);
   }, []);
 
   useEffect(() => {
     if (!isActive) {
       setTCsigned(false);
     }
+    setWalletError(false);
   }, [isActive]);
 
-  const handleConnectWallet = () => {
+  useEffect(() => {
+    if (error?.message) {
+      setWalletError(true);
+    }
+  }, [error]);
+
+  const handleConnectWallet = async () => {
     try {
+      setWalletError(false);
       if (!isActive) {
         const result = getAddChainParameters(chainId || 1);
 
-        metaMask.activate(result);
+        await metaMask.activate(result);
       }
     } catch (e: any) {
       console.log('error', e.message);
+      setWalletError(true);
     }
   };
 
   const handleSignWallet = async () => {
     try {
+      setWalletError(false);
       const signResult = await provider
         ?.getSigner()
         .signMessage('Sign this message to agree with the Terms & Conditions.');
 
       console.log('signResult', signResult);
       setTCsigned(true);
-    } catch (e) {
-      console.log('Failed to sign the wallet', e);
+    } catch (e: any) {
+      console.log('Failed to sign the wallet', e?.message);
+      setWalletError(true);
     }
   };
 
@@ -98,6 +109,8 @@ export const Airdrop: VFC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
+        {walletError && <Toast text={t('wallet.connectionErr')} state="error" />}
+
         {!signedWallet && (
           <div className={styles.titleContainer}>
             <Typography variant="h3" className={styles.title}>

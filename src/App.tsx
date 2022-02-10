@@ -3,20 +3,9 @@ import './App.css';
 import './i18n';
 import { Home, ErrorPgae } from './pages';
 import { Header, Footer } from './components';
-// import {
-//   Web3Provider
-//   // IPFSProvider,
-//   // ProjectMetadataProvider,
-//   // QueryRegistryProvider,
-//   // ContractsProvider,
-//   // QueryRegistryProjectProvider,
-//   // UserProjectsProvider,
-//   // IndexerRegistryProvider,
-// } from './containers';
 
 function App() {
   return (
-    // <Web3Provider>
     <div className="App">
       <Header />
       <div className="AppBody">
@@ -28,7 +17,6 @@ function App() {
       </div>
       <Footer />
     </div>
-    // </Web3Provider>
   );
 }
 

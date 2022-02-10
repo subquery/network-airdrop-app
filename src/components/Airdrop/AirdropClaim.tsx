@@ -44,7 +44,9 @@ export const AirdropClam: VFC = () => {
         <div className={styles.content}>
           <div className={styles.tableTitle}>
             {tableTitles.map((title, index) => (
-              <div className={index === 0 ? styles.category : ''}>{title.toUpperCase()}</div>
+              <div className={index === 0 ? styles.category : ''} key={title}>
+                {title.toUpperCase()}
+              </div>
             ))}
           </div>
           <div className={styles.divisionLine} />
