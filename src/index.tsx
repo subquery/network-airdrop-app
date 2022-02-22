@@ -1,17 +1,15 @@
 import ReactDOM from 'react-dom';
 import './index.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ErrorPgae } from './pages';
+import { AppContextProvider } from './contextProvider';
 
 ReactDOM.render(
   <BrowserRouter>
-    {/* <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/error" element={<ErrorPgae />} />
-    </Routes> */}
-    <App />
+    <AppContextProvider>
+      <App />
+    </AppContextProvider>
   </BrowserRouter>,
   document.getElementById('root')
 );

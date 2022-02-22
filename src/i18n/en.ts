@@ -55,7 +55,7 @@ const en = {
       walletConnectOptionA: 'RandomText......'
     },
     support: {
-      contact: 'If you have any question, contact us on support channel on'
+      contact: 'If you have any question, contact us on #airdrop-support channel on'
     }
   }
 };

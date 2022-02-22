@@ -28,24 +28,6 @@
   align-items: center;
 }
 
-.navLink {
-  text-decoration: none;
-  margin-left: 24px;
-}
-
-.navLink:hover {
-  text-decoration: underline;
-}
-
-.navLink:visited {
-  color: inherit;
-}
-
-.navLinkCurrent {
-  font-weight: 500;
-  color: var(--sq-info) !important;
-}
-
 .logo {
   height: 48px;
 }
@@ -61,7 +43,6 @@
 }
 
 .hostedText {
-  /* font-family: Futura; */
   font-size: 16px;
   line-height: 24px;
   margin-left: 1.5rem;

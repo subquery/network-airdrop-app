@@ -5,11 +5,7 @@
 :root {
   --sq-primary-pink: #ff4581;
   --sq-primary-blue: #4388dd;
-  --sq-gradient: linear-gradient(
-    96.26deg,
-    var(--sq-primary-blue) 13.8%,
-    var(--sq-primary-pink) 82.83%
-  );
+  --sq-gradient: linear-gradient(96.26deg, var(--sq-primary-blue) 13.8%, var(--sq-primary-pink) 82.83%);
   --sq-background-gradient: linear-gradient(
     96.26deg,
     rgba(var(--sq-primary-blue-rgb), 0.08) 13.8%,
@@ -55,10 +51,17 @@
   --sq-line-body: 24px;
 }
 
+html,
+body,
+#root,
+#root > div {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
