@@ -1,12 +1,8 @@
 .container {
-  background-image: linear-gradient(
-    293.04deg,
-    rgba(255, 69, 129, 0.1) 4.09%,
-    rgba(67, 136, 221, 0.1) 70.16%
-  );
   display: flex;
   justify-content: center;
   padding: 1rem 0;
+  background-image: linear-gradient(293.04deg, rgba(255, 69, 129, 0.1) 4.09%, rgba(67, 136, 221, 0.1) 70.16%);
 }
 
 .content {
@@ -18,11 +14,13 @@
 }
 
 .airdropDetails {
+  width: 100%;
   display: flex;
   justify-content: center;
 }
 
 .walletActionContainer {
+  width: 100%;
   border-radius: 1rem;
   background: white;
   display: flex;
@@ -36,12 +34,12 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   padding: 1rem;
+  font-weight: 700;
 }
 
 .walletActionTitle {
   color: var(--sq-gray700);
-  font-size: 20px;
-  line-height: 24px;
+  line-height: 30px;
   display: inline;
 }
 
@@ -50,12 +48,11 @@
 }
 
 .walletActionButton {
-  height: 111px;
-  border: 1px solid;
+  border: 1px solid transparent;
   border-image-slice: 1;
   border-image-source: var(--sq-gradient);
   margin-top: 2rem;
-  padding: 1rem;
+  padding: 2rem;
   width: 350px;
 
   border-radius: 1rem;
@@ -64,6 +61,7 @@
 
 .walletSignButton {
   margin-top: 40px;
+  background: var(--sq-primary-blue);
 }
 
 .walletActionText {
@@ -74,9 +72,5 @@
 
 .supportText {
   color: var(--sq-gray700);
-  margin: 1.2rem 0 0;
-}
-
-.linkText {
-  color: var(--sq-info);
+  margin: 24px 0 0;
 }

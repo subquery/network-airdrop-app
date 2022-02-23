@@ -1,19 +1,25 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState, VFC } from 'react';
+import { VFC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@subql/react-ui';
+import useSWR from 'swr';
 import styles from './AirdropClaim.module.css';
 import { EmailSubscription } from '../EmailSubscription';
+import { hooks } from '../../containers/metamask';
+import { ACCOUNT_INFO_URL } from '../../constants/urls';
+import { fetcher } from '../../utils';
 
 export const AirdropClam: VFC = () => {
-  const [testnetAirdrop, setTestnetAirdrop] = useState<number>(0);
-  const [acalaAirdrop, setAcalaAirdrop] = useState<number>(0);
-  const [additionAirdrop, setAdditionAirdrop] = useState<number>(0);
-
   const { t } = useTranslation();
+  const { useAccounts } = hooks;
+  const accounts = useAccounts();
 
+  const { data: accountInfo, error: fetchError } =
+    useSWR(accounts ? `${ACCOUNT_INFO_URL}/${accounts[0]}` : null, fetcher) || {};
+
+  const { acalaTop100UserAirdrop, nftAirdrop, testnetAirdrop } = accountInfo || {};
   const tableTitles = [t('airdrop.category'), t('airdrop.amount'), t('airdrop.status')];
   const tableInfo = [
     {
@@ -23,12 +29,12 @@ export const AirdropClam: VFC = () => {
     },
     {
       category: t('airdrop.acalaTop100'),
-      amount: `${acalaAirdrop} SQT`,
+      amount: `${acalaTop100UserAirdrop} SQT`,
       status: t('airdrop.locked')
     },
     {
       category: t('airdrop.addition'),
-      amount: `${additionAirdrop} SQT`,
+      amount: `X ${nftAirdrop} SubQuery NFT`,
       status: t('airdrop.locked')
     }
   ];
@@ -66,12 +72,10 @@ export const AirdropClam: VFC = () => {
         </div>
         <div className={styles.airdropClaimAmount}>
           <div>{t('airdrop.total')}</div>
-          <div>{`${testnetAirdrop + acalaAirdrop} SQT + ${additionAirdrop} NFT`}</div>
+          <div>{`${testnetAirdrop + acalaTop100UserAirdrop} SQT + ${nftAirdrop} NFT`}</div>
         </div>
         <div className={styles.airdropClaimDate}>
-          <Typography className={styles.airdropClaimDateText}>
-            {t('airdrop.claimDateTBA')}
-          </Typography>
+          <Typography className={styles.airdropClaimDateText}>{t('airdrop.claimDateTBA')}</Typography>
         </div>
       </div>
       <EmailSubscription />

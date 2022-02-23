@@ -25,7 +25,6 @@ const en = {
       connectBrowserWallet: 'Connect using browser wallet',
       agreeWith: 'Agree with the',
       signature: 'by signing a signature.',
-      doOnce: 'You only need to do this once.',
       signOnMetamask: 'Sign on Metamask',
       yourAirDrop: 'Your airdrop',
       category: 'category',
@@ -45,7 +44,13 @@ const en = {
     subscription: {
       getNotified: 'Get notified when the claim date is announced',
       enterEmail: 'Enter email',
-      subscribe: 'Subscribe'
+      subscribe: 'Subscribe',
+      privacy: 'privacy policy',
+      termsAndConditionsPart1: "By clicking subscribe you have read and agreed to SubQuery's ",
+      termsAndConditionsPart2: ' and consent for SubQuery to send you updates and other information via email'
+    },
+    termsAndConditions: {
+      title: 'Terms & Conditions'
     },
     faq: {
       title: 'FAQs',
@@ -55,7 +60,7 @@ const en = {
       walletConnectOptionA: 'RandomText......'
     },
     support: {
-      contact: 'If you have any question, contact us on support channel on'
+      contact: 'If you have any question, contact us on #airdrop-support channel on'
     }
   }
 };

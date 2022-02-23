@@ -39,11 +39,12 @@ export const Header: React.VFC = () => {
     <div className={styles.header}>
       <div className={styles.inner}>
         <div className={styles.left}>
-          <Link to="/">
+          <a href="https://www.subquery.network/" target="_blank" rel="noreferrer">
             <img src="/static/logo.png" className={styles.logo} alt="SubQuery logo" />
+          </a>
+          <Link to="/">
+            <Typography className={styles.hostedText}>{t('header.airdrop')}</Typography>
           </Link>
-
-          <Typography className={styles.hostedText}>{t('header.airdrop')}</Typography>
         </div>
         <div className={styles.right}>
           {isActive && accounts ? (
