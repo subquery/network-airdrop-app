@@ -24,17 +24,17 @@ export const AirdropClam: VFC = () => {
   const tableInfo = [
     {
       category: t('airdrop.testnetParticipant'),
-      amount: `${testnetAirdrop} SQT`,
+      amount: `${testnetAirdrop || 0} SQT`,
       status: t('airdrop.locked')
     },
     {
       category: t('airdrop.acalaTop100'),
-      amount: `${acalaTop100UserAirdrop} SQT`,
+      amount: `${acalaTop100UserAirdrop || 0} SQT`,
       status: t('airdrop.locked')
     },
     {
       category: t('airdrop.addition'),
-      amount: `X ${nftAirdrop} SubQuery NFT`,
+      amount: `X ${nftAirdrop || 0} SubQuery NFT`,
       status: t('airdrop.locked')
     }
   ];
