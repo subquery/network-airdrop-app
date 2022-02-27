@@ -1,10 +1,6 @@
 import { Link } from 'react-router-dom';
+import { NotFound } from '../components/NotFound';
 
-export function ErrorPgae() {
-  return (
-    <div>
-      <div>airdrop</div>
-      <Link to="/">Back</Link>
-    </div>
-  );
+export function NotFoundPage() {
+  return <NotFound />;
 }

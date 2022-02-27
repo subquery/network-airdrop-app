@@ -39,7 +39,8 @@ const en = {
     },
     wallet: {
       connectionErr: 'Unfortunately we did not recceive the confirmation, Please try again.',
-      connectAndSigned: 'You’ve agreed with the Terms and Conditions.'
+      connectAndSigned: 'You’ve agreed with the Terms and Conditions.',
+      useBrowserMetamask: 'Please use desktop browser to connect wallet.'
     },
     subscription: {
       getNotified: 'Get notified when the claim date is announced',
@@ -61,6 +62,10 @@ const en = {
     },
     support: {
       contact: 'If you have any question, contact us on #airdrop-support channel on'
+    },
+    error: {
+      404: '404',
+      pageNotFound: 'Oops! Page not found'
     }
   }
 };

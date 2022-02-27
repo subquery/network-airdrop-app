@@ -3,9 +3,10 @@
 
 import { useContext, useEffect, useState, VFC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Typography, Toast } from '@subql/react-ui';
+import { Button, Typography, Toast, Alert } from '@subql/react-ui';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
+import { FaArrowRight } from 'react-icons/fa';
 import { hooks, metaMask } from '../../containers/metamask';
 import styles from './Airdrop.module.css';
 import { AirdropClam } from './AirdropClaim';
@@ -24,9 +25,15 @@ const AskWalletConnection = ({ onClick, t }: any) => (
     </Typography>
 
     <button onClick={onClick} type="button" className={styles.walletActionButton}>
-      <img src="/static/metamaskBanner.png" className={styles.logo} alt="Metamask logo" />
-      <Typography className={styles.walletActionText}>{t('airdrop.connectBrowserWallet')}</Typography>
+      <div>
+        <img src="/static/metamaskBanner.png" className={styles.logo} alt="Metamask logo" />
+        <Typography className={styles.walletActionText}>{t('airdrop.connectBrowserWallet')}</Typography>
+      </div>
+      <FaArrowRight className={styles.rightArrow} />
     </button>
+    <div className={styles.switchToBrowserAlert}>
+      <Alert className={styles.switchToBrowserText} state="info" text={t('wallet.useBrowserMetamask')} />
+    </div>
   </div>
 );
 
@@ -144,10 +151,6 @@ export const Airdrop: VFC = () => {
   const toConnectWallet = !isActive;
   const toSignWallet = isActive && !TCSigned && !signHistory;
   const signedWallet = (isActive && TCSigned) || signHistory;
-
-  console.log('toSignWallet', toSignWallet);
-  console.log('signedWallet', signedWallet);
-  console.log('signedWallet', signHistory);
 
   return (
     <div className={styles.container}>
