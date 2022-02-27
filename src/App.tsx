@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import './i18n';
-import { Home, ErrorPgae } from './pages';
+import { Home, NotFoundPage } from './pages';
 import { Header, Footer } from './components';
 import { AppContext } from './contextProvider';
 import { fetcher } from './utils';
@@ -30,7 +30,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="/error" element={<ErrorPgae />} />
+          <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </div>

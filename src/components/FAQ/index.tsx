@@ -10,28 +10,24 @@ import styles from './FAQ.module.css';
 interface IFAQItem {
   question: string;
   answer: string;
+  idx: number;
 }
 
-const FAQItem = ({ question, answer }: IFAQItem) => {
-  const [showAnswer, setShowAnswer] = React.useState<boolean>();
+const FAQItem = ({ question, answer, idx }: IFAQItem) => {
+  const initialShowStatus = idx === 0;
+  const [showAnswer, setShowAnswer] = React.useState<boolean>(initialShowStatus);
   return (
     <>
-      <div className={styles.question}>
+      <button className={styles.question} type="button" onClick={() => setShowAnswer(!showAnswer)}>
         <Typography className={styles.questionTxt}>{question}</Typography>
-        <button className={styles.questionBtn} type="button">
+        <div className={styles.questionBtn}>
           {showAnswer ? (
-            <MdKeyboardArrowUp
-              className={styles.questionArrow}
-              onClick={() => setShowAnswer(false)}
-            />
+            <MdKeyboardArrowUp className={styles.questionArrow} />
           ) : (
-            <MdKeyboardArrowDown
-              className={styles.questionArrow}
-              onClick={() => setShowAnswer(true)}
-            />
+            <MdKeyboardArrowDown className={styles.questionArrow} />
           )}
-        </button>
-      </div>
+        </div>
+      </button>
       {showAnswer && <Typography className={styles.answer}>{answer}</Typography>}
     </>
   );
@@ -58,9 +54,9 @@ export const FAQ: React.VFC = () => {
           {t('faq.title')}
         </Typography>
 
-        {faqs.map((faq) => (
+        {faqs.map((faq, idx) => (
           <div key={faq.question} className={styles.faqItem}>
-            <FAQItem question={faq.question} answer={faq.answer} />
+            <FAQItem question={faq.question} answer={faq.answer} idx={idx} />
           </div>
         ))}
       </div>

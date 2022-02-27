@@ -32,6 +32,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
+  text-align: left;
 }
 
 .questionTxt {
@@ -54,4 +56,17 @@
 
 .answer {
   text-align: left;
+}
+
+/* Responsive media query */
+@media screen and (max-width: 768px) {
+  .faqContainer {
+    padding: 0.5rem;
+  }
+
+  .fap {
+    width: 90%;
+    margin: 1rem;
+    text-align: start;
+  }
 }

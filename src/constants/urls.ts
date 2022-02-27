@@ -1,4 +1,6 @@
-export const DOMAIN = process.env.REACT_APP_DOMAIN;
+import env from '../env.config';
+
+export const DOMAIN = env.REACT_APP_DOMAIN;
 
 export const TERMS_URL = `${DOMAIN}/terms`;
 

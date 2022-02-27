@@ -52,11 +52,20 @@
   border-image-slice: 1;
   border-image-source: var(--sq-gradient);
   margin-top: 2rem;
-  padding: 2rem;
+  padding: 2rem 1rem;
   width: 350px;
 
   border-radius: 1rem;
   text-align: start;
+
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.rightArrow {
+  height: 100%;
+  color: var(--sq-gray600);
 }
 
 .walletSignButton {
@@ -73,4 +82,36 @@
 .supportText {
   color: var(--sq-gray700);
   margin: 24px 0 0;
+}
+
+.switchToBrowserAlert {
+  display: none;
+}
+
+/* Responsive media query */
+@media screen and (max-width: 768px) {
+  .content {
+    width: 90%;
+  }
+
+  .airdropDetails {
+    width: 100%;
+  }
+
+  .walletActionTitle {
+    font-size: 18px;
+  }
+
+  .walletActionButton {
+    display: none;
+  }
+
+  .switchToBrowserAlert {
+    display: block;
+    margin-top: 1rem;
+  }
+
+  .switchToBrowserText {
+    min-width: 80%;
+  }
 }
