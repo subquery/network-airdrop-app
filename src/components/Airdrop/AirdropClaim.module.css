@@ -70,12 +70,10 @@
   color: white;
 }
 
-.airdropClaimDate {
-  border: 1px solid rgba(223, 227, 232, 1);
+.airdropClaim {
   width: 100%;
+  height: 2rem;
   border-radius: 1rem;
-  padding: 0.2rem;
-  cursor: pointer;
 }
 
 .airdropClaimDateText {
