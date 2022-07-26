@@ -144,9 +144,7 @@ export const AirdropClaim: FC<{setWalletError: any}> = ({setWalletError}) => {
           <div>{`${testnetAirdrop + acalaTop100UserAirdrop} SQT + ${nftAirdrop} NFT`}</div>
         </div>
 
-        { !canClaim && <button type="button" className={styles.airdropClaimDate} >
-          <Typography className={styles.airdropClaimDateText}>{t('airdrop.claimDateTBA')}</Typography>
-        </button> }
+        { !canClaim && <Button type="secondary" disabled colorScheme='neutral' label={t('airdrop.claimDateTBA')} className={styles.airdropClaim} onClick={handleSignWallet} /> }
 
         {/* TODO: want to combine these into one */}
         { canClaim && toSignWallet && <Button type="secondary" colorScheme='neutral' label="Agree to Terms & Conditions" className={styles.airdropClaim} onClick={handleSignWallet} /> }
