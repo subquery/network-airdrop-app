@@ -9,11 +9,11 @@ import useSWR from 'swr';
 import { FaArrowRight } from 'react-icons/fa';
 import { hooks, metaMask } from '../../containers/metamask';
 import styles from './Airdrop.module.css';
-import { AirdropClam } from './AirdropClaim';
+import { AirdropClaim } from './AirdropClaim';
 import { getAddChainParameters } from '../../containers/chains';
 import { AppContext } from '../../contextProvider';
 import { TERMS_SIGNATURE_URL } from '../../constants/urls';
-import { fetcher, fetcherWithOps } from '../../utils';
+import { fetcher } from '../../utils';
 
 const AskWalletConnection = ({ onClick, t }: any) => (
   <div className={styles.walletActionContainer}>
@@ -37,75 +37,22 @@ const AskWalletConnection = ({ onClick, t }: any) => (
   </div>
 );
 
-const AskWalletSignTC = ({ onClickTAndC, onClick, t }: any) => (
-  <div className={styles.walletActionContainer}>
-    <div>
-      <Typography className={styles.walletActionTitle}>{`${t('airdrop.agreeWith')} `}</Typography>
-      <Button type="link" className={styles.linkText} label={` Terms and Conditions `} onClick={onClickTAndC} />
-
-      <Typography className={styles.walletActionTitle}>{` ${t('airdrop.signature')}`}</Typography>
-    </div>
-
-    <Button className={styles.walletSignButton} label={t('airdrop.signOnMetamask')} onClick={onClick} />
-  </div>
-);
-
 export const Airdrop: VFC = () => {
-  const [TCSigned, setTCsigned] = useState<boolean>(false);
-  const [TCSignHash, setTCSignHash] = useState<string>();
   const [walletError, setWalletError] = useState<boolean>(false);
-  const { termsAndConditions, termsAndConditionsVersion } = useContext(AppContext);
+  const { termsAndConditionsVersion } = useContext(AppContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { useChainId, useIsActive, useProvider, useError, useAccounts } = hooks;
+  const { useChainId, useIsActive, useAccounts, useError } = hooks;
+  const error = useError();
 
   const accounts = useAccounts();
   const chainId = useChainId();
   const isActive = useIsActive();
-  const provider = useProvider();
-  const error = useError();
 
   const { data: signHistory } = useSWR(
     accounts ? `${TERMS_SIGNATURE_URL}/${termsAndConditionsVersion}-${accounts[0]}` : null,
     fetcher
   );
-
-  const postOptions = {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json, text/plain, */*',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      account: accounts ? accounts[0] : '',
-      termsVersion: termsAndConditionsVersion,
-      signTermsHash: TCSignHash
-    })
-  };
-
-  const { data: signHistorySaveResult } = useSWR(
-    accounts && TCSignHash ? TERMS_SIGNATURE_URL : null,
-    fetcherWithOps(postOptions)
-  );
-
-  useEffect(() => {
-    setTCsigned(false);
-    setWalletError(false);
-  }, []);
-
-  useEffect(() => {
-    if (!isActive) {
-      setTCsigned(false);
-    }
-    setWalletError(false);
-  }, [isActive]);
-
-  useEffect(() => {
-    if (signHistorySaveResult) {
-      setTCsigned(true);
-      setWalletError(false);
-    }
-  }, [signHistorySaveResult]);
 
   useEffect(() => {
     if (error?.message) {
@@ -127,37 +74,17 @@ export const Airdrop: VFC = () => {
     }
   };
 
-  const handleSignWallet = async () => {
-    try {
-      setWalletError(false);
-      const signTermsHash = await provider
-        ?.getSigner()
-        .signMessage(termsAndConditions || 'Sign this message to agree with the Terms & Conditions.');
-
-      if (signTermsHash) {
-        setTCSignHash(signTermsHash);
-        setTCsigned(true);
-      } else {
-        throw new Error('SignTermsHash is null or no account detected');
-      }
-    } catch (e: any) {
-      console.log('Failed to sign the wallet', e?.message);
-      setWalletError(true);
-    }
-  };
-
-  const onClickTAndC = () => navigate('/terms-and-conditions');
+  // const onClickTAndC = () => navigate('/terms-and-conditions');
 
   const toConnectWallet = !isActive;
-  const toSignWallet = isActive && !TCSigned && !signHistory;
-  const signedWallet = (isActive && TCSigned) || signHistory;
+  const toSignWallet = isActive && !signHistory;
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         {walletError && <Toast text={t('wallet.connectionErr')} state="error" />}
 
-        {!signedWallet && (
+        {!toSignWallet && (
           <div className={styles.titleContainer}>
             <Typography variant="h3" className={styles.title}>
               {t('airdrop.check')}
@@ -165,12 +92,11 @@ export const Airdrop: VFC = () => {
           </div>
         )}
 
-        {!signedWallet && <img src="static/airdropImg.svg" alt="airdrop page img" />}
+        {!toSignWallet && <img src="static/airdropImg.svg" alt="airdrop page img" />}
 
         <div className={styles.airdropDetails}>
-          {signedWallet && <AirdropClam />}
-          {toSignWallet && <AskWalletSignTC onClick={handleSignWallet} t={t} onClickTAndC={onClickTAndC} />}
-          {toConnectWallet && <AskWalletConnection onClick={handleConnectWallet} t={t} />}
+          {toConnectWallet && <AskWalletConnection onClick={handleConnectWallet} t={t} />} 
+          {toSignWallet && <AirdropClaim setWalletError={setWalletError} /> }
         </div>
         <div>
           <Typography className={styles.supportText}>
