@@ -3,14 +3,15 @@ import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { AppContextProvider } from './contextProvider';
+import { QueryApolloProvider } from './containers';
+// import { AppContextProvider } from './contextProvider'; NOTE: comment until milestone 3
 
 ReactDOM.render(
-  <BrowserRouter>
-    <AppContextProvider>
+  <QueryApolloProvider>
+    <BrowserRouter>
       <App />
-    </AppContextProvider>
-  </BrowserRouter>,
+    </BrowserRouter>
+  </QueryApolloProvider>,
   document.getElementById('root')
 );
 

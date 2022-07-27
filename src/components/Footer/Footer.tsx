@@ -56,9 +56,7 @@ export const Footer: React.VFC = () => {
         </div>
       </div>
       <div className={styles.bottom}>
-        <Typography variant="medium">{`${t(
-          'footer.copyright'
-        )}${new Date().getFullYear()}`}</Typography>
+        <Typography variant="medium">{`${t('footer.copyright')}${new Date().getFullYear()}`}</Typography>
       </div>
     </div>
   );

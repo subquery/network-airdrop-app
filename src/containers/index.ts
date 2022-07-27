@@ -2,3 +2,4 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export { Web3Provider } from './Web3';
+export * from './QueryApolloProvider';
