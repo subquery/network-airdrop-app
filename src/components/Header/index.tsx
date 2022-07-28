@@ -6,32 +6,29 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Address, Button, Dropdown, Typography } from '@subql/react-ui';
 import styles from './Header.module.css';
-import { hooks, metaMask } from '../../containers/metamask';
-import { getAddChainParameters } from '../../containers/chains';
+import { injectedConntector, useWeb3 } from '../../containers';
 
+// TODO: improve dropdown button
 export const Header: React.VFC = () => {
+  const { account, activate, deactivate, error } = useWeb3();
   const { t } = useTranslation();
-  const { useChainId, useAccounts, useIsActive } = hooks;
 
-  const chainId = useChainId();
-  const accounts = useAccounts();
-  const isActive = useIsActive();
-
-  const handleConnectWallet = () => {
-    try {
-      if (!isActive) {
-        const result = getAddChainParameters(chainId || 1);
-
-        metaMask.activate(result);
-      }
-    } catch (e: any) {
-      console.log('error', e.message);
+  const handleConnectWallet = React.useCallback(async () => {
+    if (account) {
+      deactivate();
+      return;
     }
-  };
+
+    try {
+      await activate(injectedConntector);
+    } catch (e) {
+      console.log('Failed to activate wallet', e);
+    }
+  }, [activate, account, deactivate]);
 
   const handleSelected = (key: string) => {
     if (key === 'disconnect') {
-      metaMask.deactivate();
+      deactivate();
     }
   };
 
@@ -47,12 +44,12 @@ export const Header: React.VFC = () => {
           </Link>
         </div>
         <div className={styles.right}>
-          {isActive && accounts ? (
+          {account ? (
             <Dropdown
               items={[{ key: 'disconnect', label: 'Disconnect' }]}
               onSelected={handleSelected}
               colorScheme="gradient">
-              <Address address={accounts[0]} size="large" />
+              <Address address={account} size="large" />
             </Dropdown>
           ) : (
             <Button
