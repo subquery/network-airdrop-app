@@ -1,117 +1,20 @@
 .container {
-  display: flex;
-  justify-content: center;
-  padding: 1rem 0;
-  background-image: linear-gradient(293.04deg, rgba(255, 69, 129, 0.1) 4.09%, rgba(67, 136, 221, 0.1) 70.16%);
-}
-
-.content {
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.airdropDetails {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.walletActionContainer {
-  width: 100%;
-  border-radius: 1rem;
   background: white;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  align-items: center;
-}
-
-.title {
-  background: var(--sq-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   padding: 1rem;
-  font-weight: 700;
+  border-radius: 6px;
 }
 
-.walletActionTitle {
-  color: var(--sq-gray700);
-  line-height: 30px;
-  display: inline;
+.claimedButton {
+  margin: 1rem 0;
 }
 
-.airdropDetails {
-  width: 70%;
-}
-
-.walletActionButton {
-  border: 1px solid transparent;
-  border-image-slice: 1;
-  border-image-source: var(--sq-gradient);
-  margin-top: 2rem;
-  padding: 2rem 1rem;
-  width: 350px;
-
-  border-radius: 1rem;
-  text-align: start;
-
+.airdropClaimAmount {
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  align-content: center;
-}
-
-.rightArrow {
-  height: 100%;
-  color: var(--sq-gray600);
-}
-
-.walletSignButton {
-  margin-top: 40px;
-  background: var(--sq-primary-blue);
-}
-
-.walletActionText {
-  margin-top: 0.5rem;
-  color: var(--sq-gray700);
-  font-size: 14px;
-}
-
-.supportText {
-  color: var(--sq-gray700);
-  margin: 24px 0 0;
-}
-
-.switchToBrowserAlert {
-  display: none;
-}
-
-/* Responsive media query */
-@media screen and (max-width: 768px) {
-  .content {
-    width: 90%;
-  }
-
-  .airdropDetails {
-    width: 100%;
-  }
-
-  .walletActionTitle {
-    font-size: 18px;
-  }
-
-  .walletActionButton {
-    display: none;
-  }
-
-  .switchToBrowserAlert {
-    display: block;
-    margin-top: 1rem;
-  }
-
-  .switchToBrowserText {
-    min-width: 80%;
-  }
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--sq-gradient);
+  border-radius: 6px;
+  color: white;
 }

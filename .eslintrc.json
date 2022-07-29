@@ -32,6 +32,7 @@
     "no-unused-vars": "off",
     "no-console": "off",
     "react/require-default-props": "warn",
+    "react/no-unstable-nested-components": ["error", { "allowAsProps": true }],
     "import/extensions": [
       "error",
       "ignorePackages",

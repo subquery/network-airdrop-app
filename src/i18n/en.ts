@@ -30,8 +30,6 @@ const en = {
       category: 'category',
       amount: 'amount',
       status: 'status',
-      testnetParticipant: 'Testnet Participant',
-      acalaTop100: 'Acala top 100 user',
       addition: 'Addition',
       locked: 'Locked',
       total: 'Total',
