@@ -9,6 +9,7 @@ export function Home() {
   return (
     <div>
       <div className={styles.container}>
+        <img src="static/airdrop.png" alt="airdrop page img" className={styles.bgImg} />
         <WalletDetect>
           <div className={styles.airdropContainer}>
             <div className={styles.airdropContent}>

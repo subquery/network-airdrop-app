@@ -1,6 +1,13 @@
 .container {
   background: var(--sq-background-gradient);
   height: 798px;
+
+  position: relative;
+}
+
+.bgImg {
+  position: absolute;
+  z-index: -1;
 }
 
 .airdropContainer {
