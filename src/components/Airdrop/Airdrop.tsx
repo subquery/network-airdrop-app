@@ -2,9 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { VFC } from 'react';
-import { Typography } from '@subql/react-ui';
 import i18next from 'i18next';
-import { Button, Table, TableProps } from 'antd';
+import { Button, Table, TableProps, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import styles from './Airdrop.module.css';
 import { useWeb3 } from '../../containers';
@@ -40,12 +39,15 @@ const AirdropList = ({ asyncData }: { asyncData: AsyncData<any> }) => {
   return (
     <div>
       {renderAsync(asyncData, {
-        error: (e) => <Typography>{`Error: Failed to get airdrop information. \n ${e}`}</Typography>,
+        error: (e) => (
+          <Typography.Text type="danger">{`Error: Failed to get airdrop information. \n ${e}`}</Typography.Text>
+        ),
         data: (data) => {
           if (!data) return null;
           const airdrops = data?.airdropUsers?.nodes;
           return (
             <div>
+              <Typography.Text className={styles.airdropClaimAmount}>Claim KSQT</Typography.Text>
               <Table columns={columns} dataSource={airdrops} rowKey="id" pagination={{ hideOnSinglePage: true }} />
               <Button type="ghost" shape="round" block disabled size="large" className={styles.claimedButton}>
                 {t('airdrop.claimDateTBA')}

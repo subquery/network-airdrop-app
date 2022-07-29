@@ -7,3 +7,14 @@
 .claimedButton {
   margin: 1rem 0;
 }
+
+.airdropClaimAmount {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--sq-gradient);
+  border-radius: 6px;
+  color: white;
+}
