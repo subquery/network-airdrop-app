@@ -7,7 +7,6 @@ import { InjectedConnector } from '@web3-react/injected-connector';
 import { NetworkConnector } from '@web3-react/network-connector';
 import { providers } from 'ethers';
 import React from 'react';
-// import { NetworkConnector } from '../NetworkConnector';
 
 const RPC_URLS: Record<number, string> = {
   1280: 'https://sqtn.api.onfinality.io/public',

@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { QueryApolloProvider, Web3Provider } from './containers';
-// import { AppContextProvider } from './contextProvider'; NOTE: comment until milestone 3
 
 ReactDOM.render(
   <QueryApolloProvider>

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@apollo/client": "^3.6.9",
     "@craco/craco": "^6.4.3",
     "@subql/react-ui": "1.0.1-19",
@@ -20,6 +21,7 @@
     "@web3-react/network": "8.0.5-beta.0",
     "@web3-react/network-connector": "^6.2.9",
     "@web3-react/types": "8.0.3-beta.0",
+    "antd": "^4.22.2",
     "apollo": "^2.34.0",
     "clsx": "^1.2.1",
     "ethers": "^5.5.3",
