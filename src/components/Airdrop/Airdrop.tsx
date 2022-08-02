@@ -9,28 +9,34 @@ import styles from './Airdrop.module.css';
 import { useWeb3 } from '../../containers';
 import { useAirdropsByAccount } from '../../containers/QueryAirdrop';
 import { GetAirdropsByAccount_airdropUsers_nodes as userAirdrops } from '../../__generated__/airdropSubql/GetAirdropsByAccount';
-import { AIRDROP_CATEGORIES } from '../../constants/airdropCategory';
 import { AsyncData, renderAsync } from '../../utils/renderAsync';
+import { AIRDROP_CATEGORIES } from '../../constants';
+import { TableText } from '../Table';
+import { TableTitle } from '../Table/TableTitle';
 
-// TODO: add component TableText, TableTitle
 // TODO: update Status condition enum
 // TODO: add Tag component
 // TODO: add Next Milestone Col
 const columns: TableProps<userAirdrops>['columns'] = [
   {
-    dataIndex: 'airdropId',
-    title: i18next.t('airdrop.category').toUpperCase(),
-    render: (airdropId: string) => <div>{AIRDROP_CATEGORIES[airdropId] ?? '-'}</div>
+    dataIndex: ['airdrop', 'id'],
+    title: <TableTitle title={i18next.t('airdrop.category')} />,
+    render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? '-'}</TableText>
   },
   {
     dataIndex: 'amount',
-    title: i18next.t('airdrop.amount').toUpperCase(),
-    render: (amount: string) => <div>{amount}</div>
+    title: <TableTitle title={i18next.t('airdrop.amount')} />,
+    render: (amount: string) => <TableText>{amount}</TableText>
   },
   {
     dataIndex: 'status',
-    title: i18next.t('airdrop.status').toUpperCase(),
-    render: (airdropId: string) => <div>Lock</div>
+    title: <TableTitle title={i18next.t('airdrop.status')} />,
+    render: (airdropId: string) => <TableText>Lock</TableText>
+  },
+  {
+    dataIndex: ['airdrop', 'startTime'],
+    title: <TableTitle title={i18next.t('airdrop.status')} />,
+    render: (startTime, airdrop) => <TableText>{startTime}</TableText>
   }
 ];
 

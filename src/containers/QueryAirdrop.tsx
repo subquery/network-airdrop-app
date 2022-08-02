@@ -29,7 +29,12 @@ const GET_AIRDROPS_BY_ACCOUNT = gql`
       nodes {
         id
         address
-        airdropId
+        airdrop {
+          id
+          tokenAddress
+          startTime
+          endTime
+        }
         amount
         status
       }
