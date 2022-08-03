@@ -31,8 +31,14 @@ const en = {
       amount: 'amount',
       status: 'status',
       addition: 'Addition',
+      unlocked: 'Unlocked',
       locked: 'Locked',
+      claimed: 'Claimed',
+      expired: 'Expired',
       total: 'Total',
+      youMissed: 'You missed it.',
+      nextMilestone: 'Next Milestone',
+      claimTitle: ' Claim {{token}}',
       claimDateTBA: 'Claim date to be announced'
     },
     wallet: {

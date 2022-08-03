@@ -31,7 +31,8 @@
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     "no-unused-vars": "off",
     "no-console": "off",
-    "react/require-default-props": "warn",
+    "react/jsx-no-useless-fragment": "off",
+    "react/require-default-props": "off",
     "react/no-unstable-nested-components": ["error", { "allowAsProps": true }],
     "import/extensions": [
       "error",

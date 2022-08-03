@@ -1,0 +1,18 @@
+.text {
+  color: var(--gray900);
+  font-size: 14px;
+}
+
+.tooltip {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.tooltipContent {
+  display: flex;
+  align-items: center;
+}
+
+.tooltipIcon {
+  margin: 0 6px;
+}
