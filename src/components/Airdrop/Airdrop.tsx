@@ -6,12 +6,13 @@ import i18next from 'i18next';
 import { Button, Table, TableProps, Typography, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
+import { formatEther } from '@ethersproject/units';
 import styles from './Airdrop.module.css';
 import { useWeb3 } from '../../containers';
 import { useAirdropsByAccount } from '../../containers/QueryAirdrop';
 import { GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop } from '../../__generated__/airdropSubql/GetAirdropsByAccount';
 import { AsyncData, renderAsync } from '../../utils/renderAsync';
-import { AIRDROP_CATEGORIES, DATE_FORMAT } from '../../constants';
+import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from '../../constants';
 import { TableText } from '../Table';
 import { TableTitle } from '../Table/TableTitle';
 import { AirdropClaimStatus } from '../../__generated__/airdropSubql/globalTypes';
@@ -49,7 +50,7 @@ const columns: TableProps<SortedUserAirdrops>['columns'] = [
   {
     dataIndex: 'amount',
     title: <TableTitle title={i18next.t('airdrop.amount')} />,
-    render: (amount: string) => <TableText>{amount}</TableText>
+    render: (amount) => <TableText>{`${formatEther(amount)} ${TOKEN}`}</TableText>
   },
   {
     dataIndex: 'sortedStatus',
@@ -59,7 +60,7 @@ const columns: TableProps<SortedUserAirdrops>['columns'] = [
   {
     dataIndex: 'sortedNextMilestone',
     title: <TableTitle title={i18next.t('airdrop.nextMilestone')} />,
-    width: '30%',
+    width: '25%',
     render: (sortedNextMilestone) => <TableText>{sortedNextMilestone}</TableText>
   }
 ];
