@@ -12,7 +12,7 @@ import styles from './Airdrop.module.css';
 import { useWeb3 } from '../../containers';
 import { useAirdropsByAccount } from '../../containers/QueryAirdrop';
 import { GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop } from '../../__generated__/airdropSubql/GetAirdropsByAccount';
-import { AsyncData, renderAsync } from '../../utils/renderAsync';
+import { renderAsync } from '../../utils/renderAsync';
 import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from '../../constants';
 import { TableText } from '../Table';
 import { TableTitle } from '../Table/TableTitle';
@@ -67,7 +67,10 @@ const columns: TableProps<SortedUserAirdrops>['columns'] = [
   }
 ];
 
-const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAirdrops>, BigNumber] => {
+const sortUserAirdrops = (
+  userAirdrops: Array<UserAirdrop>
+): [Array<SortedUserAirdrops>, Array<string | undefined>, BigNumber] => {
+  const unlockedAirdropIds: Array<string> = [];
   let unlockedAirdropAmount = BigNumber.from('0');
   const sortedUserAirdrops = userAirdrops.map((userAirdrop) => {
     const { status, airdrop, amount } = userAirdrop;
@@ -77,6 +80,7 @@ const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAi
 
     const isAfterStartTime = startTime.isAfter();
     if (isAfterStartTime) {
+      unlockedAirdropIds.push(airdrop?.id ?? '');
       unlockedAirdropAmount = BigNumber.from(amount.toString()).add(unlockedAirdropAmount);
       return {
         ...userAirdrop,
@@ -109,7 +113,7 @@ const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAi
     };
   });
 
-  return [sortedUserAirdrops, unlockedAirdropAmount];
+  return [sortedUserAirdrops, unlockedAirdropIds, unlockedAirdropAmount];
 };
 
 const AirdropAmountHeader = ({ airdropAmounts }: { airdropAmounts: Array<{ amount: BigNumberish; type: string }> }) => (
@@ -125,19 +129,21 @@ const AirdropAmountHeader = ({ airdropAmounts }: { airdropAmounts: Array<{ amoun
   </div>
 );
 
-const AirdropList = ({ asyncData }: { asyncData: AsyncData<any> }) => {
+export const Airdrop: VFC = () => {
   const { t } = useTranslation();
+  const { account } = useWeb3();
+  const accountAirdrop = useAirdropsByAccount({ account: account ?? '' });
   return (
-    <div>
-      {renderAsync(asyncData, {
+    <div className={styles.container}>
+      {renderAsync(accountAirdrop, {
         error: (e) => (
           <Typography.Text type="danger">{`Error: Failed to get airdrop information. \n ${e}`}</Typography.Text>
         ),
         data: (data) => {
           if (!data) return null;
-          const airdrops = data?.airdropUsers?.nodes;
-          const [sortedAirdrops, unlockedAirdropAmount] = sortUserAirdrops(airdrops);
-          const { user } = sortedAirdrops[0];
+          const airdrops = data?.airdropUsers?.nodes as Array<UserAirdrop>;
+          const [sortedAirdrops, unlockedAirdropIds, unlockedAirdropAmount] = sortUserAirdrops(airdrops);
+          const { user } = sortedAirdrops[0] ?? {};
           const totalAirdropAmount = user?.totalAirdropAmount?.toString();
           const claimedAmount = user?.claimedAmount?.toString();
 
@@ -154,29 +160,23 @@ const AirdropList = ({ asyncData }: { asyncData: AsyncData<any> }) => {
                 ]}
               />
 
-              <Table
-                columns={columns}
-                dataSource={sortedAirdrops}
-                rowKey="id"
-                pagination={{ hideOnSinglePage: true }}
-              />
-              <Button type="ghost" shape="round" block disabled size="large" className={styles.claimedButton}>
-                {t('airdrop.claimDateTBA')}
-              </Button>
+              {sortedAirdrops.length > 0 && (
+                <>
+                  <Table
+                    columns={columns}
+                    dataSource={sortedAirdrops}
+                    rowKey="id"
+                    pagination={{ hideOnSinglePage: true }}
+                  />
+                  <Button type="ghost" shape="round" block disabled size="large" className={styles.claimedButton}>
+                    {unlockedAirdropIds.length > 0 ? 'Claim the token' : 'There is no airdrop available to be claimed.'}
+                  </Button>
+                </>
+              )}
             </div>
           );
         }
       })}
-    </div>
-  );
-};
-
-export const Airdrop: VFC = () => {
-  const { account } = useWeb3();
-  const accountAirdrop = useAirdropsByAccount({ account: account ?? '' });
-  return (
-    <div className={styles.container}>
-      <AirdropList asyncData={accountAirdrop} />
     </div>
   );
 };
