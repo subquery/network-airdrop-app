@@ -38,6 +38,7 @@ const en = {
       total: 'Total',
       youMissed: 'You missed it.',
       nextMilestone: 'Next Milestone',
+      claimTitle: ' Claim {{token}}',
       claimDateTBA: 'Claim date to be announced'
     },
     wallet: {

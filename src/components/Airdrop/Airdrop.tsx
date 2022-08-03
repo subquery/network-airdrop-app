@@ -120,9 +120,12 @@ const AirdropList = ({ asyncData }: { asyncData: AsyncData<any> }) => {
           if (!data) return null;
           const airdrops = data?.airdropUsers?.nodes;
           const sortedAirdrops = sortUserAirdrops(airdrops);
-          console.log('sortedAirdrops', sortedAirdrops);
+
           return (
-            <div>
+            <div className={styles.airdropClaimContainer}>
+              <Typography.Title level={3} className={styles.airdropClaimTitle}>
+                {t('airdrop.claimTitle', { token: TOKEN })}
+              </Typography.Title>
               <Typography.Text className={styles.airdropClaimAmount}>Claim KSQT</Typography.Text>
               <Table
                 columns={columns}

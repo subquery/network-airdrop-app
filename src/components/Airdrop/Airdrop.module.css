@@ -8,6 +8,11 @@
   margin: 1rem 0;
 }
 
+.airdropClaimTitle {
+  display: flex;
+  align-items: flex-start;
+}
+
 .airdropClaimAmount {
   width: 100%;
   display: flex;
