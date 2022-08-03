@@ -23,3 +23,14 @@
   border-radius: 6px;
   color: white;
 }
+
+.amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* TODO: add theme */
+.amountText {
+  color: white !important;
+}

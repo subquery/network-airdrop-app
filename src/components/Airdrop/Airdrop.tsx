@@ -7,6 +7,7 @@ import { Button, Table, TableProps, Typography, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { formatEther } from '@ethersproject/units';
+import { BigNumber, BigNumberish } from 'ethers';
 import styles from './Airdrop.module.css';
 import { useWeb3 } from '../../containers';
 import { useAirdropsByAccount } from '../../containers/QueryAirdrop';
@@ -16,6 +17,7 @@ import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from '../../constants';
 import { TableText } from '../Table';
 import { TableTitle } from '../Table/TableTitle';
 import { AirdropClaimStatus } from '../../__generated__/airdropSubql/globalTypes';
+import { formatAmount } from '../../utils';
 
 export enum AirdropRoundStatus {
   CLAIMED = 'CLAIMED',
@@ -65,15 +67,17 @@ const columns: TableProps<SortedUserAirdrops>['columns'] = [
   }
 ];
 
-const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): Array<SortedUserAirdrops> => {
+const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAirdrops>, BigNumber] => {
+  let unlockedAirdropAmount = BigNumber.from('0');
   const sortedUserAirdrops = userAirdrops.map((userAirdrop) => {
-    const { status, airdrop } = userAirdrop;
+    const { status, airdrop, amount } = userAirdrop;
     const hasUserClaimed = status === AirdropClaimStatus.CLAIMED;
     const startTime = moment(airdrop?.startTime);
     const endTime = moment(airdrop?.endTime);
 
     const isAfterStartTime = startTime.isAfter();
     if (isAfterStartTime) {
+      unlockedAirdropAmount = BigNumber.from(amount.toString()).add(unlockedAirdropAmount);
       return {
         ...userAirdrop,
         sortedStatus: AirdropRoundStatus.LOCKED,
@@ -105,8 +109,21 @@ const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): Array<SortedUserAir
     };
   });
 
-  return sortedUserAirdrops;
+  return [sortedUserAirdrops, unlockedAirdropAmount];
 };
+
+const AirdropAmountHeader = ({ airdropAmounts }: { airdropAmounts: Array<{ amount: BigNumberish; type: string }> }) => (
+  <div className={styles.airdropClaimAmount}>
+    {airdropAmounts.map((airdropAmount) => (
+      <div key={airdropAmount.type} className={styles.amount}>
+        <Typography.Title level={5} className={styles.amountText}>
+          {airdropAmount.type}
+        </Typography.Title>
+        <Typography.Text className={styles.amountText}>{formatAmount(airdropAmount.amount)}</Typography.Text>
+      </div>
+    ))}
+  </div>
+);
 
 const AirdropList = ({ asyncData }: { asyncData: AsyncData<any> }) => {
   const { t } = useTranslation();
@@ -119,14 +136,24 @@ const AirdropList = ({ asyncData }: { asyncData: AsyncData<any> }) => {
         data: (data) => {
           if (!data) return null;
           const airdrops = data?.airdropUsers?.nodes;
-          const sortedAirdrops = sortUserAirdrops(airdrops);
+          const [sortedAirdrops, unlockedAirdropAmount] = sortUserAirdrops(airdrops);
+          const { user } = sortedAirdrops[0];
+          const totalAirdropAmount = user?.totalAirdropAmount?.toString();
+          const claimedAmount = user?.claimedAmount?.toString();
 
           return (
             <div className={styles.airdropClaimContainer}>
               <Typography.Title level={3} className={styles.airdropClaimTitle}>
                 {t('airdrop.claimTitle', { token: TOKEN })}
               </Typography.Title>
-              <Typography.Text className={styles.airdropClaimAmount}>Claim KSQT</Typography.Text>
+              <AirdropAmountHeader
+                airdropAmounts={[
+                  { amount: totalAirdropAmount ?? '0', type: t('airdrop.total') },
+                  { amount: claimedAmount ?? '0', type: t('airdrop.claimed') },
+                  { amount: unlockedAirdropAmount ?? '0', type: t('airdrop.unlocked') }
+                ]}
+              />
+
               <Table
                 columns={columns}
                 dataSource={sortedAirdrops}
