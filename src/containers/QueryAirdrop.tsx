@@ -24,11 +24,15 @@ const GET_AIRDROPS = gql`
 
 const GET_AIRDROPS_BY_ACCOUNT = gql`
   query GetAirdropsByAccount($account: String!) {
-    airdropUsers(filter: { address: { equalTo: $account } }) {
+    airdropUsers(filter: { userId: { equalTo: $account } }) {
       totalCount
       nodes {
         id
-        address
+        user {
+          id
+          totalAirdropAmount
+          claimedAmount
+        }
         airdrop {
           id
           tokenAddress

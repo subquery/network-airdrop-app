@@ -1,6 +1,8 @@
 export * from './urls';
 export * from './colors';
 
+export const DATE_FORMAT = 'MMMM Do YY, h:mm:ss a';
+
 export const TOKEN = 'kSQT';
 
 // TODO: Confirm airdrop category name for each round
