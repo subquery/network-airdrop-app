@@ -7,7 +7,7 @@ import { Button, Table, TableProps, Typography, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { formatEther } from '@ethersproject/units';
-import { BigNumber, BigNumberish } from 'ethers';
+import { BigNumber } from 'ethers';
 import styles from './Airdrop.module.css';
 import { useWeb3 } from '../../containers';
 import { useAirdropsByAccount } from '../../containers/QueryAirdrop';
@@ -21,6 +21,8 @@ import { TableText } from '../Table';
 import { TableTitle } from '../Table/TableTitle';
 import { AirdropClaimStatus } from '../../__generated__/airdropSubql/globalTypes';
 import { formatAmount } from '../../utils';
+import { AirdropAmountHeader } from './AirdropAmountHeader';
+import { AirdropClaimButton } from './AirdropClaimButton';
 
 enum AirdropRoundStatus {
   CLAIMED = 'CLAIMED',
@@ -119,37 +121,6 @@ const sortUserAirdrops = (
   return [sortedUserAirdrops, unlockedAirdropIds, unlockedAirdropAmount];
 };
 
-const AirdropAmountHeader = ({
-  airdropUser,
-  unlockedAirdropAmount
-}: {
-  airdropUser: AirdropUser | null;
-  unlockedAirdropAmount: BigNumber;
-}) => {
-  const { t } = useTranslation();
-  const totalAirdropAmount = airdropUser?.totalAirdropAmount?.toString() ?? '0';
-  const claimedAmount = airdropUser?.claimedAmount?.toString() ?? '0';
-
-  const airdropAmounts = [
-    { amount: totalAirdropAmount, type: t('airdrop.total') },
-    { amount: claimedAmount, type: t('airdrop.claimed') },
-    { amount: unlockedAirdropAmount, type: t('airdrop.unlocked') }
-  ];
-
-  return (
-    <div className={styles.airdropClaimAmount}>
-      {airdropAmounts.map((airdropAmount) => (
-        <div key={airdropAmount.type} className={styles.amount}>
-          <Typography.Title level={5} className={styles.amountText}>
-            {airdropAmount.type}
-          </Typography.Title>
-          <Typography.Text className={styles.amountText}>{formatAmount(airdropAmount.amount)}</Typography.Text>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 export const Airdrop: VFC = () => {
   const { t } = useTranslation();
   const { account } = useWeb3();
@@ -179,9 +150,7 @@ export const Airdrop: VFC = () => {
                     rowKey="id"
                     pagination={{ hideOnSinglePage: true }}
                   />
-                  <Button type="ghost" shape="round" block disabled size="large" className={styles.claimedButton}>
-                    {unlockedAirdropIds.length > 0 ? 'Claim the token' : 'There is no airdrop available to be claimed.'}
-                  </Button>
+                  <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds} />
                 </>
               )}
             </div>
