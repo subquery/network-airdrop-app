@@ -2362,6 +2362,11 @@
   resolved "https://registry.yarnpkg.com/@oclif/screen/-/screen-3.0.2.tgz#969054308fe98d130c02844a45cc792199b75670"
   integrity sha512-S/SF/XYJeevwIgHFmVDAFRUvM3m+OjhvCAYMk78ZJQCYCQ5wS7j+LTt1ZEv2jpEEGg2tx/F6TYYWxddNAYHrFQ==
 
+"@openzeppelin/contracts-upgradeable@^4.5.2":
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.7.2.tgz#414096e21f048200cbb7ad4fe4c6de2e822513bf"
+  integrity sha512-3dgc6qVmFch/uOmlmKnw5/v3JxwXcZD4T10/9CI1OUbX8AqjoZrBGKfxN1z3QxnIXRU/X31/BItJezJSDDTe7Q==
+
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.5.7.tgz#58f8217ba70069cc6a73f5d7e05e85b458c150e2"
@@ -2444,6 +2449,13 @@
   integrity sha512-OAPJUAtgeINhh/TAlUID4QTs53Njm7xzddaVlEs/SXwgtiD1tW22zAB/W1wdqfrpmikgaWQ9Fw6Ws+hsiRm5Vg==
   dependencies:
     "@sinonjs/commons" "^1.7.0"
+
+"@subql/contract-sdk@^0.7.1-2":
+  version "0.7.1-6"
+  resolved "https://registry.yarnpkg.com/@subql/contract-sdk/-/contract-sdk-0.7.1-6.tgz#498644d887e7a68a4bc6ba00fcfbe8f2177d726e"
+  integrity sha512-pNNfArYEaXaOYa5K3BMyOXru+JYzMfKNPqiFxnigKttjk4yC2St5tuSuV78tpse+9Kre9oq7WY1ky1+DA8eZlg==
+  dependencies:
+    "@openzeppelin/contracts-upgradeable" "^4.5.2"
 
 "@subql/react-ui@1.0.1-19":
   version "1.0.1-19"

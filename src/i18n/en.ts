@@ -39,7 +39,9 @@ const en = {
       youMissed: 'You missed it.',
       nextMilestone: 'Next Milestone',
       claimTitle: ' Your Airdrop ({{token}})',
-      claimDateTBA: 'Claim date to be announced'
+      claimDateTBA: 'Claim date to be announced',
+      claim: 'Claim the token',
+      nonToClaim: 'There is no airdrop available for connected address.'
     },
     wallet: {
       connectionErr: 'Unfortunately we did not recceive the confirmation, Please try again.',
@@ -70,6 +72,12 @@ const en = {
     error: {
       404: '404',
       pageNotFound: 'Oops! Page not found'
+    },
+    notification: {
+      success: 'Success!',
+      error: 'Sorry, there is something wrong',
+      txSubmittedTitle: 'Transaction has been submitted. Please wait for the transaction confirmed.',
+      changeValidIn15s: 'Change will be reflected on dashboard in 15s.'
     }
   }
 };
