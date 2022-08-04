@@ -26,4 +26,3 @@ yarn-error.log*
 # Generated graphql types
 __generated__
 src/globalTypes.ts
-.env
