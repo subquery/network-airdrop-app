@@ -38,7 +38,7 @@ const en = {
       total: 'Total',
       youMissed: 'You missed it.',
       nextMilestone: 'Next Milestone',
-      claimTitle: ' Claim {{token}}',
+      claimTitle: ' Your Airdrop ({{token}})',
       claimDateTBA: 'Claim date to be announced'
     },
     wallet: {

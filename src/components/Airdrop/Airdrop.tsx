@@ -11,7 +11,10 @@ import { BigNumber, BigNumberish } from 'ethers';
 import styles from './Airdrop.module.css';
 import { useWeb3 } from '../../containers';
 import { useAirdropsByAccount } from '../../containers/QueryAirdrop';
-import { GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop } from '../../__generated__/airdropSubql/GetAirdropsByAccount';
+import {
+  GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop,
+  GetAirdropsByAccount_airdropUsers_nodes_user as AirdropUser
+} from '../../__generated__/airdropSubql/GetAirdropsByAccount';
 import { renderAsync } from '../../utils/renderAsync';
 import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from '../../constants';
 import { TableText } from '../Table';
@@ -19,7 +22,7 @@ import { TableTitle } from '../Table/TableTitle';
 import { AirdropClaimStatus } from '../../__generated__/airdropSubql/globalTypes';
 import { formatAmount } from '../../utils';
 
-export enum AirdropRoundStatus {
+enum AirdropRoundStatus {
   CLAIMED = 'CLAIMED',
   EXPIRED = 'EXPIRED',
   LOCKED = 'LOCKED',
@@ -116,18 +119,36 @@ const sortUserAirdrops = (
   return [sortedUserAirdrops, unlockedAirdropIds, unlockedAirdropAmount];
 };
 
-const AirdropAmountHeader = ({ airdropAmounts }: { airdropAmounts: Array<{ amount: BigNumberish; type: string }> }) => (
-  <div className={styles.airdropClaimAmount}>
-    {airdropAmounts.map((airdropAmount) => (
-      <div key={airdropAmount.type} className={styles.amount}>
-        <Typography.Title level={5} className={styles.amountText}>
-          {airdropAmount.type}
-        </Typography.Title>
-        <Typography.Text className={styles.amountText}>{formatAmount(airdropAmount.amount)}</Typography.Text>
-      </div>
-    ))}
-  </div>
-);
+const AirdropAmountHeader = ({
+  airdropUser,
+  unlockedAirdropAmount
+}: {
+  airdropUser: AirdropUser | null;
+  unlockedAirdropAmount: BigNumber;
+}) => {
+  const { t } = useTranslation();
+  const totalAirdropAmount = airdropUser?.totalAirdropAmount?.toString() ?? '0';
+  const claimedAmount = airdropUser?.claimedAmount?.toString() ?? '0';
+
+  const airdropAmounts = [
+    { amount: totalAirdropAmount, type: t('airdrop.total') },
+    { amount: claimedAmount, type: t('airdrop.claimed') },
+    { amount: unlockedAirdropAmount, type: t('airdrop.unlocked') }
+  ];
+
+  return (
+    <div className={styles.airdropClaimAmount}>
+      {airdropAmounts.map((airdropAmount) => (
+        <div key={airdropAmount.type} className={styles.amount}>
+          <Typography.Title level={5} className={styles.amountText}>
+            {airdropAmount.type}
+          </Typography.Title>
+          <Typography.Text className={styles.amountText}>{formatAmount(airdropAmount.amount)}</Typography.Text>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export const Airdrop: VFC = () => {
   const { t } = useTranslation();
@@ -136,29 +157,19 @@ export const Airdrop: VFC = () => {
   return (
     <div className={styles.container}>
       {renderAsync(accountAirdrop, {
-        error: (e) => (
-          <Typography.Text type="danger">{`Error: Failed to get airdrop information. \n ${e}`}</Typography.Text>
-        ),
+        error: (e) => <Typography.Text type="danger">{`Failed to get airdrop information. \n ${e}`}</Typography.Text>,
         data: (data) => {
           if (!data) return null;
           const airdrops = data?.airdropUsers?.nodes as Array<UserAirdrop>;
           const [sortedAirdrops, unlockedAirdropIds, unlockedAirdropAmount] = sortUserAirdrops(airdrops);
           const { user } = sortedAirdrops[0] ?? {};
-          const totalAirdropAmount = user?.totalAirdropAmount?.toString();
-          const claimedAmount = user?.claimedAmount?.toString();
 
           return (
             <div className={styles.airdropClaimContainer}>
               <Typography.Title level={3} className={styles.airdropClaimTitle}>
                 {t('airdrop.claimTitle', { token: TOKEN })}
               </Typography.Title>
-              <AirdropAmountHeader
-                airdropAmounts={[
-                  { amount: totalAirdropAmount ?? '0', type: t('airdrop.total') },
-                  { amount: claimedAmount ?? '0', type: t('airdrop.claimed') },
-                  { amount: unlockedAirdropAmount ?? '0', type: t('airdrop.unlocked') }
-                ]}
-              />
+              <AirdropAmountHeader airdropUser={user} unlockedAirdropAmount={unlockedAirdropAmount} />
 
               {sortedAirdrops.length > 0 && (
                 <>
