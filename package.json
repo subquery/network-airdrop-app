@@ -25,6 +25,7 @@
     "@web3-react/types": "8.0.3-beta.0",
     "antd": "^4.22.2",
     "apollo": "^2.34.0",
+    "assert": "^2.0.0",
     "clsx": "^1.2.1",
     "ethers": "^5.5.3",
     "graphql": "15.6.1",
@@ -54,12 +55,6 @@
     "eject": "react-scripts eject",
     "lint": "eslint --fix",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [

@@ -8,19 +8,19 @@ import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { formatEther } from '@ethersproject/units';
 import { BigNumber } from 'ethers';
+import { formatAmount } from 'utils';
+import { useWeb3 } from 'containers';
+import { useAirdropsByAccount } from 'containers/QueryAirdrop';
+import { renderAsync } from 'utils/renderAsync';
+import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from 'appConstants';
 import styles from './Airdrop.module.css';
-import { useWeb3 } from '../../containers';
-import { useAirdropsByAccount } from '../../containers/QueryAirdrop';
 import {
   GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop,
   GetAirdropsByAccount_airdropUsers_nodes_user as AirdropUser
 } from '../../__generated__/airdropSubql/GetAirdropsByAccount';
-import { renderAsync } from '../../utils/renderAsync';
-import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from '../../constants';
 import { TableText } from '../Table';
 import { TableTitle } from '../Table/TableTitle';
 import { AirdropClaimStatus } from '../../__generated__/airdropSubql/globalTypes';
-import { formatAmount } from '../../utils';
 import { AirdropAmountHeader } from './AirdropAmountHeader';
 import { AirdropClaimButton } from './AirdropClaimButton';
 
@@ -150,7 +150,7 @@ export const Airdrop: VFC = () => {
                     rowKey="id"
                     pagination={{ hideOnSinglePage: true }}
                   />
-                  <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds} />
+                  <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds.filter(n => n) as string[]} />
                 </>
               )}
             </div>
