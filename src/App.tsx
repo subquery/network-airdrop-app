@@ -2,13 +2,13 @@ import { useContext, useEffect } from 'react';
 import useSWR from 'swr';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import './i18n';
-import { Home, NotFoundPage } from './pages';
-import { Header, Footer } from './components';
-import { AppContext } from './contextProvider';
-import { fetcher } from './utils';
-import { TERMS_URL } from './constants/urls';
-import { TermsAndConditions } from './pages/termsAndConditions';
+import 'i18n';
+import { TERMS_URL } from 'appConstants';
+import { Home, NotFoundPage } from 'pages';
+import { Header, Footer } from 'components';
+import { AppContext } from 'contextProvider';
+import { fetcher } from 'utils';
+import { TermsAndConditions } from 'pages/termsAndConditions';
 
 function App() {
   const { setTermsAndConditions, setTermsAndConditionsVersion } = useContext(AppContext);

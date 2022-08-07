@@ -5,12 +5,12 @@ import * as React from 'react';
 import { Button } from 'antd';
 import { useTranslation } from 'react-i18next';
 import assert from 'assert';
+import { useContracts } from 'hooks';
+import { takeContractTx } from 'utils/takeContractTx';
 import styles from './Airdrop.module.css';
-import { useContracts } from '../../hooks';
-import { takeContractTx } from '../../utils/takeContractTx';
 
 export const AirdropClaimButton: React.FC<{
-  unlockedAirdropIds: Array<string>;
+  unlockedAirdropIds: string[]
 }> = ({ unlockedAirdropIds }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const { t } = useTranslation();

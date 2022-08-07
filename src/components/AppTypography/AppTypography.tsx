@@ -6,8 +6,8 @@ import { Tooltip, Typography as AntdTypography } from 'antd';
 import { AiOutlineQuestionCircle } from 'react-icons/ai';
 import clsx from 'clsx';
 import { TextProps } from 'antd/lib/typography/Text';
+import { COLORS } from 'appConstants';
 import styles from './AppTypography.module.css';
-import { COLORS } from '../../constants';
 
 /**
  * Text with tooltip option
