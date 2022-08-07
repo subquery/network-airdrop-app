@@ -5,8 +5,8 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Address, Button, Dropdown, Typography } from '@subql/react-ui';
+import { injectedConntector, useWeb3 } from 'containers';
 import styles from './Header.module.css';
-import { injectedConntector, useWeb3 } from '../../containers';
 
 // TODO: improve dropdown button
 export const Header: React.VFC = () => {

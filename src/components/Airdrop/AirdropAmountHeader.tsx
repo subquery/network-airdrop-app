@@ -5,12 +5,12 @@ import * as React from 'react';
 import { Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { BigNumber } from 'ethers';
+import { formatAmount } from 'utils';
 import styles from './Airdrop.module.css';
 import {
   GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop,
   GetAirdropsByAccount_airdropUsers_nodes_user as AirdropUser
 } from '../../__generated__/airdropSubql/GetAirdropsByAccount';
-import { formatAmount } from '../../utils';
 
 export const AirdropAmountHeader: React.FC<{
   airdropUser: AirdropUser | null;
