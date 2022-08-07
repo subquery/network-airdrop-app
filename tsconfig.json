@@ -27,6 +27,5 @@
       "@utils/*": ["utils/*"]
     }
   },
-  "include": ["src", "types"],
-  // "exclude": ["src/__generated__"]
+  "include": ["src", "types"]
 }
