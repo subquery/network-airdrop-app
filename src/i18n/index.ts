@@ -8,7 +8,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './en';
 
 export const resources = {
-  en,
+  en
 } as const;
 
 i18n
@@ -18,9 +18,9 @@ i18n
     debug: true,
     fallbackLng: 'en',
     interpolation: {
-      escapeValue: false, // not needed for react as it escapes by default
+      escapeValue: false // not needed for react as it escapes by default
     },
-    resources,
+    resources
   });
 
 export default i18n;

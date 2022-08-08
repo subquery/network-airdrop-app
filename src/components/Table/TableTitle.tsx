@@ -28,7 +28,8 @@ export const TableTitle: React.FC<TableTitleProps> = ({ title, children: childre
       content={content}
       tooltip={tooltip}
       noTooltipIcon={!tooltip}
-      tooltipColor={COLORS.gray700}>
+      tooltipColor={COLORS.gray700}
+    >
       {children}
     </AppTypography>
   );

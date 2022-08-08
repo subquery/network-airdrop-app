@@ -1,9 +1,9 @@
 import { useContext, useEffect } from 'react';
-import { Route,Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import useSWR from 'swr';
 
 import { TERMS_URL } from 'appConstants';
-import { Footer,Header } from 'components';
+import { Footer, Header } from 'components';
 import { AppContext } from 'contextProvider';
 import { Home, NotFoundPage } from 'pages';
 import { TermsAndConditions } from 'pages/termsAndConditions';
