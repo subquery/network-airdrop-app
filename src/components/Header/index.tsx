@@ -50,7 +50,8 @@ export const Header: React.VFC = () => {
             <Dropdown
               items={[{ key: 'disconnect', label: 'Disconnect' }]}
               onSelected={handleSelected}
-              colorScheme="gradient">
+              colorScheme="gradient"
+            >
               <Address address={account} size="large" />
             </Dropdown>
           ) : (

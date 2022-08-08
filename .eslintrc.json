@@ -62,17 +62,9 @@
               // Packages. `react` related packages come first.
               ["^react", "^@?\\w"],
               // Internal packages.
-              [
-                "^(src|appConstants|components|containers|contextProvider|hooks|i18n|pages|utils|__generated__)(/.*|$)"
-              ],
+              ["^(src|appConstants|components|containers|contextProvider|hooks|i18n|pages|utils|__generated__)(/.*|$)"],
               // Other local imports. Put same-folder imports and `.` last.
-              [
-                "^\\.\\.(?!/?$)",
-                "^\\.\\./?$",
-                "^\\./(?=.*/)(?!/?$)",
-                "^\\.(?!/?$)",
-                "^\\./?$"
-              ]
+              ["^\\.\\.(?!/?$)", "^\\.\\./?$", "^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"]
             ]
           }
         ]
