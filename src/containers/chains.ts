@@ -32,35 +32,33 @@ export const CHAINS: { [chainId: number]: BasicChainInformation | ExtendedChainI
   1: {
     urls: [
       process.env.infuraKey ? `https://mainnet.infura.io/v3/${process.env.infuraKey}` : '',
-      process.env.alchemyKey
-        ? `https://eth-mainnet.alchemyapi.io/v2/${process.env.alchemyKey}`
-        : '',
+      process.env.alchemyKey ? `https://eth-mainnet.alchemyapi.io/v2/${process.env.alchemyKey}` : '',
       'https://cloudflare-eth.com'
     ].filter((url) => url !== ''),
     name: 'Mainnet'
   },
   3: {
-    urls: [
-      process.env.infuraKey ? `https://ropsten.infura.io/v3/${process.env.infuraKey}` : ''
-    ].filter((url) => url !== ''),
+    urls: [process.env.infuraKey ? `https://ropsten.infura.io/v3/${process.env.infuraKey}` : ''].filter(
+      (url) => url !== ''
+    ),
     name: 'Ropsten'
   },
   4: {
-    urls: [
-      process.env.infuraKey ? `https://rinkeby.infura.io/v3/${process.env.infuraKey}` : ''
-    ].filter((url) => url !== ''),
+    urls: [process.env.infuraKey ? `https://rinkeby.infura.io/v3/${process.env.infuraKey}` : ''].filter(
+      (url) => url !== ''
+    ),
     name: 'Rinkeby'
   },
   5: {
-    urls: [
-      process.env.infuraKey ? `https://goerli.infura.io/v3/${process.env.infuraKey}` : ''
-    ].filter((url) => url !== ''),
+    urls: [process.env.infuraKey ? `https://goerli.infura.io/v3/${process.env.infuraKey}` : ''].filter(
+      (url) => url !== ''
+    ),
     name: 'Görli'
   },
   42: {
-    urls: [
-      process.env.infuraKey ? `https://kovan.infura.io/v3/${process.env.infuraKey}` : ''
-    ].filter((url) => url !== ''),
+    urls: [process.env.infuraKey ? `https://kovan.infura.io/v3/${process.env.infuraKey}` : ''].filter(
+      (url) => url !== ''
+    ),
     name: 'Kovan'
   },
   // Optimism
@@ -112,9 +110,9 @@ export const CHAINS: { [chainId: number]: BasicChainInformation | ExtendedChainI
     blockExplorerUrls: ['https://polygonscan.com']
   },
   80001: {
-    urls: [
-      process.env.infuraKey ? `https://polygon-mumbai.infura.io/v3/${process.env.infuraKey}` : ''
-    ].filter((url) => url !== ''),
+    urls: [process.env.infuraKey ? `https://polygon-mumbai.infura.io/v3/${process.env.infuraKey}` : ''].filter(
+      (url) => url !== ''
+    ),
     name: 'Polygon Mumbai',
     nativeCurrency: MATIC,
     blockExplorerUrls: ['https://mumbai.polygonscan.com']

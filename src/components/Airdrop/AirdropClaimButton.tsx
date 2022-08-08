@@ -12,7 +12,7 @@ import { takeContractTx } from 'utils/takeContractTx';
 import styles from './Airdrop.module.css';
 
 export const AirdropClaimButton: React.FC<{
-  unlockedAirdropIds: Array<string>
+  unlockedAirdropIds: Array<string>;
 }> = ({ unlockedAirdropIds }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const { t } = useTranslation();
@@ -39,7 +39,8 @@ export const AirdropClaimButton: React.FC<{
       size="large"
       onClick={onClick}
       className={styles.claimedButton}
-      loading={isLoading}>
+      loading={isLoading}
+    >
       {buttonText}
     </Button>
   );

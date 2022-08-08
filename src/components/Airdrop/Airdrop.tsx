@@ -1,17 +1,15 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC,VFC } from 'react';
+import { FC, VFC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatEther } from '@ethersproject/units';
-import { Table, TableProps, Tag,Typography } from 'antd';
+import { Table, TableProps, Tag, Typography } from 'antd';
 import { BigNumber } from 'ethers';
 import i18next from 'i18next';
 import moment from 'moment';
 
-import {
-  GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop
-} from '__generated__/airdropSubql/GetAirdropsByAccount';
+import { GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop } from '__generated__/airdropSubql/GetAirdropsByAccount';
 import { AirdropClaimStatus } from '__generated__/airdropSubql/globalTypes';
 import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from 'appConstants';
 import { useWeb3 } from 'containers';
@@ -72,9 +70,7 @@ const columns: TableProps<SortedUserAirdrops>['columns'] = [
   }
 ];
 
-const sortUserAirdrops = (
-  userAirdrops: Array<UserAirdrop>
-): [Array<SortedUserAirdrops>, Array<string>, BigNumber] => {
+const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAirdrops>, Array<string>, BigNumber] => {
   const unlockedAirdropIds: Array<string> = [];
   let unlockedAirdropAmount = BigNumber.from('0');
   const sortedUserAirdrops = userAirdrops.map((userAirdrop) => {

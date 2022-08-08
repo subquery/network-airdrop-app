@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaArrowRight } from 'react-icons/fa';
-import { Alert,Button, Typography } from '@subql/react-ui';
+import { Alert, Button, Typography } from '@subql/react-ui';
 
 import styles from './ConnectWallet.module.css';
 
