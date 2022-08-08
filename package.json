@@ -25,6 +25,7 @@
     "@web3-react/types": "8.0.3-beta.0",
     "antd": "^4.22.2",
     "apollo": "^2.34.0",
+    "assert": "^2.0.0",
     "clsx": "^1.2.1",
     "ethers": "^5.5.3",
     "graphql": "15.6.1",
@@ -55,12 +56,6 @@
     "lint": "eslint --fix",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -82,12 +77,14 @@
     "eslint": "^8.7.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-import-resolver-typescript": "^2.5.0",
-    "eslint-plugin-import": "^2.25.4",
+    "eslint-import-resolver-typescript": "^3.4.0",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^7.0.4",
     "postcss": "^8.4.5",
     "prettier": "^2.5.1",

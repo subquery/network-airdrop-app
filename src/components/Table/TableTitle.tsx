@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as React from 'react';
-import { COLORS } from '../../constants';
+
+import { COLORS } from 'appConstants';
+
 import { AppTypography } from '../AppTypography';
 
 /**

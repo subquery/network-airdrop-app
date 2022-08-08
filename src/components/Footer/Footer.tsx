@@ -4,6 +4,7 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Typography } from '@subql/react-ui';
+
 import styles from './Footer.module.css';
 
 const LinkButton: React.VFC<{

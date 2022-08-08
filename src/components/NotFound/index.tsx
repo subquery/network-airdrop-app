@@ -4,6 +4,7 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@subql/react-ui';
+
 import styles from './NotFound.module.css';
 
 export const NotFound: React.VFC = () => {

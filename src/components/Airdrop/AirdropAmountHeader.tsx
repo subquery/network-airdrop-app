@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as React from 'react';
-import { Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { Typography } from 'antd';
 import { BigNumber } from 'ethers';
-import styles from './Airdrop.module.css';
+
 import {
-  GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop,
   GetAirdropsByAccount_airdropUsers_nodes_user as AirdropUser
-} from '../../__generated__/airdropSubql/GetAirdropsByAccount';
-import { formatAmount } from '../../utils';
+} from '__generated__/airdropSubql/GetAirdropsByAccount';
+import { formatAmount } from 'utils';
+
+import styles from './Airdrop.module.css';
 
 export const AirdropAmountHeader: React.FC<{
   airdropUser: AirdropUser | null;

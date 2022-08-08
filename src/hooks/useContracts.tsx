@@ -4,6 +4,7 @@
 import React from 'react';
 import { ContractSDK } from '@subql/contract-sdk';
 import deploymentDetails from '@subql/contract-sdk/publish/testnet.json';
+
 import { useWeb3 } from '../containers';
 
 export function useContracts(): ContractSDK | undefined {

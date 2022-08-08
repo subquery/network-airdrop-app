@@ -1,26 +1,26 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { VFC, FC } from 'react';
-import i18next from 'i18next';
-import { Button, Table, TableProps, Typography, Tag } from 'antd';
+import { FC,VFC } from 'react';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
 import { formatEther } from '@ethersproject/units';
+import { Table, TableProps, Tag,Typography } from 'antd';
 import { BigNumber } from 'ethers';
-import styles from './Airdrop.module.css';
-import { useWeb3 } from '../../containers';
-import { useAirdropsByAccount } from '../../containers/QueryAirdrop';
+import i18next from 'i18next';
+import moment from 'moment';
+
 import {
-  GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop,
-  GetAirdropsByAccount_airdropUsers_nodes_user as AirdropUser
-} from '../../__generated__/airdropSubql/GetAirdropsByAccount';
-import { renderAsync } from '../../utils/renderAsync';
-import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from '../../constants';
+  GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop
+} from '__generated__/airdropSubql/GetAirdropsByAccount';
+import { AirdropClaimStatus } from '__generated__/airdropSubql/globalTypes';
+import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from 'appConstants';
+import { useWeb3 } from 'containers';
+import { useAirdropsByAccount } from 'containers/QueryAirdrop';
+import { renderAsync } from 'utils/renderAsync';
+
 import { TableText } from '../Table';
 import { TableTitle } from '../Table/TableTitle';
-import { AirdropClaimStatus } from '../../__generated__/airdropSubql/globalTypes';
-import { formatAmount } from '../../utils';
+import styles from './Airdrop.module.css';
 import { AirdropAmountHeader } from './AirdropAmountHeader';
 import { AirdropClaimButton } from './AirdropClaimButton';
 
@@ -74,7 +74,7 @@ const columns: TableProps<SortedUserAirdrops>['columns'] = [
 
 const sortUserAirdrops = (
   userAirdrops: Array<UserAirdrop>
-): [Array<SortedUserAirdrops>, Array<string | undefined>, BigNumber] => {
+): [Array<SortedUserAirdrops>, Array<string>, BigNumber] => {
   const unlockedAirdropIds: Array<string> = [];
   let unlockedAirdropAmount = BigNumber.from('0');
   const sortedUserAirdrops = userAirdrops.map((userAirdrop) => {
@@ -85,7 +85,10 @@ const sortUserAirdrops = (
 
     const isAfterStartTime = startTime.isAfter();
     if (isAfterStartTime) {
-      unlockedAirdropIds.push(airdrop?.id ?? '');
+      const id = airdrop?.id;
+      if (id) {
+        unlockedAirdropIds.push(id);
+      }
       unlockedAirdropAmount = BigNumber.from(amount.toString()).add(unlockedAirdropAmount);
       return {
         ...userAirdrop,

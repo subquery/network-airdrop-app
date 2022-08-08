@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { Button, Typography, Alert } from '@subql/react-ui';
+import { useTranslation } from 'react-i18next';
 import { FaArrowRight } from 'react-icons/fa';
+import { Alert,Button, Typography } from '@subql/react-ui';
+
 import styles from './ConnectWallet.module.css';
 
 const Wallet: React.VFC<{ name: string; icon: string; onClick?: () => void }> = ({ name, icon, onClick }) => {

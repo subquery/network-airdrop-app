@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as React from 'react';
-import { Tooltip, Typography as AntdTypography } from 'antd';
 import { AiOutlineQuestionCircle } from 'react-icons/ai';
-import clsx from 'clsx';
+import { Tooltip, Typography as AntdTypography } from 'antd';
 import { TextProps } from 'antd/lib/typography/Text';
+import clsx from 'clsx';
+
+import { COLORS } from 'appConstants';
+
 import styles from './AppTypography.module.css';
-import { COLORS } from '../../constants';
 
 /**
  * Text with tooltip option

@@ -1,4 +1,4 @@
-import { createContext, useState, FC, useMemo, useContext } from 'react';
+import { createContext, FC,useMemo, useState } from 'react';
 
 const defaultAppContext = {
   error: null,
