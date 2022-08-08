@@ -1,4 +1,5 @@
 import { Airdrop } from 'components';
+import { Contact } from 'components/Contact';
 import { EmailSubscription } from 'components/EmailSubscription';
 import { FAQ } from 'components/FAQ';
 import { WalletDetect } from 'components/WalletDetect/WalletDetect';
@@ -15,6 +16,7 @@ export function Home() {
             <div className={styles.airdropContent}>
               <Airdrop />
               <EmailSubscription />
+              <Contact />
             </div>
           </div>
         </WalletDetect>

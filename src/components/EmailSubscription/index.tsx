@@ -3,7 +3,6 @@
 
 import { useState, VFC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { Button, TextInput, Toast,Typography } from '@subql/react-ui';
 import useSWR from 'swr';
 
@@ -19,7 +18,6 @@ interface ToastBar {
 
 export const EmailSubscription: VFC = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [email, setEmail] = useState<string>();
   const [onSubscribe, setOnSubscribe] = useState<boolean>();
   const [toastBar, setToastBar] = useState<ToastBar>();
@@ -67,12 +65,13 @@ export const EmailSubscription: VFC = () => {
         <Typography variant="small" className={styles.termsAndConditionsText}>
           {t('subscription.termsAndConditionsPart1')}
         </Typography>
-        <Button
-          type="link"
-          className={styles.linkText}
-          label={t('subscription.privacy')}
-          onClick={() => navigate('/terms-and-conditions')}
-        />
+        <a href="https://subquery.network/privacy">
+          <Button
+            type="link"
+            className={styles.linkText}
+            label={t('subscription.privacy')}
+          />  
+        </a>
         <Typography variant="small" className={styles.termsAndConditionsText}>{` ${t(
           'subscription.termsAndConditionsPart2'
         )}`}</Typography>
