@@ -1,0 +1,9 @@
+.container {
+    flex: auto;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.text {
+    font-size: 1.2em;
+}
