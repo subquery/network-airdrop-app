@@ -65,7 +65,7 @@ export const EmailSubscription: VFC = () => {
         <Typography variant="small" className={styles.termsAndConditionsText}>
           {t('subscription.termsAndConditionsPart1')}
         </Typography>
-        <a href="https://subquery.network/privacy">
+        <a href="https://subquery.network/privacy" target="_blank" rel="noreferrer">
           <Button
             type="link"
             className={styles.linkText}

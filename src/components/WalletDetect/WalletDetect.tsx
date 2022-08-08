@@ -6,8 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { Toast } from '@subql/react-ui';
 import clsx from 'clsx';
 
-import { Contact } from 'components/Contact';
-
 import { injectedConntector, useWeb3 } from '../../containers';
 import { ConnectWallet } from './ConnectWallet';
 import styles from './WalletDetect.module.css';
@@ -56,7 +54,9 @@ export const WalletDetect: React.FC<IWalletDetect> = ({
           {t(`airdrop.check`)} 
         </span>
         <ConnectWallet onConnect={handleConnectWallet} title={title} subTitle={subTitle} />
-        <Contact />
+        <div className={styles.contact}>
+          <span className={styles.contactText}>{t(`support.contact`)}</span>
+        </div>
       </div>
     );
   }
