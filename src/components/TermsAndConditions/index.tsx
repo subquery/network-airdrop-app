@@ -1,11 +1,12 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Typography } from '@subql/react-ui';
-import { t } from 'i18next';
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
+import { Typography } from '@subql/react-ui';
+import { t } from 'i18next';
 import remarkBreaks from 'remark-breaks';
+
 import { AppContext } from '../../contextProvider';
 import styles from './TermsAndConditions.module.css';
 

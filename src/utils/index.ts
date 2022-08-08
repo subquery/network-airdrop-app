@@ -1,5 +1,6 @@
 import { BigNumberish } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
+
 import { TOKEN } from 'appConstants';
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());

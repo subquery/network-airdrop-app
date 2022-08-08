@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as React from 'react';
+
 import { Spinner as DefaultSpinner } from '../components';
 
 type RenderResult = React.ReactElement | null;

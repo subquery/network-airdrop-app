@@ -13,7 +13,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": ["react", "@typescript-eslint", "simple-import-sort", "unused-imports"],
   "ignorePatterns": ["**/__generated__"],
   "rules": {
     "react/react-in-jsx-scope": "off",
@@ -33,6 +33,7 @@
     "no-console": "off",
     "react/jsx-no-useless-fragment": "off",
     "react/require-default-props": "off",
+    "unused-imports/no-unused-imports": "error",
     "react/no-unstable-nested-components": ["error", { "allowAsProps": true }],
     "import/extensions": [
       "error",
@@ -49,5 +50,33 @@
     "import/resolver": {
       "typescript": {}
     }
-  }
+  },
+  "overrides": [
+    {
+      "files": ["./src/**/*.{ts,tsx}"],
+      "rules": {
+        "simple-import-sort/imports": [
+          "error",
+          {
+            "groups": [
+              // Packages. `react` related packages come first.
+              ["^react", "^@?\\w"],
+              // Internal packages.
+              [
+                "^(src|appConstants|components|containers|contextProvider|hooks|i18n|pages|utils)(/.*|$)"
+              ],
+              // Other local imports. Put same-folder imports and `.` last.
+              [
+                "^\\.\\.(?!/?$)",
+                "^\\.\\./?$",
+                "^\\./(?=.*/)(?!/?$)",
+                "^\\.(?!/?$)",
+                "^\\./?$"
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

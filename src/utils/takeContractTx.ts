@@ -1,10 +1,9 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { ContractTransaction } from 'ethers';
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Spinner as DefaultSpinner } from '../components';
+import { ContractTransaction } from 'ethers';
+
 import { NotificationType, openNotificationWithIcon } from '../components/Notification';
 
 interface ITakeContractTx {

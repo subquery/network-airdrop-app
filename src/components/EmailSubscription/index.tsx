@@ -3,12 +3,13 @@
 
 import { useState, VFC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, TextInput, Typography, Toast } from '@subql/react-ui';
-
-import useSWR from 'swr';
 import { useNavigate } from 'react-router-dom';
+import { Button, TextInput, Toast,Typography } from '@subql/react-ui';
+import useSWR from 'swr';
+
 import { EMAIL_SUSCRIBE_URL } from 'appConstants';
 import { fetcherWithOps } from 'utils';
+
 import styles from './EmailSubscription.module.css';
 
 interface ToastBar {

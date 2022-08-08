@@ -1,13 +1,14 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Toast } from '@subql/react-ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Toast } from '@subql/react-ui';
 import clsx from 'clsx';
+
 import { injectedConntector, useWeb3 } from '../../containers';
-import styles from './WalletDetect.module.css';
 import { ConnectWallet } from './ConnectWallet';
+import styles from './WalletDetect.module.css';
 
 interface IWalletDetect {
   title?: string;

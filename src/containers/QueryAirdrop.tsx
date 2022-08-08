@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { gql, OperationVariables, QueryResult, useQuery } from '@apollo/client';
+
 import { GetAirdrops } from '../__generated__/airdropSubql/GetAirdrops';
 import {
   GetAirdropsByAccount,

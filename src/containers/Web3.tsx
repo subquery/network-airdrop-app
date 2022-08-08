@@ -1,12 +1,12 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react';
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core';
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { NetworkConnector } from '@web3-react/network-connector';
 import { providers } from 'ethers';
-import React from 'react';
 
 const RPC_URLS: Record<number, string> = {
   1280: 'https://sqtn.api.onfinality.io/public',

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { notification } from 'antd';
+
 import { COLORS } from 'appConstants';
 
 export enum NotificationType {
