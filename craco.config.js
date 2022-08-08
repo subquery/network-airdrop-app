@@ -20,6 +20,7 @@ module.exports = {
       i18n: resolve(__dirname, 'src/i18n'),
       pages: resolve(__dirname, 'src/pages'),
       utils: resolve(__dirname, 'src/utils'),
+      __generated__: resolve(__dirname, 'src/__generated__'),
     }
   },
 };

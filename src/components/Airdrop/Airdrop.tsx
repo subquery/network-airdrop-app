@@ -9,15 +9,15 @@ import { BigNumber } from 'ethers';
 import i18next from 'i18next';
 import moment from 'moment';
 
+import {
+  GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop
+} from '__generated__/airdropSubql/GetAirdropsByAccount';
+import { AirdropClaimStatus } from '__generated__/airdropSubql/globalTypes';
 import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from 'appConstants';
 import { useWeb3 } from 'containers';
 import { useAirdropsByAccount } from 'containers/QueryAirdrop';
 import { renderAsync } from 'utils/renderAsync';
 
-import {
-  GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop
-} from '../../__generated__/airdropSubql/GetAirdropsByAccount';
-import { AirdropClaimStatus } from '../../__generated__/airdropSubql/globalTypes';
 import { TableText } from '../Table';
 import { TableTitle } from '../Table/TableTitle';
 import styles from './Airdrop.module.css';

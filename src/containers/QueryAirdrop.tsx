@@ -3,11 +3,11 @@
 
 import { gql, OperationVariables, QueryResult, useQuery } from '@apollo/client';
 
-import { GetAirdrops } from '../__generated__/airdropSubql/GetAirdrops';
+import { GetAirdrops } from '__generated__/airdropSubql/GetAirdrops';
 import {
   GetAirdropsByAccount,
   GetAirdropsByAccountVariables
-} from '../__generated__/airdropSubql/GetAirdropsByAccount';
+} from '__generated__/airdropSubql/GetAirdropsByAccount';
 
 const GET_AIRDROPS = gql`
   query GetAirdrops {

@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { Typography } from 'antd';
 import { BigNumber } from 'ethers';
 
-import { formatAmount } from 'utils';
-
 import {
   GetAirdropsByAccount_airdropUsers_nodes_user as AirdropUser
-} from '../../__generated__/airdropSubql/GetAirdropsByAccount';
+} from '__generated__/airdropSubql/GetAirdropsByAccount';
+import { formatAmount } from 'utils';
+
 import styles from './Airdrop.module.css';
 
 export const AirdropAmountHeader: React.FC<{
