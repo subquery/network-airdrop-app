@@ -74,7 +74,7 @@ const columns: TableProps<SortedUserAirdrops>['columns'] = [
 
 const sortUserAirdrops = (
   userAirdrops: Array<UserAirdrop>
-): [Array<SortedUserAirdrops>, Array<string | undefined>, BigNumber] => {
+): [Array<SortedUserAirdrops>, Array<string>, BigNumber] => {
   const unlockedAirdropIds: Array<string> = [];
   let unlockedAirdropAmount = BigNumber.from('0');
   const sortedUserAirdrops = userAirdrops.map((userAirdrop) => {
@@ -85,7 +85,10 @@ const sortUserAirdrops = (
 
     const isAfterStartTime = startTime.isAfter();
     if (isAfterStartTime) {
-      unlockedAirdropIds.push(airdrop?.id ?? '');
+      const id = airdrop?.id;
+      if (id) {
+        unlockedAirdropIds.push(id);
+      }
       unlockedAirdropAmount = BigNumber.from(amount.toString()).add(unlockedAirdropAmount);
       return {
         ...userAirdrop,
@@ -150,7 +153,7 @@ export const Airdrop: VFC = () => {
                     rowKey="id"
                     pagination={{ hideOnSinglePage: true }}
                   />
-                  <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds.filter(n => n) as string[]} />
+                  <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds} />
                 </>
               )}
             </div>
