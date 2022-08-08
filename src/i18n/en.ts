@@ -19,7 +19,7 @@ const en = {
       noDescription: 'No description'
     },
     airdrop: {
-      check: 'Thanks for being a part of SubQuery’s growth',
+      check: 'Thank you for contributing to SubQuery’s growth',
       eligible: 'You may be eligible for SQT airdrop.',
       connectWallet: 'Connect your wallet to find out',
       connectBrowserWallet: 'Connect using browser wallet',
@@ -41,7 +41,7 @@ const en = {
       claimTitle: ' Your Airdrop ({{token}})',
       claimDateTBA: 'Claim date to be announced',
       claim: 'Claim the token',
-      nonToClaim: 'There is no airdrop available for connected address.'
+      nonToClaim: 'There is no airdrop available for connected address'
     },
     wallet: {
       connectionErr: 'Unfortunately we did not recceive the confirmation, Please try again.',
@@ -67,7 +67,7 @@ const en = {
       walletConnectOptionA: 'RandomText......'
     },
     support: {
-      contact: 'If you have any question, contact us on #airdrop-support channel on'
+      contact: 'If you have any questions, contact us at #airdrop-support channel on Discord'
     },
     error: {
       404: '404',

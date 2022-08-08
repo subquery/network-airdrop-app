@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Toast } from '@subql/react-ui';
 import clsx from 'clsx';
 
+import { Contact } from 'components/Contact';
+
 import { injectedConntector, useWeb3 } from '../../containers';
 import { ConnectWallet } from './ConnectWallet';
 import styles from './WalletDetect.module.css';
@@ -50,7 +52,11 @@ export const WalletDetect: React.FC<IWalletDetect> = ({
     return (
       <div className={clsx(styles.container, containerClassName)}>
         {errorAlert && <Toast state="error" text={errorAlert} className={styles.error} />}
+        <span className={styles.title}>
+          {t(`airdrop.check`)} 
+        </span>
         <ConnectWallet onConnect={handleConnectWallet} title={title} subTitle={subTitle} />
+        <Contact />
       </div>
     );
   }
