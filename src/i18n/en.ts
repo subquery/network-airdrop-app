@@ -4,6 +4,9 @@
 const en = {
   translation: {
     header: {
+      claim: 'Claim',
+      sale: 'Public Sale',
+      network: 'Subquery Network',
       airdrop: 'Airdrop',
       studio: 'Studio',
       documentation: 'Documentation',

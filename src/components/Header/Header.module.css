@@ -32,6 +32,10 @@
   height: 48px;
 }
 
+.spacer {
+  width: 1rem;
+}
+
 .hosted {
   padding-left: 25px;
 }

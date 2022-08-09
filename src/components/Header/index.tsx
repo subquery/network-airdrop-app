@@ -38,14 +38,18 @@ export const Header: React.VFC = () => {
     <div className={styles.header}>
       <div className={styles.inner}>
         <div className={styles.left}>
-          <a href="https://www.subquery.network/" target="_blank" rel="noreferrer">
-            <img src="/static/logo.png" className={styles.logo} alt="SubQuery logo" />
+          <a href="https://foundation.subquery.network/" target="_blank" rel="noreferrer">
+            <img src="/static/sqFoundation.svg" className={styles.logo} alt="SubQuery logo" />
           </a>
-          <Link to="/">
-            <Typography className={styles.hostedText}>{t('header.airdrop')}</Typography>
-          </Link>
         </div>
         <div className={styles.right}>
+          <Link to="/">
+            <Typography className={styles.hostedText}>{t('header.claim')}</Typography>
+          </Link>
+          <a href="https://www.subquery.network/" target="_blank" rel="noreferrer">
+            <Typography className={styles.hostedText}>{t('header.network')}</Typography>
+          </a>
+          <div className={styles.spacer} />
           {account ? (
             <Dropdown
               items={[{ key: 'disconnect', label: 'Disconnect' }]}
