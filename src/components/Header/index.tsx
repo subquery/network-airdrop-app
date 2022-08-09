@@ -43,6 +43,9 @@ export const Header: React.VFC = () => {
           </a>
         </div>
         <div className={styles.right}>
+          <a href="https://foundation.subquery.network/" target="_blank" rel="noreferrer">
+            <Typography className={styles.hostedText}>{t('header.home')}</Typography>
+          </a>
           <Link to="/">
             <Typography className={styles.hostedText}>{t('header.claim')}</Typography>
           </Link>
