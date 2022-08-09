@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { Airdrop } from 'components';
 import { EmailSubscription } from 'components/EmailSubscription';
 import { FAQ } from 'components/FAQ';
@@ -6,6 +8,8 @@ import { WalletDetect } from 'components/WalletDetect/WalletDetect';
 import styles from './home.module.css';
 
 export function Home() {
+  const { t } = useTranslation();
+
   return (
     <div>
       <div className={styles.container}>
