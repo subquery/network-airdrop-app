@@ -19,9 +19,6 @@ export function Home() {
             <div className={styles.airdropContent}>
               <Airdrop />
               <EmailSubscription />
-              <div className={styles.contact}>
-                <span className={styles.contactText}>{t(`support.contact`)}</span>
-              </div>
             </div>
           </div>
         </WalletDetect>
