@@ -5,10 +5,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
 import assert from 'assert';
-<<<<<<< HEAD
 import clsx from 'clsx';
-=======
->>>>>>> 9b7ea08 (feat: add sign-agreeT&C flow before claim)
 import useSWR from 'swr';
 
 import { TERMS_SIGNATURE_URL } from 'appConstants';
