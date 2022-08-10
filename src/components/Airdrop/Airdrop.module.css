@@ -6,6 +6,7 @@
 
 .claimedButton {
   margin: 1rem 0;
+  background: var(--sq-primary-blue) !important;
 }
 
 .airdropClaimTitle {

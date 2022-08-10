@@ -50,7 +50,7 @@ const columns: TableProps<SortedUserAirdrops>['columns'] = [
   {
     dataIndex: ['airdrop', 'id'],
     title: <TableTitle title={i18next.t('airdrop.category')} />,
-    render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? '-'}</TableText>
+    render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</TableText>
   },
   {
     dataIndex: 'amount',
