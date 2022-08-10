@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
 import assert from 'assert';
+import clsx from 'clsx';
 import useSWR from 'swr';
 
 import { TERMS_SIGNATURE_URL } from 'appConstants';
@@ -74,15 +75,14 @@ export const AirdropClaimButton: React.FC<{
 
   return (
     <Button
-      type={canClaim ? 'primary' : 'ghost'}
+      type="primary"
       shape="round"
       block
       disabled={!canClaim}
       size="large"
       onClick={hasSignedTC ? onClaimAirdrop : onSignTC}
-      className={styles.claimedButton}
-      loading={isLoading}
-    >
+      className={clsx(styles.button, canClaim && styles.claimButton)}
+      loading={isLoading}>
       {buttonText}
     </Button>
   );

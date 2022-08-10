@@ -79,19 +79,17 @@ const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAi
     const startTime = moment(airdrop?.startTime);
     const endTime = moment(airdrop?.endTime);
 
+    // Before airdrop claim period
     const isAfterStartTime = startTime.isAfter();
     if (isAfterStartTime) {
-      const id = airdrop?.id;
-      if (id) {
-        unlockedAirdropIds.push(id);
-      }
-      unlockedAirdropAmount = BigNumber.from(amount.toString()).add(unlockedAirdropAmount);
       return {
         ...userAirdrop,
         sortedStatus: AirdropRoundStatus.LOCKED,
         sortedNextMilestone: `${startTime.format(DATE_FORMAT)} - ${endTime.format(DATE_FORMAT)}`
       };
     }
+
+    // After airdrop claim period
     const isBeforeEndTime = endTime.isBefore();
     if (isBeforeEndTime) {
       const sortedStatus = hasUserClaimed ? AirdropRoundStatus.CLAIMED : AirdropRoundStatus.EXPIRED;
@@ -105,6 +103,10 @@ const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAi
     }
 
     // moment().isBetween(startTime, endTime);
+    if (!hasUserClaimed) {
+      unlockedAirdropIds.push(airdrop?.id ?? ''); // airdropId must exist
+      unlockedAirdropAmount = BigNumber.from(amount.toString()).add(unlockedAirdropAmount);
+    }
     const sortedStatus = hasUserClaimed ? AirdropRoundStatus.CLAIMED : AirdropRoundStatus.UNLOCKED;
     const sortedNextMilestone = hasUserClaimed
       ? '-'
