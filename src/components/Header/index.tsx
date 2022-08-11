@@ -61,7 +61,7 @@ export const Header: React.VFC = () => {
           </a>
         </div>
         <div className={styles.right}>
-          <div className={styles.rightLinks}>
+          <div className={styles.textLinks}>
             {
               headerEntryLinks.map((headerLink) =>
                 headerLink.external ? (
