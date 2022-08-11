@@ -46,8 +46,7 @@ const en = {
       whenExpires: 'Expires {{date}}',
       nextMilestone: 'Next Milestone',
       claimTitle: ' Your Airdrop ({{token}})',
-      claimDateTBA: 'Claim date to be announced',
-      claim: 'Claim the token',
+      claim: 'Claim Your Unlocked Tokens',
       nonToClaim: 'There is no airdrop available for connected address'
     },
     wallet: {
