@@ -76,8 +76,8 @@ const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAi
   const sortedUserAirdrops = userAirdrops.map((userAirdrop) => {
     const { status, airdrop, amount } = userAirdrop;
     const hasUserClaimed = status === AirdropClaimStatus.CLAIMED;
-    const startTime = moment(airdrop?.startTime);
-    const endTime = moment(airdrop?.endTime);
+    const startTime = moment.utc(airdrop?.startTime).local();
+    const endTime = moment.utc(airdrop?.endTime).local();
 
     // Before airdrop claim period
     const isAfterStartTime = startTime.isAfter();
@@ -104,7 +104,7 @@ const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAi
 
     // moment().isBetween(startTime, endTime);
     if (!hasUserClaimed) {
-      unlockedAirdropIds.push(airdrop?.id ?? ''); // airdropId must exist
+      airdrop?.id && unlockedAirdropIds.push(airdrop?.id); // airdropId must exist
       unlockedAirdropAmount = BigNumber.from(amount.toString()).add(unlockedAirdropAmount);
     }
     const sortedStatus = hasUserClaimed ? AirdropRoundStatus.CLAIMED : AirdropRoundStatus.UNLOCKED;

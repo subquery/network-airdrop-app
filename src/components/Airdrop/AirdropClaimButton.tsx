@@ -12,7 +12,7 @@ import { TERMS_SIGNATURE_URL } from 'appConstants';
 import { useWeb3 } from 'containers';
 import { AppContext } from 'contextProvider';
 import { useContracts, useSignTCHistory } from 'hooks';
-import { fetcherPost } from 'utils';
+import { convertStrToNumber, fetcherPost } from 'utils';
 import { takeContractTx } from 'utils/takeContractTx';
 
 import styles from './Airdrop.module.css';
@@ -69,7 +69,8 @@ export const AirdropClaimButton: React.FC<{
   const onClaimAirdrop = async () => {
     assert(contracts, 'Contracts should be available.');
     setIsLoading(true);
-    await takeContractTx({ contractTx: contracts.airdropper.batchClaimAirdrop(unlockedAirdropIds) });
+    const sortedUnlockedAirdropIds = unlockedAirdropIds.map((airdropId) => convertStrToNumber(airdropId));
+    await takeContractTx({ contractTx: contracts.airdropper.batchClaimAirdrop(sortedUnlockedAirdropIds) });
     setIsLoading(false);
   };
 

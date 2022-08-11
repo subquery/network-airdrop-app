@@ -20,3 +20,5 @@ export const fetcherPost = (options: any) => {
 };
 
 export const formatAmount = (amount: BigNumberish): string => `${formatEther(amount)} ${TOKEN}`;
+
+export const convertStrToNumber = (str: string): number => Number.parseInt(str, 10);

@@ -35,6 +35,7 @@
     "react/require-default-props": "off",
     "unused-imports/no-unused-imports": "error",
     "consistent-return": "off",
+    "no-unused-expressions": "off",
     "react/no-unstable-nested-components": ["error", { "allowAsProps": true }],
     "import/extensions": [
       "error",
