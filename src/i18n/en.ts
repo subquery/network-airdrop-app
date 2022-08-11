@@ -4,7 +4,7 @@
 const en = {
   translation: {
     header: {
-      home: "Home",
+      home: 'Home',
       claim: 'Claim',
       sale: 'Public Sale',
       network: 'Subquery Network',
