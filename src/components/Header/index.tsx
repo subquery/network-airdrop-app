@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { Address, Button, Dropdown, Typography } from '@subql/react-ui';
 
 import { injectedConntector, useWeb3 } from 'containers';
@@ -19,17 +19,17 @@ export const Header: React.VFC = () => {
     {
       url: 'https://foundation.subquery.network/',
       title: t('header.home'),
-      external: true,
+      external: true
     },
     {
       url: '/',
       title: t('header.claim'),
-      external: false,
+      external: false
     },
     {
       url: 'https://www.subquery.network/',
       title: t('header.network'),
-      external: true,
+      external: true
     },
   ];
 
@@ -63,17 +63,10 @@ export const Header: React.VFC = () => {
         <div className={styles.right}>
           <div className={styles.textLinks}>
             {
-              headerEntryLinks.map((headerLink) =>
-                headerLink.external ? (
-                    <a href={headerLink.url} target="_blank" rel="noreferrer" key={headerLink.url}>
-                      <Typography className={styles.hostedText}>{headerLink.title}</Typography>
-                    </a>
-                  )
-                  : (
-                    <Link to={headerLink.url} key={headerLink.url}>
-                      <Typography className={styles.hostedText}>{headerLink.title}</Typography>
-                    </Link>
-                  )
+              headerEntryLinks.map((headerLink) => 
+                <a href={headerLink.url} target={headerLink.external ? "_blank": "_self"} rel="noreferrer" key={headerLink.url}>
+                  <Typography className={styles.hostedText}>{headerLink.title}</Typography>
+                </a>
               )
             }
           </div>
