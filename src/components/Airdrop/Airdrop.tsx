@@ -149,7 +149,7 @@ export const Airdrop: VFC = () => {
                 <>
                   <Table
                     columns={columns}
-                    dataSource={sortedAirdrops}
+                    dataSource={[...sortedAirdrops]}
                     rowKey="id"
                     pagination={{ hideOnSinglePage: true }}
                   />

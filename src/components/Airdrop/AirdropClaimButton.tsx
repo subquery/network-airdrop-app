@@ -47,7 +47,7 @@ export const AirdropClaimButton: React.FC<{
 
   const canClaim = unlockedAirdropIds.length > 0 && contracts;
   const buttonText = !contracts
-    ? 'Checking your airdrop from contracts...'
+    ? t('airdrop.initContract')
     : canClaim
     ? hasSignedTC
       ? t('airdrop.claim')
@@ -84,8 +84,7 @@ export const AirdropClaimButton: React.FC<{
       size="large"
       onClick={hasSignedTC ? onClaimAirdrop : onSignTC}
       className={clsx(styles.button, canClaim && styles.claimButton)}
-      loading={isLoading}
-    >
+      loading={isLoading}>
       {buttonText}
     </Button>
   );

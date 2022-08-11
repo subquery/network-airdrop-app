@@ -38,6 +38,7 @@ const en = {
       unlockedTitle: 'Unlocked (Claimable)',
       unlocked: 'Unlocked',
       locked: 'Locked',
+      initContract: 'Checking your airdrop from contracts...',
       claimed: 'You’ve Claimed',
       expired: 'Expired',
       total: 'Your Total Allocation',
