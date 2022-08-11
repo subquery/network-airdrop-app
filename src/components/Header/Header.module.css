@@ -51,7 +51,12 @@
   font-size: 16px;
   line-height: 24px;
   margin-left: 1.5rem;
-  color: #454f58;
+  color: var(--sq-gray700);
+}
+
+.activeText {
+  color: var(--sq-primary-blue);
+  cursor: pointer;
 }
 
 .endNavSeperator {

@@ -3,35 +3,50 @@
 
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-// import { Link } from 'react-router-dom';
 import { Address, Button, Dropdown, Typography } from '@subql/react-ui';
+import clsx from 'clsx';
 
 import { injectedConntector, useWeb3 } from 'containers';
 
 import styles from './Header.module.css';
 
+const HeaderLinks = () => {
+  const { t } = useTranslation();
+  const headerEntryLinks = [
+    {
+      url: 'https://foundation.subquery.network/',
+      title: t('header.home')
+    },
+    {
+      url: '/',
+      title: t('header.claim')
+    },
+    {
+      url: 'https://www.subquery.network/',
+      title: t('header.network')
+    }
+  ];
+
+  return (
+    <div className={styles.textLinks}>
+      {headerEntryLinks.map((headerLink) => {
+        const isExternalLink = headerLink.url.startsWith('http');
+        return isExternalLink ? (
+          <a href={headerLink.url} target="_blank" key={headerLink.url} rel="noreferrer">
+            <Typography className={styles.hostedText}>{headerLink.title}</Typography>
+          </a>
+        ) : (
+          <Typography className={clsx(styles.hostedText, styles.activeText)}>{headerLink.title}</Typography>
+        );
+      })}
+    </div>
+  );
+};
+
 // TODO: improve dropdown button
 export const Header: React.VFC = () => {
   const { account, activate, deactivate, error } = useWeb3();
   const { t } = useTranslation();
-
-  const headerEntryLinks = [
-    {
-      url: 'https://foundation.subquery.network/',
-      title: t('header.home'),
-      external: true
-    },
-    {
-      url: '/',
-      title: t('header.claim'),
-      external: false
-    },
-    {
-      url: 'https://www.subquery.network/',
-      title: t('header.network'),
-      external: true
-    },
-  ];
 
   const handleConnectWallet = React.useCallback(async () => {
     if (account) {
@@ -61,21 +76,12 @@ export const Header: React.VFC = () => {
           </a>
         </div>
         <div className={styles.right}>
-          <div className={styles.textLinks}>
-            {
-              headerEntryLinks.map((headerLink, i) => 
-                <a href={headerLink.url} target={headerLink.external ? "_blank": "_self"} rel="noreferrer" key={i}>
-                  <Typography className={styles.hostedText}>{headerLink.title}</Typography>
-                </a>
-              )
-            }
-          </div>
+          <HeaderLinks />
           {account ? (
             <Dropdown
               items={[{ key: 'disconnect', label: 'Disconnect' }]}
               onSelected={handleSelected}
-              colorScheme="gradient"
-            >
+              colorScheme="gradient">
               <Address address={account} size="large" />
             </Dropdown>
           ) : (
