@@ -63,8 +63,8 @@ export const Header: React.VFC = () => {
         <div className={styles.right}>
           <div className={styles.textLinks}>
             {
-              headerEntryLinks.map((headerLink) => 
-                <a href={headerLink.url} target={headerLink.external ? "_blank": "_self"} rel="noreferrer" key={headerLink.url}>
+              headerEntryLinks.map((headerLink, i) => 
+                <a href={headerLink.url} target={headerLink.external ? "_blank": "_self"} rel="noreferrer" key={i}>
                   <Typography className={styles.hostedText}>{headerLink.title}</Typography>
                 </a>
               )
