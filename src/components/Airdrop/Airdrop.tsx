@@ -65,7 +65,6 @@ const columns: TableProps<SortedUserAirdrops>['columns'] = [
   {
     dataIndex: 'sortedNextMilestone',
     title: <TableTitle title={i18next.t('airdrop.nextMilestone')} />,
-    width: '25%',
     render: (sortedNextMilestone) => <TableText>{sortedNextMilestone}</TableText>
   }
 ];
@@ -85,7 +84,7 @@ const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAi
       return {
         ...userAirdrop,
         sortedStatus: AirdropRoundStatus.LOCKED,
-        sortedNextMilestone: `${startTime.format(DATE_FORMAT)} - ${endTime.format(DATE_FORMAT)}`
+        sortedNextMilestone: i18next.t('airdrop.whenUnlock', { date: startTime.format(DATE_FORMAT) })
       };
     }
 
@@ -93,7 +92,9 @@ const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAi
     const isBeforeEndTime = endTime.isBefore();
     if (isBeforeEndTime) {
       const sortedStatus = hasUserClaimed ? AirdropRoundStatus.CLAIMED : AirdropRoundStatus.EXPIRED;
-      const sortedNextMilestone = hasUserClaimed ? '-' : i18next.t('airdrop.youMissed');
+      const sortedNextMilestone = hasUserClaimed
+        ? i18next.t('airdrop.youHvClaimed')
+        : i18next.t('airdrop.whenExpired', { date: endTime.format(DATE_FORMAT) });
 
       return {
         ...userAirdrop,
@@ -109,8 +110,8 @@ const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAi
     }
     const sortedStatus = hasUserClaimed ? AirdropRoundStatus.CLAIMED : AirdropRoundStatus.UNLOCKED;
     const sortedNextMilestone = hasUserClaimed
-      ? '-'
-      : `${startTime.format(DATE_FORMAT)} - ${endTime.format(DATE_FORMAT)}`;
+      ? i18next.t('airdrop.youHvClaimed')
+      : i18next.t('airdrop.whenExpires', { date: endTime.format(DATE_FORMAT) });
 
     return {
       ...userAirdrop,
