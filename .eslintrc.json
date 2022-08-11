@@ -34,6 +34,7 @@
     "react/jsx-no-useless-fragment": "off",
     "react/require-default-props": "off",
     "unused-imports/no-unused-imports": "error",
+    "consistent-return": "off",
     "react/no-unstable-nested-components": ["error", { "allowAsProps": true }],
     "import/extensions": [
       "error",

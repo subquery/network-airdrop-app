@@ -4,8 +4,12 @@
   border-radius: 6px;
 }
 
-.claimedButton {
+.button {
   margin: 1rem 0;
+}
+
+.claimButton {
+  background: var(--sq-primary-blue) !important;
 }
 
 .airdropClaimTitle {

@@ -18,10 +18,9 @@ function App() {
   const { data, error } = useSWR(TERMS_URL, fetcher);
 
   useEffect(() => {
-    if (data) {
-      const { id, content } = data;
-      setTermsAndConditions(content);
-      setTermsAndConditionsVersion(id);
+    if (data && setTermsAndConditions && setTermsAndConditionsVersion) {
+      setTermsAndConditions(data.termsAndConditions);
+      setTermsAndConditionsVersion(data.version);
     }
   }, [data, error]);
 

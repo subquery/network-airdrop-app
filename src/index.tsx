@@ -1,6 +1,8 @@
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
+import { AppContextProvider } from 'contextProvider';
+
 import App from './App';
 import { QueryApolloProvider, Web3Provider } from './containers';
 import reportWebVitals from './reportWebVitals';
@@ -11,7 +13,9 @@ ReactDOM.render(
   <QueryApolloProvider>
     <Web3Provider>
       <BrowserRouter>
-        <App />
+        <AppContextProvider>
+          <App />
+        </AppContextProvider>
       </BrowserRouter>
     </Web3Provider>
   </QueryApolloProvider>,

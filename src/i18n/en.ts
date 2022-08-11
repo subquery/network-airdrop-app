@@ -57,7 +57,8 @@ const en = {
       termsAndConditionsPart2: ' and consent for SubQuery to send you updates and other information via email'
     },
     termsAndConditions: {
-      title: 'Terms & Conditions'
+      title: 'Terms & Conditions',
+      sign: 'Agree Terms & Conditions before claim.'
     },
     faq: {
       title: 'FAQs',
