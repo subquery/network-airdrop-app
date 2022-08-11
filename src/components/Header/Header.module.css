@@ -24,6 +24,11 @@
 
 .right {
   display: flex;
+  gap: 1.5rem;
+}
+
+.textLinks {
+  display: flex;
   flex-direction: row;
   align-items: center;
 }
@@ -32,8 +37,8 @@
   height: 48px;
 }
 
-.hosted {
-  padding-left: 25px;
+.spacer {
+  width: 1rem;
 }
 
 .hostedBorder {
@@ -46,5 +51,14 @@
   font-size: 16px;
   line-height: 24px;
   margin-left: 1.5rem;
-  color: #454f58;
+  color: var(--sq-gray700);
+}
+
+.activeText {
+  color: var(--sq-primary-blue);
+  cursor: pointer;
+}
+
+.endNavSeperator {
+  margin-right: 1rem;
 }

@@ -3,12 +3,45 @@
 
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { Address, Button, Dropdown, Typography } from '@subql/react-ui';
+import clsx from 'clsx';
 
 import { injectedConntector, useWeb3 } from 'containers';
 
 import styles from './Header.module.css';
+
+const HeaderLinks = () => {
+  const { t } = useTranslation();
+  const headerEntryLinks = [
+    {
+      url: 'https://foundation.subquery.network/',
+      title: t('header.home')
+    },
+    {
+      url: '/',
+      title: t('header.claim')
+    },
+    {
+      url: 'https://www.subquery.network/',
+      title: t('header.network')
+    }
+  ];
+
+  return (
+    <div className={styles.textLinks}>
+      {headerEntryLinks.map((headerLink) => {
+        const isExternalLink = headerLink.url.startsWith('http');
+        return isExternalLink ? (
+          <a href={headerLink.url} target="_blank" key={headerLink.url} rel="noreferrer">
+            <Typography className={styles.hostedText}>{headerLink.title}</Typography>
+          </a>
+        ) : (
+          <Typography className={clsx(styles.hostedText, styles.activeText)}>{headerLink.title}</Typography>
+        );
+      })}
+    </div>
+  );
+};
 
 // TODO: improve dropdown button
 export const Header: React.VFC = () => {
@@ -38,14 +71,12 @@ export const Header: React.VFC = () => {
     <div className={styles.header}>
       <div className={styles.inner}>
         <div className={styles.left}>
-          <a href="https://www.subquery.network/" target="_blank" rel="noreferrer">
-            <img src="/static/logo.png" className={styles.logo} alt="SubQuery logo" />
+          <a href="https://foundation.subquery.network/" target="_blank" rel="noreferrer">
+            <img src="/static/sqFoundation.svg" className={styles.logo} alt="SubQuery logo" />
           </a>
-          <Link to="/">
-            <Typography className={styles.hostedText}>{t('header.airdrop')}</Typography>
-          </Link>
         </div>
         <div className={styles.right}>
+          <HeaderLinks />
           {account ? (
             <Dropdown
               items={[{ key: 'disconnect', label: 'Disconnect' }]}

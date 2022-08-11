@@ -4,6 +4,10 @@
 const en = {
   translation: {
     header: {
+      home: 'Home',
+      claim: 'Claim',
+      sale: 'Public Sale',
+      network: 'Subquery Network',
       airdrop: 'Airdrop',
       studio: 'Studio',
       documentation: 'Documentation',
