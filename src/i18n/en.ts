@@ -40,11 +40,13 @@ const en = {
       claimed: 'Claimed',
       expired: 'Expired',
       total: 'Total',
-      youMissed: 'You missed it.',
+      whenUnlock: 'Unlocked {{date}}',
+      youHvClaimed: `You've already claimed this`,
+      whenExpired: 'Expired {{date}}',
+      whenExpires: 'Expires {{date}}',
       nextMilestone: 'Next Milestone',
       claimTitle: ' Your Airdrop ({{token}})',
-      claimDateTBA: 'Claim date to be announced',
-      claim: 'Claim the token',
+      claim: 'Claim Your Unlocked Tokens',
       nonToClaim: 'There is no airdrop available for connected address'
     },
     wallet: {

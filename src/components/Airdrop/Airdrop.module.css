@@ -12,6 +12,10 @@
   background: var(--sq-primary-blue) !important;
 }
 
+.claimButton {
+  background: var(--sq-primary-blue) !important;
+}
+
 .airdropClaimTitle {
   display: flex;
   align-items: flex-start;
