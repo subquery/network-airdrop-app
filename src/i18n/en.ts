@@ -35,17 +35,21 @@ const en = {
       amount: 'amount',
       status: 'status',
       addition: 'Addition',
+      unlockedTitle: 'Unlocked (Claimable)',
       unlocked: 'Unlocked',
       locked: 'Locked',
-      claimed: 'Claimed',
+      initContract: 'Checking your airdrop from contracts...',
+      claimed: 'You’ve Claimed',
       expired: 'Expired',
-      total: 'Total',
+      total: 'Your Total Allocation',
       whenUnlock: 'Unlocked {{date}}',
       youHvClaimed: `You've already claimed this`,
       whenExpired: 'Expired {{date}}',
       whenExpires: 'Expires {{date}}',
       nextMilestone: 'Next Milestone',
       claimTitle: ' Your Airdrop ({{token}})',
+      description:
+        'Only Ambassador and the best Indexers from the SubQuery Frontier Testnet will receive kSQT airdrops.',
       claim: 'Claim Your Unlocked Tokens',
       nonToClaim: 'There is no airdrop available for connected address'
     },
@@ -74,7 +78,10 @@ const en = {
       walletConnectOptionA: 'RandomText......'
     },
     support: {
-      contact: 'If you have any questions, contact us at #airdrop-support channel on Discord'
+      joinDiscord: 'Join Discord For Announcements On Claim Dates',
+      turnOnNotification:
+        'Make sure you turn on notifications for the #announcement channel so you don’t miss any update',
+      contact: 'If you have any questions, contact us at #kepler-airdrop-support channel on Discord'
     },
     error: {
       404: '404',

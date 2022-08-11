@@ -47,7 +47,7 @@ export const AirdropClaimButton: React.FC<{
 
   const canClaim = unlockedAirdropIds.length > 0 && contracts;
   const buttonText = !contracts
-    ? 'Loading contracts...'
+    ? t('airdrop.initContract')
     : canClaim
     ? hasSignedTC
       ? t('airdrop.claim')
@@ -70,6 +70,7 @@ export const AirdropClaimButton: React.FC<{
     assert(contracts, 'Contracts should be available.');
     setIsLoading(true);
     const sortedUnlockedAirdropIds = unlockedAirdropIds.map((airdropId) => convertStrToNumber(airdropId));
+    console.log('sortedUnlockedAirdropIds', sortedUnlockedAirdropIds);
     await takeContractTx({ contractTx: contracts.airdropper.batchClaimAirdrop(sortedUnlockedAirdropIds) });
     setIsLoading(false);
   };

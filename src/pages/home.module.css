@@ -23,3 +23,17 @@
 .airdropContent {
   width: 65vw;
 }
+
+.supportContainer {
+  background: white;
+  margin-top: 1rem;
+  border-radius: 1rem;
+  padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.text {
+  margin-top: 1rem;
+}

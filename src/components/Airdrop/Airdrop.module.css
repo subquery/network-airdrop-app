@@ -1,6 +1,6 @@
 .container {
   background: white;
-  padding: 1rem;
+  padding: 2rem;
   border-radius: 6px;
 }
 
@@ -16,7 +16,16 @@
   background: var(--sq-primary-blue) !important;
 }
 
+.claimButton {
+  background: var(--sq-primary-blue) !important;
+}
+
 .airdropClaimTitle {
+  display: flex;
+  align-items: flex-start;
+}
+
+.description {
   display: flex;
   align-items: flex-start;
 }
@@ -39,6 +48,15 @@
 }
 
 /* TODO: add theme */
-.amountText {
+.text {
   color: white !important;
+  font-size: 18px;
+}
+
+.amountTitle {
+  font-weight: 400;
+}
+
+.amountText {
+  font-weight: 600;
 }
