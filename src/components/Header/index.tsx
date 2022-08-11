@@ -15,6 +15,24 @@ export const Header: React.VFC = () => {
   const { account, activate, deactivate, error } = useWeb3();
   const { t } = useTranslation();
 
+  const headerEntryLinks = [
+    {
+      url: 'https://foundation.subquery.network/',
+      title: t('header.home'),
+      external: true,
+    },
+    {
+      url: '/',
+      title: t('header.claim'),
+      external: false,
+    },
+    {
+      url: 'https://www.subquery.network/',
+      title: t('header.network'),
+      external: true,
+    },
+  ];
+
   const handleConnectWallet = React.useCallback(async () => {
     if (account) {
       deactivate();
@@ -43,16 +61,22 @@ export const Header: React.VFC = () => {
           </a>
         </div>
         <div className={styles.right}>
-          <a href="https://foundation.subquery.network/" target="_blank" rel="noreferrer">
-            <Typography className={styles.hostedText}>{t('header.home')}</Typography>
-          </a>
-          <Link to="/">
-            <Typography className={styles.hostedText}>{t('header.claim')}</Typography>
-          </Link>
-          <a href="https://www.subquery.network/" target="_blank" rel="noreferrer">
-            <Typography className={styles.hostedText}>{t('header.network')}</Typography>
-          </a>
-          <div className={styles.spacer} />
+          <div className={styles.rightLinks}>
+            {
+              headerEntryLinks.map((headerLink) =>
+                headerLink.external ? (
+                    <a href={headerLink.url} target="_blank" rel="noreferrer" key={headerLink.url}>
+                      <Typography className={styles.hostedText}>{headerLink.title}</Typography>
+                    </a>
+                  )
+                  : (
+                    <Link to={headerLink.url} key={headerLink.url}>
+                      <Typography className={styles.hostedText}>{headerLink.title}</Typography>
+                    </Link>
+                  )
+              )
+            }
+          </div>
           {account ? (
             <Dropdown
               items={[{ key: 'disconnect', label: 'Disconnect' }]}
