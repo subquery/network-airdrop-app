@@ -142,6 +142,7 @@ export const Airdrop: VFC = () => {
               <Typography.Title level={3} className={styles.airdropClaimTitle}>
                 {t('airdrop.claimTitle', { token: TOKEN })}
               </Typography.Title>
+              <Typography.Text className={styles.description}>{t('airdrop.description')}</Typography.Text>
               <AirdropAmountHeader airdropUser={user} unlockedAirdropAmount={unlockedAirdropAmount} />
 
               {sortedAirdrops.length > 0 && (
