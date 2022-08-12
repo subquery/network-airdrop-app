@@ -27,6 +27,7 @@ export const AirdropClaimButton: React.FC<{
   const signTCHistoryExist = useSignTCHistory(termsAndConditionsVersion);
   const [TCSignHash, setTCSignHash] = React.useState<string>();
   const [hasSignedTC, setHasSignedTC] = React.useState<boolean>(signTCHistoryExist);
+  const [hasClaimedIds, setHasClaimedIds] = React.useState<Array<string>>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const signaturePostBody = {
@@ -45,6 +46,9 @@ export const AirdropClaimButton: React.FC<{
     setHasSignedTC(signTCHistoryExist || signHistorySaveResult);
   }, [signHistorySaveResult, signTCHistoryExist]);
 
+  const isClaiming = !!hasClaimedIds.find(
+    (claimedId) => !!unlockedAirdropIds.find((unlockedAirdropId) => unlockedAirdropId === claimedId)
+  );
   const canClaim = unlockedAirdropIds.length > 0 && contracts;
   const buttonText = !contracts
     ? t('airdrop.initContract')
@@ -83,9 +87,11 @@ export const AirdropClaimButton: React.FC<{
 
       const approvalTxResult = await approvalTx.wait();
       if (approvalTxResult.status) {
+        setHasClaimedIds(unlockedAirdropIds);
+
         openNotificationWithIcon({
           type: NotificationType.SUCCESS,
-          title: t('airdrop.claim'),
+          title: t('airdrop.successClaim'),
           description: t('notification.changeValidIn15s')
         });
       } else {
@@ -112,8 +118,7 @@ export const AirdropClaimButton: React.FC<{
       size="large"
       onClick={hasSignedTC ? onClaimAirdrop : onSignTC}
       className={clsx(styles.button, canClaim && styles.claimButton)}
-      loading={isLoading}
-    >
+      loading={isLoading || isClaiming}>
       {buttonText}
     </Button>
   );

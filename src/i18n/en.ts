@@ -51,6 +51,7 @@ const en = {
       description:
         'Only Ambassador and the best Indexers from the SubQuery Frontier Testnet will receive kSQT airdrops.',
       claim: 'Claim Your Unlocked Tokens',
+      successClaim: 'You have claimed airdrop successfully',
       nonToClaim: 'There is no airdrop available for connected address'
     },
     wallet: {
