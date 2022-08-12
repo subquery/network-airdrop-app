@@ -1,6 +1,7 @@
 .container {
   background: var(--sq-background-gradient);
-  height: 798px;
+  min-height: 798px;
+  display: flex;
 
   position: relative;
 }
@@ -18,6 +19,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: scroll;
+  padding: 1rem;
 }
 
 .airdropContent {

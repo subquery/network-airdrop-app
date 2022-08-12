@@ -49,5 +49,8 @@ export function useAllAirdrop(): QueryResult<GetAirdrops> {
 }
 
 export function useAirdropsByAccount(params: GetAirdropsByAccountVariables): QueryResult<GetAirdropsByAccount> {
-  return useQuery<GetAirdropsByAccount, OperationVariables>(GET_AIRDROPS_BY_ACCOUNT, { variables: params });
+  return useQuery<GetAirdropsByAccount, OperationVariables>(GET_AIRDROPS_BY_ACCOUNT, {
+    variables: params,
+    pollInterval: 10000
+  });
 }

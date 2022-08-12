@@ -5,15 +5,7 @@
 }
 
 .button {
-  margin: 1rem 0;
-}
-
-.claimButton {
-  background: var(--sq-primary-blue) !important;
-}
-
-.claimButton {
-  background: var(--sq-primary-blue) !important;
+  margin-top: 2rem;
 }
 
 .claimButton {
@@ -28,6 +20,7 @@
 .description {
   display: flex;
   align-items: flex-start;
+  text-align: start;
 }
 
 .airdropClaimAmount {
@@ -45,6 +38,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  text-align: start;
 }
 
 /* TODO: add theme */

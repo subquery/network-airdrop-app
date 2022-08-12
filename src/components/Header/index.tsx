@@ -36,7 +36,9 @@ const HeaderLinks = () => {
             <Typography className={styles.hostedText}>{headerLink.title}</Typography>
           </a>
         ) : (
-          <Typography className={clsx(styles.hostedText, styles.activeText)}>{headerLink.title}</Typography>
+          <Typography key={headerLink.url} className={clsx(styles.hostedText, styles.activeText)}>
+            {headerLink.title}
+          </Typography>
         );
       })}
     </div>
@@ -81,8 +83,7 @@ export const Header: React.VFC = () => {
             <Dropdown
               items={[{ key: 'disconnect', label: 'Disconnect' }]}
               onSelected={handleSelected}
-              colorScheme="gradient"
-            >
+              colorScheme="gradient">
               <Address address={account} size="large" />
             </Dropdown>
           ) : (
