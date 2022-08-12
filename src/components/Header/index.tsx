@@ -36,7 +36,9 @@ const HeaderLinks = () => {
             <Typography className={styles.hostedText}>{headerLink.title}</Typography>
           </a>
         ) : (
-          <Typography className={clsx(styles.hostedText, styles.activeText)}>{headerLink.title}</Typography>
+          <Typography key={headerLink.url} className={clsx(styles.hostedText, styles.activeText)}>
+            {headerLink.title}
+          </Typography>
         );
       })}
     </div>

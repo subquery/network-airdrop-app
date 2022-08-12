@@ -9,11 +9,11 @@ import clsx from 'clsx';
 import useSWR from 'swr';
 
 import { TERMS_SIGNATURE_URL } from 'appConstants';
+import { NotificationType, openNotificationWithIcon } from 'components/Notification';
 import { useWeb3 } from 'containers';
 import { AppContext } from 'contextProvider';
 import { useContracts, useSignTCHistory } from 'hooks';
 import { convertStrToNumber, fetcherPost } from 'utils';
-import { takeContractTx } from 'utils/takeContractTx';
 
 import styles from './Airdrop.module.css';
 
@@ -27,6 +27,7 @@ export const AirdropClaimButton: React.FC<{
   const signTCHistoryExist = useSignTCHistory(termsAndConditionsVersion);
   const [TCSignHash, setTCSignHash] = React.useState<string>();
   const [hasSignedTC, setHasSignedTC] = React.useState<boolean>(signTCHistoryExist);
+  const [hasClaimedIds, setHasClaimedIds] = React.useState<Array<string>>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const signaturePostBody = {
@@ -45,6 +46,9 @@ export const AirdropClaimButton: React.FC<{
     setHasSignedTC(signTCHistoryExist || signHistorySaveResult);
   }, [signHistorySaveResult, signTCHistoryExist]);
 
+  const isClaiming = !!hasClaimedIds.find(
+    (claimedId) => !!unlockedAirdropIds.find((unlockedAirdropId) => unlockedAirdropId === claimedId)
+  );
   const canClaim = unlockedAirdropIds.length > 0 && contracts;
   const buttonText = !contracts
     ? t('airdrop.initContract')
@@ -55,24 +59,54 @@ export const AirdropClaimButton: React.FC<{
     : t('airdrop.nonToClaim');
 
   const onSignTC = async () => {
-    if (!termsAndConditions || !library) return null;
     try {
+      if (!termsAndConditions || !library)
+        throw Error(`Failed to load ${!termsAndConditions ? 'Terms and Conditions' : 'metamask lib'}`);
       const signTermsHash = await library.getSigner().signMessage(termsAndConditions);
       setTCSignHash(signTermsHash);
       console.log('signTermsHash', signTermsHash);
-    } catch (error) {
-      // TODO: add error alert or notification
-      console.error(error);
+    } catch (error: any) {
+      const err = error?.message ?? 'Opps, we hint an issue.';
+      console.error('onSignTC Error', err);
+      openNotificationWithIcon({
+        type: NotificationType.ERROR,
+        title: 'Agree Terms And Condition',
+        description: err
+      });
     }
   };
 
+  // TODO: fix takeContractTx
   const onClaimAirdrop = async () => {
-    assert(contracts, 'Contracts should be available.');
-    setIsLoading(true);
-    const sortedUnlockedAirdropIds = unlockedAirdropIds.map((airdropId) => convertStrToNumber(airdropId));
-    console.log('sortedUnlockedAirdropIds', sortedUnlockedAirdropIds);
-    await takeContractTx({ contractTx: contracts.airdropper.batchClaimAirdrop(sortedUnlockedAirdropIds) });
-    setIsLoading(false);
+    try {
+      assert(contracts, 'Contracts should be available.');
+      setIsLoading(true);
+      const sortedUnlockedAirdropIds = unlockedAirdropIds.map((airdropId) => convertStrToNumber(airdropId));
+      const approvalTx = await contracts.airdropper.batchClaimAirdrop(sortedUnlockedAirdropIds);
+      openNotificationWithIcon({ title: t('notification.txSubmittedTitle') });
+
+      const approvalTxResult = await approvalTx.wait();
+      if (approvalTxResult.status) {
+        setHasClaimedIds(unlockedAirdropIds);
+
+        openNotificationWithIcon({
+          type: NotificationType.SUCCESS,
+          title: t('airdrop.successClaim'),
+          description: t('notification.changeValidIn15s')
+        });
+      } else {
+        throw new Error();
+      }
+    } catch (error: any) {
+      console.error(`Tx Error: ${error}`);
+      openNotificationWithIcon({
+        type: NotificationType.ERROR,
+        title: 'Transaction failure.',
+        description: error?.message ?? t('notification.error')
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -84,7 +118,7 @@ export const AirdropClaimButton: React.FC<{
       size="large"
       onClick={hasSignedTC ? onClaimAirdrop : onSignTC}
       className={clsx(styles.button, canClaim && styles.claimButton)}
-      loading={isLoading}
+      loading={isLoading || isClaiming}
     >
       {buttonText}
     </Button>
