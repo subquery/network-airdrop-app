@@ -118,7 +118,8 @@ export const AirdropClaimButton: React.FC<{
       size="large"
       onClick={hasSignedTC ? onClaimAirdrop : onSignTC}
       className={clsx(styles.button, canClaim && styles.claimButton)}
-      loading={isLoading || isClaiming}>
+      loading={isLoading || isClaiming}
+    >
       {buttonText}
     </Button>
   );
