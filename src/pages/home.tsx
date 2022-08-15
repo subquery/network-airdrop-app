@@ -3,6 +3,7 @@ import { Button, Typography } from 'antd';
 
 import { DISCORD_INVITE_URL } from 'appConstants';
 import { Airdrop } from 'components';
+import { BlockchainStatus } from 'components/BlockchainStatus';
 import { FAQ } from 'components/FAQ';
 import { WalletDetect } from 'components/WalletDetect/WalletDetect';
 
@@ -27,15 +28,17 @@ export function Home() {
     <div>
       <div className={styles.container}>
         <img src="static/airdrop.png" alt="airdrop page img" className={styles.bgImg} />
-        <WalletDetect>
-          <div className={styles.airdropContainer}>
-            <div className={styles.airdropContent}>
-              <Airdrop />
-              <JoinDiscord />
+        <BlockchainStatus>
+          <WalletDetect>
+            <div className={styles.airdropContainer}>
+              <div className={styles.airdropContent}>
+                <Airdrop />
+                <JoinDiscord />
+              </div>
+              <Typography.Text className={styles.text}> {t('support.contact')}</Typography.Text>
             </div>
-            <Typography.Text className={styles.text}> {t('support.contact')}</Typography.Text>
-          </div>
-        </WalletDetect>
+          </WalletDetect>
+        </BlockchainStatus>
       </div>
 
       <FAQ />

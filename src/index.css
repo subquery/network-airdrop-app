@@ -70,3 +70,10 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+/* antD */
+.ant-btn-primary {
+  color: #fff;
+  border-color: var(--sq-primary-blue);
+  background: var(--sq-primary-blue);
+}

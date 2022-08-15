@@ -8,3 +8,4 @@ export * from './Footer';
 export * from './Spinner';
 export * from './AppTypography';
 export * from './Table';
+export * from './BlockchainStatus';
