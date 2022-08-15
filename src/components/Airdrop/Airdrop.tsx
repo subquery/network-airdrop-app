@@ -46,25 +46,25 @@ const AirdropStatusTag: FC<{ status: AirdropRoundStatus }> = ({ status }) => {
   return <Tag color={color}>{text}</Tag>;
 };
 
-const columns: TableProps<SortedUserAirdrops>['columns'] = [
+const getColumns = (t: any): TableProps<SortedUserAirdrops>['columns'] => [
   {
     dataIndex: ['airdrop', 'id'],
-    title: <TableTitle title={i18next.t('airdrop.category')} />,
+    title: <TableTitle title={t('airdrop.category')} />,
     render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</TableText>
   },
   {
     dataIndex: 'amount',
-    title: <TableTitle title={i18next.t('airdrop.amount')} />,
+    title: <TableTitle title={t('airdrop.amount')} />,
     render: (amount) => <TableText>{`${formatEther(amount)} ${TOKEN}`}</TableText>
   },
   {
     dataIndex: 'sortedStatus',
-    title: <TableTitle title={i18next.t('airdrop.status')} />,
+    title: <TableTitle title={t('airdrop.status')} />,
     render: (airdropStatus) => <AirdropStatusTag status={airdropStatus} />
   },
   {
     dataIndex: 'sortedNextMilestone',
-    title: <TableTitle title={i18next.t('airdrop.nextMilestone')} />,
+    title: <TableTitle title={t('airdrop.nextMilestone')} />,
     render: (sortedNextMilestone) => <TableText>{sortedNextMilestone}</TableText>
   }
 ];
@@ -148,7 +148,7 @@ export const Airdrop: VFC = () => {
               {sortedAirdrops.length > 0 && (
                 <>
                   <Table
-                    columns={columns}
+                    columns={getColumns(t)}
                     dataSource={[...sortedAirdrops]}
                     rowKey="id"
                     pagination={{ hideOnSinglePage: true }}
