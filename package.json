@@ -96,10 +96,10 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "lint",
-      "format"
+      "eslint --fix .",
+      "prettier --write --config ./.prettierrc"
     ],
-    "*.{css,md}": "format"
+    "*.{css,md}": "prettier --write"
   },
   "resolutions": {
     "graphql": "15.6.1"
