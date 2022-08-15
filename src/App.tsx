@@ -1,18 +1,22 @@
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import useSWR from 'swr';
 
 import { TERMS_URL } from 'appConstants';
 import { Footer, Header } from 'components';
+import { useWeb3 } from 'containers';
 import { AppContext } from 'contextProvider';
 import { Home, NotFoundPage } from 'pages';
 import { TermsAndConditions } from 'pages/termsAndConditions';
 import { fetcher } from 'utils';
 
-import './App.css';
+import styles from './App.module.css';
+
 import 'i18n';
 
 function App() {
+  const { error: web3Error } = useWeb3();
+  console.log('web3Error', web3Error);
   const { setTermsAndConditions, setTermsAndConditionsVersion } = useContext(AppContext);
 
   const { data, error } = useSWR(TERMS_URL, fetcher);
@@ -25,9 +29,9 @@ function App() {
   }, [data, error]);
 
   return (
-    <div className="App">
+    <div className={styles.app}>
       <Header />
-      <div className="AppBody">
+      <div className={styles.appBody}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />

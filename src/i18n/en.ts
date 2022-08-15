@@ -93,6 +93,11 @@ const en = {
       error: 'Sorry, there is something wrong',
       txSubmittedTitle: 'Transaction has been submitted. Please wait for the transaction confirmed.',
       changeValidIn15s: 'Change will be reflected on dashboard in 15s.'
+    },
+    unsupportedNetwork: {
+      title: 'Unsupported network',
+      subtitle: 'Please switch networks to claim the airdrop.',
+      button: 'Switch Network'
     }
   }
 };

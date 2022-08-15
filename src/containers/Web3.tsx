@@ -9,14 +9,14 @@ import { NetworkConnector } from '@web3-react/network-connector';
 import { providers } from 'ethers';
 
 const RPC_URLS: Record<number, string> = {
-  1280: 'https://sqtn.api.onfinality.io/public',
+  // 1280: 'https://sqtn.api.onfinality.io/public',
   595: 'https://tc7-eth.aca-dev.network'
 };
 
 const defaultChainId = 595;
 
 export const injectedConntector = new InjectedConnector({
-  supportedChainIds: [defaultChainId, 1]
+  supportedChainIds: [defaultChainId]
 });
 
 const networkConnector = new NetworkConnector({
