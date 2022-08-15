@@ -15,15 +15,15 @@ import styles from './Airdrop.module.css';
 export const AirdropAmountHeader: React.FC<{
   airdropUser: AirdropUser | null;
   unlockedAirdropAmount: BigNumber;
-}> = ({ airdropUser, unlockedAirdropAmount }) => {
+  claimedAirdropAmount: BigNumber;
+}> = ({ airdropUser, unlockedAirdropAmount, claimedAirdropAmount }) => {
   const { t } = useTranslation();
   const totalAirdropAmount = airdropUser?.totalAirdropAmount?.toString() ?? '0';
-  const claimedAmount = airdropUser?.claimedAmount?.toString() ?? '0';
 
   const airdropAmounts = [
     { amount: totalAirdropAmount, type: t('airdrop.total') },
     { amount: unlockedAirdropAmount, type: t('airdrop.unlockedTitle') },
-    { amount: claimedAmount, type: t('airdrop.claimed') }
+    { amount: claimedAirdropAmount, type: t('airdrop.claimed') }
   ];
 
   return (

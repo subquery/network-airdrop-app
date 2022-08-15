@@ -46,37 +46,54 @@ const AirdropStatusTag: FC<{ status: AirdropRoundStatus }> = ({ status }) => {
   return <Tag color={color}>{text}</Tag>;
 };
 
-const columns: TableProps<SortedUserAirdrops>['columns'] = [
+const getColumns = (t: any): TableProps<SortedUserAirdrops>['columns'] => [
   {
     dataIndex: ['airdrop', 'id'],
-    title: <TableTitle title={i18next.t('airdrop.category')} />,
+    title: <TableTitle title={t('airdrop.category')} />,
     render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</TableText>
   },
   {
     dataIndex: 'amount',
-    title: <TableTitle title={i18next.t('airdrop.amount')} />,
+    title: <TableTitle title={t('airdrop.amount')} />,
     render: (amount) => <TableText>{`${formatEther(amount)} ${TOKEN}`}</TableText>
   },
   {
     dataIndex: 'sortedStatus',
-    title: <TableTitle title={i18next.t('airdrop.status')} />,
+    title: <TableTitle title={t('airdrop.status')} />,
     render: (airdropStatus) => <AirdropStatusTag status={airdropStatus} />
   },
   {
     dataIndex: 'sortedNextMilestone',
-    title: <TableTitle title={i18next.t('airdrop.nextMilestone')} />,
+    title: <TableTitle title={t('airdrop.nextMilestone')} />,
     render: (sortedNextMilestone) => <TableText>{sortedNextMilestone}</TableText>
   }
 ];
 
-const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAirdrops>, Array<string>, BigNumber] => {
+/**
+ * NOTE: NOT refer totalClaim from subql
+ * REASON: Multi claimedEvent happen at same time when batchClaim function call, as the db table is not lock when insert
+ *
+ * @param userAirdrops
+ * @returns [sortedAirdropArray for table, unlockedAirdropIds, unlockedAirdropAmount, claimedAirdropAmount]
+ */
+
+const sortUserAirdrops = (
+  userAirdrops: Array<UserAirdrop>
+): [Array<SortedUserAirdrops>, Array<string>, BigNumber, BigNumber] => {
   const unlockedAirdropIds: Array<string> = [];
   let unlockedAirdropAmount = BigNumber.from('0');
+  let claimedAirdropAmount = BigNumber.from('0');
+
   const sortedUserAirdrops = userAirdrops.map((userAirdrop) => {
     const { status, airdrop, amount } = userAirdrop;
     const hasUserClaimed = status === AirdropClaimStatus.CLAIMED;
     const startTime = moment.utc(airdrop?.startTime).local();
     const endTime = moment.utc(airdrop?.endTime).local();
+
+    // Cal claimed amount
+    if (hasUserClaimed) {
+      claimedAirdropAmount = BigNumber.from(amount.toString()).add(claimedAirdropAmount);
+    }
 
     // Before airdrop claim period
     const isAfterStartTime = startTime.isAfter();
@@ -120,7 +137,7 @@ const sortUserAirdrops = (userAirdrops: Array<UserAirdrop>): [Array<SortedUserAi
     };
   });
 
-  return [sortedUserAirdrops, unlockedAirdropIds, unlockedAirdropAmount];
+  return [sortedUserAirdrops, unlockedAirdropIds, unlockedAirdropAmount, claimedAirdropAmount];
 };
 
 export const Airdrop: VFC = () => {
@@ -134,7 +151,8 @@ export const Airdrop: VFC = () => {
         data: (data) => {
           if (!data) return null;
           const airdrops = data?.airdropUsers?.nodes as Array<UserAirdrop>;
-          const [sortedAirdrops, unlockedAirdropIds, unlockedAirdropAmount] = sortUserAirdrops(airdrops);
+          const [sortedAirdrops, unlockedAirdropIds, unlockedAirdropAmount, claimedAirdropAmount] =
+            sortUserAirdrops(airdrops);
           const { user } = sortedAirdrops[0] ?? {};
 
           return (
@@ -143,12 +161,16 @@ export const Airdrop: VFC = () => {
                 {t('airdrop.claimTitle', { token: TOKEN })}
               </Typography.Title>
               <Typography.Text className={styles.description}>{t('airdrop.description')}</Typography.Text>
-              <AirdropAmountHeader airdropUser={user} unlockedAirdropAmount={unlockedAirdropAmount} />
+              <AirdropAmountHeader
+                airdropUser={user}
+                unlockedAirdropAmount={unlockedAirdropAmount}
+                claimedAirdropAmount={claimedAirdropAmount}
+              />
 
               {sortedAirdrops.length > 0 && (
                 <>
                   <Table
-                    columns={columns}
+                    columns={getColumns(t)}
                     dataSource={[...sortedAirdrops]}
                     rowKey="id"
                     pagination={{ hideOnSinglePage: true }}
