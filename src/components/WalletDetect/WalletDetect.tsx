@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Toast } from '@subql/react-ui';
 import { Typography } from 'antd';
 import clsx from 'clsx';
@@ -57,7 +57,13 @@ export const WalletDetect: React.FC<IWalletDetect> = ({
         <ConnectWallet onConnect={handleConnectWallet} title={title} subTitle={subTitle} />
         <div className={styles.contact}>
           <Typography.Text className={styles.contactText}>
-                {t(`support.contactPart1`)}<a href={DISCORD_KEPLER_SUPPORT_URL}>#kepler-airdrop-support</a>{t(`support.contactPart2`)}
+            <Trans i18nKey="support.contact">
+              If you have any questions, contact us at 
+              <a type="link" href={DISCORD_KEPLER_SUPPORT_URL} target="_blank" rel="noreferrer">
+                #kepler-support-channel
+              </a>
+              channel on Discord
+            </Trans>  
           </Typography.Text>
         </div>
       </div>
