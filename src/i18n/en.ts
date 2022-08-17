@@ -81,8 +81,8 @@ const en = {
     support: {
       joinDiscord: 'Join Discord For Announcements On Claim Dates',
       turnOnNotification:
-        'Make sure you turn on notifications for the #announcement channel so you don’t miss any update',
-      contact: 'If you have any questions, contact us at #kepler-airdrop-support channel on Discord'
+        'Make sure you turn on notifications for the <1>#announcement</1> channel so you don’t miss any update',
+      contact: 'If you have any questions, contact us at <1>#kepler-support-channel</1> channel on Discord',
     },
     error: {
       404: '404',
