@@ -4,7 +4,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Toast } from '@subql/react-ui';
+import { Typography } from 'antd';
 import clsx from 'clsx';
+
+import { DISCORD_KEPLER_SUPPORT_URL } from 'appConstants';
 
 import { injectedConntector, useWeb3 } from '../../containers';
 import { ConnectWallet } from './ConnectWallet';
@@ -53,7 +56,9 @@ export const WalletDetect: React.FC<IWalletDetect> = ({
         <span className={styles.title}>{t(`airdrop.check`)}</span>
         <ConnectWallet onConnect={handleConnectWallet} title={title} subTitle={subTitle} />
         <div className={styles.contact}>
-          <span className={styles.contactText}>{t(`support.contact`)}</span>
+          <Typography.Text className={styles.contactText}>
+                {t(`support.contactPart1`)}<a href={DISCORD_KEPLER_SUPPORT_URL}>#kepler-airdrop-support</a>{t(`support.contactPart2`)}
+          </Typography.Text>
         </div>
       </div>
     );

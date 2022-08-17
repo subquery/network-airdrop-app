@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Button, Typography } from 'antd';
 
-import { DISCORD_INVITE_URL } from 'appConstants';
+import { DISCORD_INVITE_URL, DISCORD_KEPLER_SUPPORT_URL } from 'appConstants';
 import { Airdrop } from 'components';
 import { BlockchainStatus } from 'components/BlockchainStatus';
 import { FAQ } from 'components/FAQ';
@@ -17,7 +17,9 @@ const JoinDiscord = () => {
       <Button type="primary" ghost href={DISCORD_INVITE_URL} shape="round" size="large" target="_blank">
         {t('support.joinDiscord')}
       </Button>
-      <Typography.Text className={styles.text}> {t('support.turnOnNotification')}</Typography.Text>
+      <Typography.Text className={styles.text}>
+        {t(`support.turnOnNotificationPart1`)}<a href={DISCORD_KEPLER_SUPPORT_URL}>#announcement</a>{t(`support.turnOnNotificationPart2`)}
+      </Typography.Text>
     </div>
   );
 };
@@ -35,7 +37,9 @@ export function Home() {
                 <Airdrop />
                 <JoinDiscord />
               </div>
-              <Typography.Text className={styles.text}> {t('support.contact')}</Typography.Text>
+              <Typography.Text className={styles.text}>
+                {t(`support.contactPart1`)}<a href={DISCORD_KEPLER_SUPPORT_URL}>#kepler-airdrop-support</a>{t(`support.contactPart2`)}
+              </Typography.Text>
             </div>
           </WalletDetect>
         </BlockchainStatus>
