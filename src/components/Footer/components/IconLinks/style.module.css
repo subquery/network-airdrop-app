@@ -8,16 +8,3 @@
 .icon {
   margin: 0 16px;
 }
-.qrcode {
-  max-width: 248px;
-  text-align: center;
-  padding: 24px 24px;
-  font-size: 20px;
-}
-.qrcode p {
-  margin-bottom: 0;
-}
-.qrcode img {
-  width: 200px;
-  height: 200px;
-}
