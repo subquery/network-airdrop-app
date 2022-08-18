@@ -53,7 +53,6 @@ export const WalletDetect: React.FC<IWalletDetect> = ({
     return (
       <div className={clsx(styles.container, containerClassName)}>
         {errorAlert && <Toast state="error" text={errorAlert} className={styles.error} />}
-        <span className={styles.title}>{t(`airdrop.check`)}</span>
         <ConnectWallet onConnect={handleConnectWallet} title={title} subTitle={subTitle} />
         <div className={styles.contact}>
           <Typography.Text className={styles.contactText}>
