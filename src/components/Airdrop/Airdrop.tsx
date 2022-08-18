@@ -183,11 +183,10 @@ export const Airdrop: VFC = () => {
                   />
                   <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds} />
                 </>
-              )}        
+              )}
             </div>
           );
         }
-      })
-    }
+      })}
   </div>
-  )};
+)};
