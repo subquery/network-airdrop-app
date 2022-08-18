@@ -178,7 +178,6 @@ export const Airdrop: VFC = () => {
                     columns={getColumns(t)}
                     dataSource={[...sortedAirdrops]}
                     rowKey="id"
-                    className={styles.customTable}
                     pagination={{ hideOnSinglePage: true }}
                   />
                   <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds} />
@@ -189,4 +188,5 @@ export const Airdrop: VFC = () => {
         }
       })}
   </div>
-)};
+  )
+};
