@@ -83,20 +83,22 @@
 
 .walletActionContainer {
   width: 50vw;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   background: white;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 3rem;
   align-items: center;
 }
 
 .title {
-  background: var(--sq-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  padding: 1rem;
+  background-image: linear-gradient(45deg, var(--sq-primary-blue), var(--sq-primary-pink));
+  background-clip: text;
+  color: transparent;
+  font-size: 45px;
   font-weight: 700;
+  width: 40vw;
+  margin-bottom: 2rem;
 }
 
 .walletActionTitle {

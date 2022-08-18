@@ -24,7 +24,7 @@ const en = {
     },
     airdrop: {
       check: 'Thank you for contributing to SubQuery’s growth',
-      eligible: 'You may be eligible for SQT airdrop.',
+      eligible: 'You may be eligible for airdrop.',
       connectWallet: 'Connect your wallet to find out',
       connectBrowserWallet: 'Connect using browser wallet',
       agreeWith: 'Agree with the',
@@ -49,10 +49,10 @@ const en = {
       nextMilestone: 'Next Milestone',
       claimTitle: ' Your Airdrop ({{token}})',
       description:
-        'Only Ambassador and the best Indexers from the SubQuery Frontier Testnet will receive kSQT airdrops.',
+        'Only Ambassadors and the best Indexers from the SubQuery Frontier Testnet will be eligible to receive kSQT airdrops.',
       claim: 'Claim Your Unlocked Tokens',
       successClaim: 'You have claimed airdrop successfully',
-      nonToClaim: 'There is no airdrop available for connected address'
+      nonToClaim: 'No Claimable Airdrop Available'
     },
     wallet: {
       connectionErr: 'Unfortunately we did not recceive the confirmation, Please try again.',
@@ -69,7 +69,7 @@ const en = {
     },
     termsAndConditions: {
       title: 'Terms & Conditions',
-      sign: 'Agree Terms & Conditions before claim.'
+      sign: 'Agree Terms & Conditions before claim'
     },
     faq: {
       title: 'FAQs',
@@ -79,10 +79,10 @@ const en = {
       walletConnectOptionA: 'RandomText......'
     },
     support: {
-      joinDiscord: 'Join Discord For Announcements On Claim Dates',
+      joinDiscord: 'Join Our Discord for Announcements on Claim Dates',
       turnOnNotification:
-        'Make sure you turn on notifications for the <1>#announcement</1> channel so you don’t miss any update',
-      contact: 'If you have any questions, contact us at <1>#kepler-support-channel</1> channel on Discord',
+        'Make sure you turn on notifications for the <1>#announcement</1> channel so you don’t miss any updates',
+      contact: 'If you have any questions, contact us on the <1>#kepler-support-channel</1> channel on Discord',
     },
     error: {
       404: '404',

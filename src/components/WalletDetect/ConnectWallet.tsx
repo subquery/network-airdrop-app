@@ -44,6 +44,7 @@ export const ConnectWallet: React.FC<IConnectWallet> = ({ onConnect, title, subT
   const { t } = useTranslation();
   return (
     <div className={styles.walletActionContainer}>
+      <span className={styles.title}>{t(`airdrop.check`)}</span>
       <Typography variant="h6" className={styles.walletActionTitle}>
         {title ?? t('airdrop.eligible')}
       </Typography>

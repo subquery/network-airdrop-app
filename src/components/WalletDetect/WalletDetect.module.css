@@ -14,17 +14,6 @@
   margin: 1rem;
 }
 
-.title {
-  background-image: linear-gradient(45deg, var(--sq-primary-blue), var(--sq-primary-pink));
-  background-clip: text;
-  color: transparent;
-  font-size: 45px;
-  font-weight: 700;
-  margin-top: 10vh;
-  width: 40vw;
-  margin-bottom: 3rem;
-}
-
 .content {
   width: 100%;
 }
