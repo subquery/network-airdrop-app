@@ -172,21 +172,22 @@ export const Airdrop: VFC = () => {
                 unlockedAirdropAmount={unlockedAirdropAmount}
                 claimedAirdropAmount={claimedAirdropAmount}
               />
-
+              {sortedAirdrops.length > 0 && (
                 <>
                   <Table
                     columns={getColumns(t)}
-                    dataSource={[{id: 'ss', user: { __typename: 'User', totalAirdropAmount: '2', id: '', claimedAmount: '2'}, status: AirdropClaimStatus.CLAIMED, __typename: 'AirdropUser', airdrop: {__typename: 'Airdrop', id: '', tokenAddress: '', startTime: new Date(), endTime: new Date()}, amount: '2', sortedStatus: AirdropRoundStatus.UNLOCKED, sortedNextMilestone: 'this is just test data'}]}
+                    dataSource={[...sortedAirdrops]}
                     rowKey="id"
                     className={styles.customTable}
                     pagination={{ hideOnSinglePage: true }}
                   />
                   <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds} />
                 </>
+              )}        
             </div>
           );
         }
-      })}
-    </div>
-  );
-};
+      })
+    }
+  </div>
+  )};
