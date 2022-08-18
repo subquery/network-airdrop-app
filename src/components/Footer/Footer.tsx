@@ -23,7 +23,7 @@ export const Footer: React.FC = () => (
             size="large"
           >
             <div className={styles.discordButton}>
-              <img src={Discord} alt='' className={styles.discordButtonIcon} />
+              <img src={Discord} alt='discord' className={styles.discordButtonIcon} />
               <div>Join our active Discord community</div>
             </div>
           </Button>
