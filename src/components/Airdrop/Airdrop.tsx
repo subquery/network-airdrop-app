@@ -50,22 +50,28 @@ const getColumns = (t: any): TableProps<SortedUserAirdrops>['columns'] => [
   {
     dataIndex: ['airdrop', 'id'],
     title: <TableTitle title={t('airdrop.category')} />,
-    render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</TableText>
+    render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</TableText>,
+    width: '25%'
   },
   {
     dataIndex: 'amount',
     title: <TableTitle title={t('airdrop.amount')} />,
-    render: (amount) => <TableText>{`${formatEther(amount)} ${TOKEN}`}</TableText>
+    render: (amount) => <TableText>{`${formatEther(amount)} ${TOKEN}`}</TableText>,
+    align: 'right',
+    width: '20%'
   },
   {
     dataIndex: 'sortedStatus',
     title: <TableTitle title={t('airdrop.status')} />,
-    render: (airdropStatus) => <AirdropStatusTag status={airdropStatus} />
+    render: (airdropStatus) => <AirdropStatusTag status={airdropStatus} />,
+    align: 'center',
+    width: '15%',
   },
   {
     dataIndex: 'sortedNextMilestone',
     title: <TableTitle title={t('airdrop.nextMilestone')} />,
-    render: (sortedNextMilestone) => <TableText>{sortedNextMilestone}</TableText>
+    render: (sortedNextMilestone) => <TableText>{sortedNextMilestone}</TableText>,
+    width: '30%'
   }
 ];
 
@@ -167,17 +173,16 @@ export const Airdrop: VFC = () => {
                 claimedAirdropAmount={claimedAirdropAmount}
               />
 
-              {sortedAirdrops.length > 0 && (
                 <>
                   <Table
                     columns={getColumns(t)}
-                    dataSource={[...sortedAirdrops]}
+                    dataSource={[{id: 'ss', user: { __typename: 'User', totalAirdropAmount: '2', id: '', claimedAmount: '2'}, status: AirdropClaimStatus.CLAIMED, __typename: 'AirdropUser', airdrop: {__typename: 'Airdrop', id: '', tokenAddress: '', startTime: new Date(), endTime: new Date()}, amount: '2', sortedStatus: AirdropRoundStatus.UNLOCKED, sortedNextMilestone: 'this is just test data'}]}
                     rowKey="id"
+                    className={styles.customTable}
                     pagination={{ hideOnSinglePage: true }}
                   />
                   <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds} />
                 </>
-              )}
             </div>
           );
         }
