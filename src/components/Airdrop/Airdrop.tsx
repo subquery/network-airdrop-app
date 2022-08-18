@@ -50,22 +50,28 @@ const getColumns = (t: any): TableProps<SortedUserAirdrops>['columns'] => [
   {
     dataIndex: ['airdrop', 'id'],
     title: <TableTitle title={t('airdrop.category')} />,
-    render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</TableText>
+    render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</TableText>,
+    width: '30%'
   },
   {
     dataIndex: 'amount',
     title: <TableTitle title={t('airdrop.amount')} />,
-    render: (amount) => <TableText>{`${formatEther(amount)} ${TOKEN}`}</TableText>
+    render: (amount) => <TableText>{`${formatEther(amount)} ${TOKEN}`}</TableText>,
+    align: 'right',
+    width: '20%'
   },
   {
     dataIndex: 'sortedStatus',
     title: <TableTitle title={t('airdrop.status')} />,
-    render: (airdropStatus) => <AirdropStatusTag status={airdropStatus} />
+    render: (airdropStatus) => <AirdropStatusTag status={airdropStatus} />,
+    align: 'center',
+    width: '15%',
   },
   {
     dataIndex: 'sortedNextMilestone',
     title: <TableTitle title={t('airdrop.nextMilestone')} />,
-    render: (sortedNextMilestone) => <TableText>{sortedNextMilestone}</TableText>
+    render: (sortedNextMilestone) => <TableText>{sortedNextMilestone}</TableText>,
+    width: '35%'
   }
 ];
 
@@ -166,7 +172,6 @@ export const Airdrop: VFC = () => {
                 unlockedAirdropAmount={unlockedAirdropAmount}
                 claimedAirdropAmount={claimedAirdropAmount}
               />
-
               {sortedAirdrops.length > 0 && (
                 <>
                   <Table
@@ -182,6 +187,6 @@ export const Airdrop: VFC = () => {
           );
         }
       })}
-    </div>
-  );
+  </div>
+  )
 };
