@@ -92,7 +92,7 @@
 }
 
 .title {
-  background-image: var(--sq-gradient);
+  background-image: var(--sq-gradient-alt);
   background-clip: text;
   color: transparent;
   font-size: 45px;
