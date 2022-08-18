@@ -3,7 +3,8 @@ import { Route, Routes } from 'react-router-dom';
 import useSWR from 'swr';
 
 import { TERMS_URL } from 'appConstants';
-import { Footer, Header } from 'components';
+import { Header } from 'components';
+import { Footer } from 'components/Footer/Footer';
 import { useWeb3 } from 'containers';
 import { AppContext } from 'contextProvider';
 import { Home, NotFoundPage } from 'pages';
