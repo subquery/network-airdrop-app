@@ -51,7 +51,7 @@ const getColumns = (t: any): TableProps<SortedUserAirdrops>['columns'] => [
     dataIndex: ['airdrop', 'id'],
     title: <TableTitle title={t('airdrop.category')} />,
     render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</TableText>,
-    width: '25%'
+    width: '30%'
   },
   {
     dataIndex: 'amount',
@@ -71,7 +71,7 @@ const getColumns = (t: any): TableProps<SortedUserAirdrops>['columns'] => [
     dataIndex: 'sortedNextMilestone',
     title: <TableTitle title={t('airdrop.nextMilestone')} />,
     render: (sortedNextMilestone) => <TableText>{sortedNextMilestone}</TableText>,
-    width: '30%'
+    width: '35%'
   }
 ];
 
