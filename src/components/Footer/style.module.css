@@ -32,7 +32,7 @@
   align-items: flex-start;
   justify-content: space-between;
   height: 67px;
-  width: 287px;
+  width: 400px;
 }
 .contact {
   display: flex;
@@ -78,6 +78,7 @@
   color: var(--sq-primary-blue);
   font-size: 16px;
   font-weight: bold;
+  gap: 15px;
 }
 
 

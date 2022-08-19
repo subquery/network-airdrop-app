@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "antd";
 
 import Discord from "./images/discord.svg";
@@ -32,6 +33,7 @@ export const Footer: React.FC = () => (
       <div className={styles.secondaryRow}>
         <div className={styles.links}>
           <a href="https://subquery.network/privacy">Privacy Policy</a>
+          <Link to="/terms-and-conditions">Airdrop Terms & Conditions</Link>
         </div>
         <div className={styles.copyright}>
           <small>SubQuery Foundation © 2022</small>

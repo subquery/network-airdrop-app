@@ -3,6 +3,7 @@
 
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Address, Button, Dropdown, Typography } from '@subql/react-ui';
 import clsx from 'clsx';
 
@@ -37,7 +38,9 @@ const HeaderLinks = () => {
           </a>
         ) : (
           <Typography key={headerLink.url} className={clsx(styles.hostedText, styles.activeText)}>
-            {headerLink.title}
+            <Link to={headerLink.url}>
+              {headerLink.title}
+            </Link>
           </Typography>
         );
       })}
