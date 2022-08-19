@@ -2,15 +2,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
+import { ReactNode } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { Typography } from '@subql/react-ui';
+
+import { DISCORD_INVITE_URL } from 'appConstants';
 
 import styles from './FAQ.module.css';
 
 interface IFAQItem {
   question: string;
-  answer: string;
+  answer: string | ReactNode;
   idx: number;
 }
 
@@ -39,13 +42,49 @@ export const FAQ: React.VFC = () => {
 
   const faqs = [
     {
-      question: t('faq.whoCanMintQ'),
-      answer: t('faq.whoCanMintA')
+      question: t('faq.whoCanClaimQ'),
+      answer: t('faq.whoCanClaimA')
     },
     {
-      question: t('faq.walletConnectOptionQ'),
-      answer: t('faq.walletConnectOptionA')
-    }
+      question: t('faq.howCanClaimQ'),
+      answer: <Trans i18nKey="faq.howCanClaimA"/>
+    },
+    {
+      question: t('faq.howLongAirdropQ'),
+      answer: t('faq.howLongAirdropA')
+    },
+    {
+      question: t('faq.whenCanClaimQ'),
+      answer: t('faq.whenCanClaimA')
+    },
+    {
+      question: t('faq.troubleshootingQ'),
+      answer: (
+        <Trans i18nKey="faq.troubleshootingA">
+          Currently we only support Metamask. If you have any questions, please contact us 
+          <a className={styles.discordLink} href={DISCORD_INVITE_URL} target="_blank" rel="noreferrer">
+            via Discord
+          </a>
+        </Trans>
+      )
+    },
+    {
+      question: t('faq.whenWillRecieveQ'),
+      answer: t('faq.whenWillRecieveA')
+    },
+    {
+      question: t('faq.whoCanContactQ'),
+      answer: ( 
+        <Trans i18nKey="faq.whoCanContactA">
+          If your question is not answered here, please contact us
+          <a className={styles.discordLink} href={DISCORD_INVITE_URL} target="_blank" rel="noreferrer">
+            via our Discord
+          </a>
+          via our Discord
+          in the Airdrop channel
+        </Trans>
+      )
+    },
   ];
 
   return (

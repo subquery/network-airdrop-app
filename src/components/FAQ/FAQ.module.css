@@ -70,3 +70,8 @@
     text-align: start;
   }
 }
+
+
+.discordLink {
+  color: var(--sq-primary-blue);
+}

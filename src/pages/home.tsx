@@ -56,7 +56,6 @@ export function Home() {
           </WalletDetect>
         </BlockchainStatus>
       </div>
-
       <FAQ />
     </div>
   );
