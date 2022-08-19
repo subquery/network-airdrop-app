@@ -1,0 +1,10 @@
+.icons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  left: -16px;
+}
+.icon {
+  margin: 0 16px;
+}

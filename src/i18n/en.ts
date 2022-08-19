@@ -16,8 +16,10 @@ const en = {
       hosted: 'Hosted Service'
     },
     footer: {
-      title: 'Join The Future',
-      copyright: 'SubQuery © '
+      discord: 'Join our Active Discord community',
+      privacy: 'Privacy Policy',
+      termsAndConditions: 'Airdrop Terms & Conditions',
+      copyright: 'SubQuery Foundation © 2022'
     },
     projectCard: {
       noDescription: 'No description'
