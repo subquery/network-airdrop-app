@@ -40,7 +40,7 @@ const en = {
       unlockedTitle: 'Unlocked (Claimable)',
       unlocked: 'Unlocked',
       locked: 'Locked',
-      initContract: 'Checking your airdrop from contracts...',
+      initContract: 'Loading… This Will Take Few Seconds',
       claimed: 'Claimed',
       expired: 'Expired',
       total: 'Your Total Allocation',
@@ -71,12 +71,13 @@ const en = {
     },
     termsAndConditions: {
       title: 'Terms & Conditions',
-      sign: 'Agree Terms & Conditions before claim'
+      sign: 'Agree To The Terms & Conditions Before Claiming'
     },
     faq: {
       title: 'FAQs',
       whoCanClaimQ: 'Who Can Claim Tokens and How Much?',
-      whoCanClaimA: 'The SubQuery airdrop is claimable by SubQuery Ambassadors and the highest scoring Indexers from the SubQuery Frontier testnet. Please note that it is possible for an individual to be eligible for multiple categories, thereby collecting multiple rewards.',
+      whoCanClaimA:
+        'The SubQuery airdrop is claimable by SubQuery Ambassadors and the highest scoring Indexers from the SubQuery Frontier testnet. Please note that it is possible for an individual to be eligible for multiple categories, thereby collecting multiple rewards.',
       howCanClaimQ: 'How do I claim my tokens?',
       howCanClaimA: `The process for claiming your airdrop is: <br/>
         <br/>1. Visit the https://claim.subquery.foundation Website. Please double-check the URL to prevent any risk of scams or fraudulent activity. 
@@ -87,21 +88,26 @@ const en = {
         <br/>6. You will then be prompted with another MetaMask screen to confirm claiming the tokens. By clicking on the “Confirm” button on MetaMask, the transaction will start to be processed.
         <br/>7. Once the transaction is confirmed, you will see a success message popped up on the claim page. You can always check the progress on the Karura block explorer.`,
       howLongAirdropQ: 'How long is the airdrop available for?',
-      howLongAirdropA: 'Eligible users will be able to claim their kSQT airdrop tokens for a three month period from the date of our Kepler network launch. You will lose access to any airdrop tokens if you do not claim them by the end of the period.',
+      howLongAirdropA:
+        'Eligible users will be able to claim their kSQT airdrop tokens for a three month period from the date of our Kepler network launch. You will lose access to any airdrop tokens if you do not claim them by the end of the period.',
       whenCanClaimQ: 'How do I know when I can claim my tokens?',
-      whenCanClaimA: 'We will also post messages on our Twitter, Telegram and Discord at the appropriate time to notify the community.',
+      whenCanClaimA:
+        'We will also post messages on our Twitter, Telegram and Discord at the appropriate time to notify the community.',
       troubleshootingQ: 'Wallet Troubleshooting',
-      troubleshootingA: 'Currently we only support Metamask. If you have any questions, please contact us <1>via Discord</1>.',
+      troubleshootingA:
+        'Currently we only support Metamask. If you have any questions, please contact us <1>via Discord</1>.',
       whenWillRecieveQ: 'When will I receive my kSQT tokens from the Airdrop?',
-      whenWillRecieveA: 'kSQT tokens will be available when the Kepler Network launches. The exact date will be announced closer to the time.',
+      whenWillRecieveA:
+        'kSQT tokens will be available when the Kepler Network launches. The exact date will be announced closer to the time.',
       whoCanContactQ: 'Who can I contact for help?',
-      whoCanContactA: 'If your question is not answered here, please contact us <1>via our Discord</1> in the Airdrop channel'
+      whoCanContactA:
+        'If your question is not answered here, please contact us <1>via our Discord</1> in the Airdrop channel'
     },
     support: {
       joinDiscord: 'Join Our Discord for Announcements on Claim Dates',
       turnOnNotification:
         'Make sure you turn on notifications for the <1>#announcement</1> channel so you don’t miss any updates',
-      contact: 'If you have any questions, contact us on the <1>#kepler-support-channel</1> channel on Discord',
+      contact: 'If you have any questions, contact us on the <1>#kepler-support-channel</1> on Discord'
     },
     error: {
       404: '404',
