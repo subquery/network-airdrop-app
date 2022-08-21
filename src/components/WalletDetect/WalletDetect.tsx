@@ -59,7 +59,7 @@ export const WalletDetect: React.FC<IWalletDetect> = ({
             <Trans i18nKey="support.contact">
               If you have any questions, contact us at 
               <a type="link" href={DISCORD_KEPLER_SUPPORT_URL} target="_blank" rel="noreferrer">
-                #kepler-support-channel
+                #kepler-support
               </a>
               channel on Discord
             </Trans>  
