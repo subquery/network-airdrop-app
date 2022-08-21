@@ -107,7 +107,7 @@ const en = {
       joinDiscord: 'Join Our Discord for Announcements on Claim Dates',
       turnOnNotification:
         'Make sure you turn on notifications for the <1>#announcement</1> channel so you don’t miss any updates',
-      contact: 'If you have any questions, contact us on the <1>#kepler-support-channel</1> on Discord'
+      contact: 'If you have any questions, contact us on the <1>#kepler-support</1> channel on Discord'
     },
     error: {
       404: '404',
