@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { UnsupportedChainIdError } from '@web3-react/core';
 import { Button, Typography } from 'antd';
 
-import { NETWORK_CONFIGS, useWeb3 } from 'containers';
+import { NETWORK_CONFIGS, SUPPORTED_NETWORK, useWeb3 } from 'containers';
 
 import styles from './BlockchainStatus.module.css';
 
@@ -19,7 +19,7 @@ export const BlockchainStatus: React.FC = ({ children }) => {
   const isMetaMask = React.useMemo(() => !!window.ethereum?.isMetaMask, []);
 
   const handleSwitchNetwork = () => {
-    window.ethereum?.send('wallet_addEthereumChain', [NETWORK_CONFIGS['acala-testnet']]);
+    window.ethereum?.send('wallet_addEthereumChain', [NETWORK_CONFIGS[SUPPORTED_NETWORK]]);
   };
 
   if (error instanceof UnsupportedChainIdError) {
