@@ -8,15 +8,28 @@ import { InjectedConnector } from '@web3-react/injected-connector';
 import { NetworkConnector } from '@web3-react/network-connector';
 import { providers } from 'ethers';
 
-const RPC_URLS: Record<number, string> = {
-  1287: 'https://moonbeam-alpha.api.onfinality.io/public',
-  595: 'https://acala-mandala-adapter.api.onfinality.io/public'
-};
-
-const defaultChainId = 1287;
 const MOONBEAM_NETWORK = 'moonbase-alpha';
 const ACALA_NETWORK = 'acala-testnet';
+const NETWORKS: { [key: string]: { chainId: number; rpc: string } } = {
+  [MOONBEAM_NETWORK]: {
+    chainId: 1287,
+    rpc: 'https://moonbeam-alpha.api.onfinality.io/public'
+  },
+  [ACALA_NETWORK]: {
+    chainId: 595,
+    rpc: 'https://acala-mandala-adapter.api.onfinality.io/public'
+  }
+};
 export const SUPPORTED_NETWORK = MOONBEAM_NETWORK;
+const defaultChainId = NETWORKS[SUPPORTED_NETWORK].chainId;
+const RPC_URLS: Record<number, string> = Object.keys(NETWORKS).reduce((result, curNetwork) => {
+  const network = NETWORKS[curNetwork];
+  if (network) {
+    return { ...result, [network.chainId]: network.rpc };
+  }
+
+  return result;
+}, {});
 
 export const injectedConntector = new InjectedConnector({
   supportedChainIds: [defaultChainId]
