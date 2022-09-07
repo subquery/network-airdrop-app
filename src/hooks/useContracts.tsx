@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { ContractSDK } from '@subql/contract-sdk';
-import deploymentDetails from '@subql/contract-sdk/publish/testnet.json';
+import deploymentDetails from '@subql/contract-sdk/publish/moonbase.json';
 
 import { useWeb3 } from '../containers';
 
