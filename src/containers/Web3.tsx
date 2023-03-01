@@ -8,9 +8,13 @@ import { InjectedConnector } from '@web3-react/injected-connector';
 import { NetworkConnector } from '@web3-react/network-connector';
 import { providers } from 'ethers';
 
+// import { TalismanConnector, TalismanWindow } from 'utils';
+
 const MOONBEAM_NETWORK = 'moonbase-alpha';
 const ACALA_NETWORK = 'acala-testnet';
-const NETWORKS: { [key: string]: { chainId: number; rpc: string } } = {
+const MUMBAI_NETWORK = 'mumbai-testnet';
+
+export const NETWORKS: { [key: string]: { chainId: number; rpc: string } } = {
   [MOONBEAM_NETWORK]: {
     chainId: 1287,
     rpc: 'https://moonbeam-alpha.api.onfinality.io/public'
@@ -18,10 +22,15 @@ const NETWORKS: { [key: string]: { chainId: number; rpc: string } } = {
   [ACALA_NETWORK]: {
     chainId: 595,
     rpc: 'https://acala-mandala-adapter.api.onfinality.io/public'
+  },
+  [MUMBAI_NETWORK]: {
+    chainId: 80001,
+    rpc: 'https://rpc-mumbai.maticvigil.com/'
   }
 };
-export const SUPPORTED_NETWORK = MOONBEAM_NETWORK;
+export const SUPPORTED_NETWORK = MUMBAI_NETWORK;
 const defaultChainId = NETWORKS[SUPPORTED_NETWORK].chainId;
+
 const RPC_URLS: Record<number, string> = Object.keys(NETWORKS).reduce((result, curNetwork) => {
   const network = NETWORKS[curNetwork];
   if (network) {
@@ -35,35 +44,47 @@ export const injectedConntector = new InjectedConnector({
   supportedChainIds: [defaultChainId]
 });
 
+// Talisman wallet connector
+// export const talismanConnector = new TalismanConnector({
+//   supportedChainIds: [defaultChainId]
+// });
+
+// export type SUPPORTED_CONNECTORS_TYPE = InjectedConnector | TalismanConnector;
+
+export type SUPPORTED_CONNECTORS_TYPE = InjectedConnector;
+export interface SupportedConnectorsReturn {
+  connector: SUPPORTED_CONNECTORS_TYPE;
+  windowObj: any;
+  title?: string;
+  description?: string;
+  icon?: string;
+}
+export const SUPPORTED_CONNECTORS: { [key: string]: SupportedConnectorsReturn } = {
+  INJECTED: {
+    connector: injectedConntector,
+    windowObj: window.ethereum,
+    title: 'Connect with Metamask',
+    description: 'Connect with Metamask browser extension',
+    icon: '/static/metamask.png'
+  }
+
+  // TALISMAN: {
+  //   connector: talismanConnector,
+  //   windowObj: (window as TalismanWindow).talismanEth,
+  //   title: 'Connect with Talisman',
+  //   description: 'Connect with Talisman browser extension',
+  //   icon: '/static/talisman.png'
+  // }
+};
+
+export const ALL_SUPPORTED_CONNECTORS = Object.keys(SUPPORTED_CONNECTORS).map(
+  (supportConnector) => SUPPORTED_CONNECTORS[supportConnector]
+);
+
 const networkConnector = new NetworkConnector({
   urls: RPC_URLS,
   defaultChainId
 });
-
-export const NETWORK_CONFIGS = {
-  [MOONBEAM_NETWORK]: {
-    chainId: `0x${Number(1287).toString(16)}`,
-    chainName: 'Moonbase Alpha',
-    nativeCurrency: {
-      name: 'DEV',
-      symbol: 'DEV',
-      decimals: 18
-    },
-    rpcUrls: [RPC_URLS[1287]],
-    blockExplorerUrls: ['https://moonbase-blockscout.testnet.moonbeam.network/']
-  },
-  [ACALA_NETWORK]: {
-    chainId: `0x${Number(595).toString(16)}`,
-    chainName: 'Acala Testnet',
-    nativeCurrency: {
-      name: 'ACA',
-      symbol: 'ACA',
-      decimals: 18
-    },
-    rpcUrls: [RPC_URLS[595]],
-    blockExplorerUrls: ['https://blockscout.mandala.acala.network/']
-  }
-};
 
 function getLibrary(provider: providers.ExternalProvider): providers.Web3Provider {
   // Acala would use https://github.com/AcalaNetwork/bodhi.js here
@@ -92,7 +113,7 @@ const InitProvider: React.VFC = () => {
   return null;
 };
 
-export const Web3Provider: React.FC = (props) => (
+export const Web3Provider: React.FC<{ children: React.ReactNode }> = (props) => (
   <Web3ReactProvider getLibrary={getLibrary}>
     <InitProvider />
     {props.children}
