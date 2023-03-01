@@ -86,42 +86,6 @@ const networkConnector = new NetworkConnector({
   defaultChainId
 });
 
-export const NETWORK_CONFIGS = {
-  [MOONBEAM_NETWORK]: {
-    chainId: `0x${Number(1287).toString(16)}`,
-    chainName: 'Moonbase Alpha',
-    nativeCurrency: {
-      name: 'DEV',
-      symbol: 'DEV',
-      decimals: 18
-    },
-    rpcUrls: [RPC_URLS[1287]],
-    blockExplorerUrls: ['https://moonbase.moonscan.io/']
-  },
-  [ACALA_NETWORK]: {
-    chainId: `0x${Number(595).toString(16)}`,
-    chainName: 'Acala Testnet',
-    nativeCurrency: {
-      name: 'ACA',
-      symbol: 'ACA',
-      decimals: 18
-    },
-    rpcUrls: [RPC_URLS[595]],
-    blockExplorerUrls: ['https://blockscout.mandala.acala.network/']
-  },
-  [MUMBAI_NETWORK]: {
-    chainId: `0x${Number(1287).toString(16)}`,
-    chainName: 'Polygon Mumbai',
-    nativeCurrency: {
-      name: 'DEV',
-      symbol: 'DEV',
-      decimals: 18
-    },
-    rpcUrls: [RPC_URLS[80001]],
-    blockExplorerUrls: ['https://polygonscan.com/']
-  }
-};
-
 function getLibrary(provider: providers.ExternalProvider): providers.Web3Provider {
   // Acala would use https://github.com/AcalaNetwork/bodhi.js here
   return new providers.Web3Provider(provider);
