@@ -10,6 +10,12 @@ import { providers } from 'ethers';
 
 // import { TalismanConnector, TalismanWindow } from 'utils';
 
+export const ethMethods = {
+  requestAccount: 'eth_requestAccounts',
+  switchChain: 'wallet_switchEthereumChain',
+  addChain: 'wallet_addEthereumChain'
+};
+
 const MOONBEAM_NETWORK = 'moonbase-alpha';
 const ACALA_NETWORK = 'acala-testnet';
 const MUMBAI_NETWORK = 'mumbai-testnet';
@@ -29,6 +35,7 @@ export const NETWORKS: { [key: string]: { chainId: number; rpc: string } } = {
   }
 };
 export const SUPPORTED_NETWORK = MUMBAI_NETWORK;
+export const SUPPORTED_NETWORK_CHAINID = NETWORKS[SUPPORTED_NETWORK].chainId;
 const defaultChainId = NETWORKS[SUPPORTED_NETWORK].chainId;
 
 const RPC_URLS: Record<number, string> = Object.keys(NETWORKS).reduce((result, curNetwork) => {
