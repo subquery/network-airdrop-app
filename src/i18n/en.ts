@@ -49,9 +49,9 @@ const en = {
       whenExpired: 'Expired {{date}}',
       whenExpires: 'Expires {{date}}',
       nextMilestone: 'Next Milestone',
-      claimTitle: ' Your Airdrop ({{token}})',
+      claimTitle: ' Your {{token}} Airdrop',
       description:
-        'Only Ambassadors and the best Indexers from the SubQuery Frontier Testnet will be eligible to receive kSQT airdrops.',
+        'Ambassadors and the best Indexers from the SubQuery Frontier test network are eligible to receive the kSQT airdrops.',
       claim: 'Claim Your Unlocked Tokens',
       successClaim: 'You have claimed airdrop successfully',
       nonToClaim: 'No Claimable Airdrop Available'
@@ -75,9 +75,9 @@ const en = {
     },
     faq: {
       title: 'FAQs',
-      whoCanClaimQ: 'Who Can Claim Tokens and How Much?',
+      whoCanClaimQ: 'Who can claim airdropped tokens and how much?',
       whoCanClaimA:
-        'The SubQuery airdrop is claimable by SubQuery Ambassadors and the highest scoring Indexers from the SubQuery Frontier testnet. Please note that it is possible for an individual to be eligible for multiple categories, thereby collecting multiple rewards.',
+        'The SubQuery Airdrop is claimable by SubQuery Ambassadors and the highest scoring Indexers from the SubQuery Frontier test network. Please note that it is possible for an individual to be eligible for multiple categories, thereby collecting multiple rewards.',
       howCanClaimQ: 'How do I claim my tokens?',
       howCanClaimA: `The process for claiming your airdrop is: <br/>
         <br/>1. Visit the https://claim.subquery.foundation Website. Please double-check the URL to prevent any risk of scams or fraudulent activity. 
@@ -120,9 +120,9 @@ const en = {
       changeValidIn15s: 'Change will be reflected on dashboard in 15s.'
     },
     unsupportedNetwork: {
-      title: 'Unsupported network',
-      subtitle: 'Please switch networks to claim the airdrop.',
-      button: 'Switch Network'
+      title: 'You are connected to the wrong network',
+      subtitle: 'Please switch your network to Polygon to view and claim your airdrop.',
+      button: 'Switch Network to Polygon'
     }
   }
 };
