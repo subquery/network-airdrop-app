@@ -2,50 +2,22 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
+import { networks } from '@subql/contract-sdk';
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core';
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { NetworkConnector } from '@web3-react/network-connector';
 import { providers } from 'ethers';
 
-// import { TalismanConnector, TalismanWindow } from 'utils';
+export const defaultChainId = parseInt(networks.testnet.chainId, 16);
+export const ECOSYSTEM_NETWORK = networks.testnet.chainName;
 
-export const ethMethods = {
-  requestAccount: 'eth_requestAccounts',
-  switchChain: 'wallet_switchEthereumChain',
-  addChain: 'wallet_addEthereumChain'
+export const RPC_URLS: Record<number, string> = {
+  80001: 'https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78',
+  137: 'https://polygon-rpc.com/'
 };
 
-const MOONBEAM_NETWORK = 'moonbase-alpha';
-const ACALA_NETWORK = 'acala-testnet';
-const MUMBAI_NETWORK = 'mumbai-testnet';
-
-export const NETWORKS: { [key: string]: { chainId: number; rpc: string } } = {
-  [MOONBEAM_NETWORK]: {
-    chainId: 1287,
-    rpc: 'https://moonbeam-alpha.api.onfinality.io/public'
-  },
-  [ACALA_NETWORK]: {
-    chainId: 595,
-    rpc: 'https://acala-mandala-adapter.api.onfinality.io/public'
-  },
-  [MUMBAI_NETWORK]: {
-    chainId: 80001,
-    rpc: 'https://rpc-mumbai.maticvigil.com/'
-  }
-};
-export const SUPPORTED_NETWORK = MUMBAI_NETWORK;
-export const SUPPORTED_NETWORK_CHAINID = NETWORKS[SUPPORTED_NETWORK].chainId;
-const defaultChainId = NETWORKS[SUPPORTED_NETWORK].chainId;
-
-const RPC_URLS: Record<number, string> = Object.keys(NETWORKS).reduce((result, curNetwork) => {
-  const network = NETWORKS[curNetwork];
-  if (network) {
-    return { ...result, [network.chainId]: network.rpc };
-  }
-
-  return result;
-}, {});
+export const SUPPORTED_NETWORK = 'testnet';
 
 export const injectedConntector = new InjectedConnector({
   supportedChainIds: [defaultChainId]
@@ -94,23 +66,24 @@ const networkConnector = new NetworkConnector({
 });
 
 function getLibrary(provider: providers.ExternalProvider): providers.Web3Provider {
-  // Acala would use https://github.com/AcalaNetwork/bodhi.js here
   return new providers.Web3Provider(provider);
 }
 
 export const useWeb3 = (): Web3ReactContextInterface<providers.Web3Provider> => useWeb3React();
 
-const InitProvider: React.VFC = () => {
+const InitProvider: React.FC = () => {
   const { activate } = useWeb3();
+  // const { setIsInitialAccount } = useWeb3Store();
 
   const activateInitialConnector = React.useCallback(async () => {
-    if (await injectedConntector.isAuthorized()) {
-      activate(injectedConntector);
-
-      return;
+    // setIsInitialAccount(true);
+    const isInjectedConnectorAuthorized = await injectedConntector.isAuthorized();
+    if (isInjectedConnectorAuthorized) {
+      await activate(injectedConntector);
+    } else {
+      await activate(networkConnector);
     }
-
-    activate(networkConnector);
+    // setIsInitialAccount(false);
   }, [activate]);
 
   React.useEffect(() => {
@@ -120,9 +93,60 @@ const InitProvider: React.VFC = () => {
   return null;
 };
 
-export const Web3Provider: React.FC<{ children: React.ReactNode }> = (props) => (
+export const Web3Provider: React.FC = ({ children }) => (
   <Web3ReactProvider getLibrary={getLibrary}>
     <InitProvider />
-    {props.children}
+    {children}
   </Web3ReactProvider>
 );
+
+export const ethMethods = {
+  requestAccount: 'eth_requestAccounts',
+  switchChain: 'wallet_switchEthereumChain',
+  addChain: 'wallet_addEthereumChain'
+};
+
+export const handleSwitchNetwork = async (ethWindowObj = window?.ethereum) => {
+  if (!ethWindowObj) return;
+
+  try {
+    await ethWindowObj.request({
+      method: ethMethods.switchChain,
+      params: [{ chainId: `0x${Number(defaultChainId).toString(16)}` }]
+    });
+  } catch (e: any) {
+    console.log('handleSwitchNetwork:', e);
+    if (e?.code === 4902) {
+      await ethWindowObj.request({
+        method: ethMethods.addChain,
+        params: [networks.testnet]
+      });
+    } else {
+      console.log('Switch Ethereum network failed', e);
+    }
+  }
+};
+
+export const useConnectNetwork = () => {
+  const { account, activate, deactivate } = useWeb3();
+  // const { setEthWindowObj } = useWeb3Store();
+  const onNetworkConnect = React.useCallback(
+    async (connector: SupportedConnectorsReturn) => {
+      console.log('onNetworkConnect', connector.windowObj);
+      if (account) {
+        deactivate();
+        return;
+      }
+
+      try {
+        // setEthWindowObj(connector.windowObj);
+        await activate(connector.connector);
+      } catch (e) {
+        console.log('Failed to activate wallet', e);
+      }
+    },
+    [account, deactivate, activate]
+  );
+
+  return { onNetworkConnect };
+};

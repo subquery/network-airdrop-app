@@ -11,11 +11,14 @@ import { injectedConntector, useWeb3 } from 'containers';
 
 import styles from './Header.module.css';
 
+const FOUNDATION_URL = 'https://subquery.foundation/';
+const SUBQUERY_URL = 'https://www.subquery.network/';
+
 const HeaderLinks = () => {
   const { t } = useTranslation();
   const headerEntryLinks = [
     {
-      url: 'https://foundation.subquery.network/',
+      url: FOUNDATION_URL,
       title: t('header.home')
     },
     {
@@ -23,7 +26,7 @@ const HeaderLinks = () => {
       title: t('header.claim')
     },
     {
-      url: 'https://www.subquery.network/',
+      url: SUBQUERY_URL,
       title: t('header.network')
     }
   ];
@@ -38,9 +41,7 @@ const HeaderLinks = () => {
           </a>
         ) : (
           <Typography key={headerLink.url} className={clsx(styles.hostedText, styles.activeText)}>
-            <Link to={headerLink.url}>
-              {headerLink.title}
-            </Link>
+            <Link to={headerLink.url}>{headerLink.title}</Link>
           </Typography>
         );
       })}
@@ -76,7 +77,7 @@ export const Header: React.VFC = () => {
     <div className={styles.header}>
       <div className={styles.inner}>
         <div className={styles.left}>
-          <a href="https://foundation.subquery.network/" target="_blank" rel="noreferrer">
+          <a href={FOUNDATION_URL} target="_blank" rel="noreferrer">
             <img src="/static/sqFoundation.svg" className={styles.logo} alt="SubQuery logo" />
           </a>
         </div>
