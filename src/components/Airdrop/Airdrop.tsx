@@ -65,7 +65,7 @@ const getColumns = (t: any): TableProps<SortedUserAirdrops>['columns'] => [
     title: <TableTitle title={t('airdrop.status')} />,
     render: (airdropStatus) => <AirdropStatusTag status={airdropStatus} />,
     align: 'center',
-    width: '15%',
+    width: '15%'
   },
   {
     dataIndex: 'sortedNextMilestone',
@@ -172,7 +172,7 @@ export const Airdrop: VFC = () => {
                 unlockedAirdropAmount={unlockedAirdropAmount}
                 claimedAirdropAmount={claimedAirdropAmount}
               />
-              {sortedAirdrops.length > 0 && (
+              {sortedAirdrops.length > 0 ? (
                 <>
                   <Table
                     columns={getColumns(t)}
@@ -182,11 +182,13 @@ export const Airdrop: VFC = () => {
                   />
                   <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds} />
                 </>
+              ) : (
+                <Typography.Text>{t('airdrop.nonToClaim')}</Typography.Text>
               )}
             </div>
           );
         }
       })}
-  </div>
-  )
+    </div>
+  );
 };
