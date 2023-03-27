@@ -53,7 +53,7 @@ jobs:
         uses: reggionick/s3-deploy@v3
         with:
           folder: build
-          bucket: airdrop.subquery.network
+          bucket: airdrop.subquery.foundation
           bucket-region: ap-southeast-2
           invalidation: /*
           dist-id: ${{ secrets.CLOUDFRONT_ID_PROD }}
