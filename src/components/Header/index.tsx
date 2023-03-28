@@ -9,7 +9,6 @@ import clsx from 'clsx';
 
 import { injectedConntector, useWeb3 } from 'containers';
 
-import { isOpen } from '../WalletDetect/ConnectWallet';
 import styles from './Header.module.css';
 
 const FOUNDATION_URL = 'https://subquery.foundation/';
@@ -84,24 +83,22 @@ export const Header: React.VFC = () => {
         </div>
         <div className={styles.right}>
           <HeaderLinks />
-          {isOpen ? (
-            account ? (
-              <Dropdown
-                items={[{ key: 'disconnect', label: 'Disconnect' }]}
-                onSelected={handleSelected}
-                colorScheme="gradient"
-              >
-                <Address address={account} size="large" />
-              </Dropdown>
-            ) : (
-              <Button
-                type="secondary"
-                label={t('header.connectWallet')}
-                onClick={handleConnectWallet}
-                leftItem={<i className="bi-link-45deg" role="img" aria-label="link" />}
-              />
-            )
-          ) : null}
+          {account ? (
+            <Dropdown
+              items={[{ key: 'disconnect', label: 'Disconnect' }]}
+              onSelected={handleSelected}
+              colorScheme="gradient"
+            >
+              <Address address={account} size="large" />
+            </Dropdown>
+          ) : (
+            <Button
+              type="secondary"
+              label={t('header.connectWallet')}
+              onClick={handleConnectWallet}
+              leftItem={<i className="bi-link-45deg" role="img" aria-label="link" />}
+            />
+          )}
         </div>
       </div>
     </div>
