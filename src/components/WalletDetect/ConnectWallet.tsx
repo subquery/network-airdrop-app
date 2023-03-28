@@ -72,7 +72,7 @@ export const ConnectWallet: React.FC<IConnectWallet> = ({ onConnect, title, subT
           <Typography variant="h6" className={styles.walletActionTitle}>
             {t('airdrop.notYetOpen')}
           </Typography>
-          <a href="https://blog.subquery.network" target="_blank" rel="noreferrer">
+          <a href="https://blog.subquery.network/kepler-airdrop-details" target="_blank" rel="noreferrer">
             <Button type="primary" className={styles.linkText} label={t('airdrop.notYetOpenReadMore')} />
           </a>
         </>
