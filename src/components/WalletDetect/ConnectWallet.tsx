@@ -4,47 +4,34 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaArrowRight } from 'react-icons/fa';
-import { Alert, Button, Typography } from '@subql/react-ui';
+import { Alert, Typography } from '@subql/react-ui';
+
+import { injectedConntector, useWeb3 } from 'containers';
 
 import styles from './ConnectWallet.module.css';
 
-const Wallet: React.VFC<{ name: string; icon: string; onClick?: () => void }> = ({ name, icon, onClick }) => {
-  const { t } = useTranslation();
-
-  return (
-    <Button
-      type="secondary"
-      label=""
-      className={styles.walletContainer}
-      onClick={onClick}
-      leftItem={
-        <div className={styles.wallet}>
-          <div>
-            <img src={icon} alt="wallet logo" className={styles.walletIcon} />
-
-            <Typography variant="body" className={styles.walletSubtitle}>
-              {t('connectWallet.metamaskDesc')}
-            </Typography>
-          </div>
-          <i className={['bi-arrow-right', styles.arrow].join(' ')} role="img" aria-label="arrow right" />
-        </div>
-      }
-    />
-  );
-};
-
 interface IConnectWallet {
-  onConnect: () => void;
   title?: string;
   subTitle?: string;
   logoImgUrl?: string;
 }
 
-export const ConnectWallet: React.FC<IConnectWallet> = ({ onConnect, title, subTitle, logoImgUrl }) => {
+export const ConnectWallet: React.FC<IConnectWallet> = ({ title, subTitle, logoImgUrl }) => {
   const { t } = useTranslation();
+  const { account, activate, error } = useWeb3();
+
+  const handleConnectWallet = React.useCallback(async () => {
+    if (account) return;
+
+    try {
+      await activate(injectedConntector);
+    } catch (e) {
+      console.log('Failed to activate wallet', e);
+    }
+  }, [activate, account]);
+
   return (
-    <div className={styles.walletActionContainer}>
-      <span className={styles.title}>{t(`airdrop.check`)}</span>
+    <>
       <Typography variant="h6" className={styles.walletActionTitle}>
         {title ?? t('airdrop.eligible')}
       </Typography>
@@ -52,7 +39,7 @@ export const ConnectWallet: React.FC<IConnectWallet> = ({ onConnect, title, subT
         {subTitle ?? t('airdrop.connectWallet')}
       </Typography>
 
-      <button onClick={onConnect} type="button" className={styles.walletActionButton}>
+      <button onClick={handleConnectWallet} type="button" className={styles.walletActionButton}>
         <div>
           <img src="/static/metamaskBanner.png" className={styles.logo} alt="Metamask logo" />
           <Typography className={styles.walletActionText}>{t('airdrop.connectBrowserWallet')}</Typography>
@@ -62,6 +49,6 @@ export const ConnectWallet: React.FC<IConnectWallet> = ({ onConnect, title, subT
       <div className={styles.switchToBrowserAlert}>
         <Alert className={styles.switchToBrowserText} state="info" text={t('wallet.useBrowserMetamask')} />
       </div>
-    </div>
+    </>
   );
 };

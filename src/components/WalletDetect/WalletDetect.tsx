@@ -3,15 +3,34 @@
 
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Toast } from '@subql/react-ui';
+import { Button, Toast } from '@subql/react-ui';
 import { Typography } from 'antd';
 import clsx from 'clsx';
 
 import { DISCORD_KEPLER_SUPPORT_URL } from 'appConstants';
 
-import { injectedConntector, useWeb3 } from '../../containers';
+import { useWeb3 } from '../../containers';
 import { ConnectWallet } from './ConnectWallet';
 import styles from './WalletDetect.module.css';
+
+const CLAIM_ENABLE = process.env.REACT_APP_CLAIM_ENABLED === 'true';
+
+const AirdropReadMore = () => {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.notYetOpen}>
+      <Button
+        type="primary"
+        className={styles.linkText}
+        label={t('airdrop.notYetOpenReadMore')}
+        href="https://blog.subquery.network/kepler-airdrop-details"
+        target="_blank"
+      />
+
+      <Typography.Text className={styles.notYetOpenText}>{t('airdrop.notYetOpen')}</Typography.Text>
+    </div>
+  );
+};
 
 interface IWalletDetect {
   title?: string;
@@ -19,7 +38,6 @@ interface IWalletDetect {
   containerClassName?: string;
   walletConnectorClassName?: string;
 }
-
 export const WalletDetect: React.FC<IWalletDetect> = ({
   title,
   subTitle,
@@ -27,7 +45,7 @@ export const WalletDetect: React.FC<IWalletDetect> = ({
   containerClassName,
   walletConnectorClassName
 }) => {
-  const { account, activate, error } = useWeb3();
+  const { account, error } = useWeb3();
   const { t } = useTranslation();
 
   const [errorAlert, setErrorAlert] = React.useState<string>();
@@ -38,31 +56,26 @@ export const WalletDetect: React.FC<IWalletDetect> = ({
     }
   }, [error]);
 
-  const handleConnectWallet = React.useCallback(async () => {
-    if (account) return;
-
-    try {
-      await activate(injectedConntector);
-    } catch (e) {
-      setErrorAlert((e as Error).message);
-      console.log('Failed to activate wallet', e);
-    }
-  }, [activate, account]);
-
   if (!account) {
     return (
       <div className={clsx(styles.container, containerClassName)}>
-        {errorAlert && <Toast state="error" text={errorAlert} className={styles.error} />}
-        <ConnectWallet onConnect={handleConnectWallet} title={title} subTitle={subTitle} />
+        <div>
+          {errorAlert && <Toast state="error" text={errorAlert} className={styles.error} />}
+          <div className={styles.walletActionContainer}>
+            <span className={styles.title}>{t('airdrop.title')}</span>
+            {CLAIM_ENABLE && <ConnectWallet title={title} subTitle={subTitle} />}
+            {!CLAIM_ENABLE && <AirdropReadMore />}
+          </div>
+        </div>
         <div className={styles.contact}>
           <Typography.Text className={styles.contactText}>
             <Trans i18nKey="support.contact">
-              If you have any questions, contact us at 
+              If you have any questions, contact us at
               <a type="link" href={DISCORD_KEPLER_SUPPORT_URL} target="_blank" rel="noreferrer">
                 #kepler-support
               </a>
               channel on Discord
-            </Trans>  
+            </Trans>
           </Typography.Text>
         </div>
       </div>
