@@ -9,15 +9,14 @@ import { InjectedConnector } from '@web3-react/injected-connector';
 import { NetworkConnector } from '@web3-react/network-connector';
 import { providers } from 'ethers';
 
-export const defaultChainId = parseInt(networks.testnet.chainId, 16);
-export const ECOSYSTEM_NETWORK = networks.testnet.chainName;
+export const SUPPORTED_NETWORK = (process.env.REACT_APP_NETWORK ?? 'testnet') as keyof typeof networks;
+export const defaultChainId = parseInt(networks[SUPPORTED_NETWORK].chainId, 16);
+export const ECOSYSTEM_NETWORK = networks[SUPPORTED_NETWORK].chainName;
 
 export const RPC_URLS: Record<number, string> = {
   80001: 'https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78',
   137: 'https://polygon-rpc.com/'
 };
-
-export const SUPPORTED_NETWORK = 'testnet';
 
 export const injectedConntector = new InjectedConnector({
   supportedChainIds: [defaultChainId]
@@ -119,7 +118,7 @@ export const handleSwitchNetwork = async (ethWindowObj = window?.ethereum) => {
     if (e?.code === 4902) {
       await ethWindowObj.request({
         method: ethMethods.addChain,
-        params: [networks.testnet]
+        params: [networks[SUPPORTED_NETWORK]]
       });
     } else {
       console.log('Switch Ethereum network failed', e);
