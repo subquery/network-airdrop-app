@@ -8,6 +8,8 @@ import { Alert, Button, Typography } from '@subql/react-ui';
 
 import styles from './ConnectWallet.module.css';
 
+export const isOpen = false; // Confirm with james before changing to true!
+
 const Wallet: React.VFC<{ name: string; icon: string; onClick?: () => void }> = ({ name, icon, onClick }) => {
   const { t } = useTranslation();
 
@@ -45,23 +47,36 @@ export const ConnectWallet: React.FC<IConnectWallet> = ({ onConnect, title, subT
   return (
     <div className={styles.walletActionContainer}>
       <span className={styles.title}>{t(`airdrop.check`)}</span>
-      <Typography variant="h6" className={styles.walletActionTitle}>
-        {title ?? t('airdrop.eligible')}
-      </Typography>
-      <Typography variant="h6" className={styles.walletActionTitle}>
-        {subTitle ?? t('airdrop.connectWallet')}
-      </Typography>
 
-      <button onClick={onConnect} type="button" className={styles.walletActionButton}>
-        <div>
-          <img src="/static/metamaskBanner.png" className={styles.logo} alt="Metamask logo" />
-          <Typography className={styles.walletActionText}>{t('airdrop.connectBrowserWallet')}</Typography>
-        </div>
-        <FaArrowRight className={styles.rightArrow} />
-      </button>
-      <div className={styles.switchToBrowserAlert}>
-        <Alert className={styles.switchToBrowserText} state="info" text={t('wallet.useBrowserMetamask')} />
-      </div>
+      {isOpen ? (
+        <>
+          <Typography variant="h6" className={styles.walletActionTitle}>
+            {title ?? t('airdrop.eligible')}
+          </Typography>
+          <Typography variant="h6" className={styles.walletActionTitle}>
+            {subTitle ?? t('airdrop.connectWallet')}
+          </Typography>
+          <button onClick={onConnect} type="button" className={styles.walletActionButton}>
+            <div>
+              <img src="/static/metamaskBanner.png" className={styles.logo} alt="Metamask logo" />
+              <Typography className={styles.walletActionText}>{t('airdrop.connectBrowserWallet')}</Typography>
+            </div>
+            <FaArrowRight className={styles.rightArrow} />
+          </button>
+          <div className={styles.switchToBrowserAlert}>
+            <Alert className={styles.switchToBrowserText} state="info" text={t('wallet.useBrowserMetamask')} />
+          </div>
+        </>
+      ) : (
+        <>
+          <Typography variant="h6" className={styles.walletActionTitle}>
+            {t('airdrop.notYetOpen')}
+          </Typography>
+          <a href="https://blog.subquery.network" target="_blank" rel="noreferrer">
+            <Button type="primary" className={styles.linkText} label={t('airdrop.notYetOpenReadMore')} />
+          </a>
+        </>
+      )}
     </div>
   );
 };
