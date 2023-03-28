@@ -7,7 +7,7 @@ const en = {
       home: 'Home',
       claim: 'Claim',
       sale: 'Public Sale',
-      network: 'Subquery Network',
+      network: 'SubQuery Network',
       airdrop: 'Airdrop',
       studio: 'Studio',
       documentation: 'Documentation',
@@ -25,7 +25,9 @@ const en = {
       noDescription: 'No description'
     },
     airdrop: {
-      check: 'Thank you for contributing to SubQuery’s growth',
+      notYetOpen: 'Check back soon for when the Airdrop app launches',
+      notYetOpenReadMore: 'Read more about the upcoming airdrop',
+      title: 'Thank you for contributing to SubQuery’s growth',
       eligible: 'You may be eligible for airdrop.',
       connectWallet: 'Connect your wallet to find out',
       connectBrowserWallet: 'Connect using browser wallet',

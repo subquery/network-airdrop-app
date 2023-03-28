@@ -13,6 +13,7 @@ import styles from './Header.module.css';
 
 const FOUNDATION_URL = 'https://subquery.foundation/';
 const SUBQUERY_URL = 'https://www.subquery.network/';
+const CLAIM_ENABLE = process.env.REACT_APP_CLAIM_ENABLED === 'true';
 
 const HeaderLinks = () => {
   const { t } = useTranslation();
@@ -30,6 +31,8 @@ const HeaderLinks = () => {
       title: t('header.network')
     }
   ];
+
+  console.log('CLAIM_ENABLE', typeof process.env.REACT_APP_CLAIM_ENABLED);
 
   return (
     <div className={styles.textLinks}>
@@ -49,14 +52,18 @@ const HeaderLinks = () => {
   );
 };
 
-// TODO: improve dropdown button
-export const Header: React.VFC = () => {
+const WalletButton = () => {
   const { account, activate, deactivate, error } = useWeb3();
   const { t } = useTranslation();
 
-  const handleConnectWallet = React.useCallback(async () => {
-    if (account) {
+  const handleSelected = (key: string) => {
+    if (key === 'disconnect') {
       deactivate();
+    }
+  };
+
+  const handleConnectWallet = React.useCallback(async () => {
+    if (account || !CLAIM_ENABLE) {
       return;
     }
 
@@ -67,40 +74,32 @@ export const Header: React.VFC = () => {
     }
   }, [activate, account, deactivate]);
 
-  const handleSelected = (key: string) => {
-    if (key === 'disconnect') {
-      deactivate();
-    }
-  };
-
-  return (
-    <div className={styles.header}>
-      <div className={styles.inner}>
-        <div className={styles.left}>
-          <a href={FOUNDATION_URL} target="_blank" rel="noreferrer">
-            <img src="/static/sqFoundation.svg" className={styles.logo} alt="SubQuery logo" />
-          </a>
-        </div>
-        <div className={styles.right}>
-          <HeaderLinks />
-          {account ? (
-            <Dropdown
-              items={[{ key: 'disconnect', label: 'Disconnect' }]}
-              onSelected={handleSelected}
-              colorScheme="gradient"
-            >
-              <Address address={account} size="large" />
-            </Dropdown>
-          ) : (
-            <Button
-              type="secondary"
-              label={t('header.connectWallet')}
-              onClick={handleConnectWallet}
-              leftItem={<i className="bi-link-45deg" role="img" aria-label="link" />}
-            />
-          )}
-        </div>
-      </div>
-    </div>
+  return account ? (
+    <Dropdown items={[{ key: 'disconnect', label: 'Disconnect' }]} onSelected={handleSelected} colorScheme="gradient">
+      <Address address={account} size="large" />
+    </Dropdown>
+  ) : (
+    <Button
+      type="secondary"
+      label={t('header.connectWallet')}
+      onClick={handleConnectWallet}
+      leftItem={<i className="bi-link-45deg" role="img" aria-label="link" />}
+    />
   );
 };
+
+export const Header: React.VFC = () => (
+  <div className={styles.header}>
+    <div className={styles.inner}>
+      <div className={styles.left}>
+        <a href={FOUNDATION_URL} target="_blank" rel="noreferrer">
+          <img src="/static/sqFoundation.svg" className={styles.logo} alt="SubQuery logo" />
+        </a>
+      </div>
+      <div className={styles.right}>
+        <HeaderLinks />
+        {CLAIM_ENABLE && <WalletButton />}
+      </div>
+    </div>
+  </div>
+);
