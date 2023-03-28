@@ -32,6 +32,8 @@ const HeaderLinks = () => {
     }
   ];
 
+  console.log('CLAIM_ENABLE', typeof process.env.REACT_APP_CLAIM_ENABLED);
+
   return (
     <div className={styles.textLinks}>
       {headerEntryLinks.map((headerLink) => {
