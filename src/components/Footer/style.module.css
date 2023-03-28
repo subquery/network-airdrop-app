@@ -59,7 +59,7 @@
 }
 
 .discordButtonText {
-  color: var(--sq-primary-blue)
+  color: var(--sq-primary-blue);
 }
 
 .discordButtonIcon {
@@ -80,7 +80,6 @@
   font-weight: bold;
   gap: 15px;
 }
-
 
 @media screen and (max-width: 800px) {
   .links > a {
@@ -105,5 +104,5 @@
   }
 }
 .joinour {
-  color: #4388DD;
+  color: #4388dd;
 }

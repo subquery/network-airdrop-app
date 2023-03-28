@@ -1,14 +1,14 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { Button } from "antd";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { Button } from 'antd';
 
-import Discord from "./images/discord.svg";
-import { IconLinks } from "./components";
-import styles from "./style.module.css";
+import Discord from './images/discord.svg';
+import { IconLinks } from './components';
+import styles from './style.module.css';
 
 export const Footer: React.FC = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <div className={styles.footerWrapper}>
@@ -20,15 +20,9 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className={styles.discord}>
-            <Button
-              type="primary"
-              ghost
-              shape="round"
-              href="https://discord.com/invite/subquery"
-              size="large"
-            >
+            <Button type="primary" ghost shape="round" href="https://discord.com/invite/subquery" size="large">
               <div className={styles.discordButton}>
-                <img src={Discord} alt='discord' className={styles.discordButtonIcon} />
+                <img src={Discord} alt="discord" className={styles.discordButtonIcon} />
                 <div>{t(`footer.discord`)}</div>
               </div>
             </Button>
@@ -45,5 +39,5 @@ export const Footer: React.FC = () => {
         </div>
       </div>
     </div>
-  )
+  );
 };

@@ -47,7 +47,7 @@ export const FAQ: React.VFC = () => {
     },
     {
       question: t('faq.howCanClaimQ'),
-      answer: <Trans i18nKey="faq.howCanClaimA"/>
+      answer: <Trans i18nKey="faq.howCanClaimA" />
     },
     {
       question: t('faq.howLongAirdropQ'),
@@ -61,7 +61,7 @@ export const FAQ: React.VFC = () => {
       question: t('faq.troubleshootingQ'),
       answer: (
         <Trans i18nKey="faq.troubleshootingA">
-          Currently we only support Metamask. If you have any questions, please contact us 
+          Currently we only support Metamask. If you have any questions, please contact us
           <a className={styles.discordLink} href={DISCORD_INVITE_URL} target="_blank" rel="noreferrer">
             via Discord
           </a>
@@ -74,17 +74,16 @@ export const FAQ: React.VFC = () => {
     },
     {
       question: t('faq.whoCanContactQ'),
-      answer: ( 
+      answer: (
         <Trans i18nKey="faq.whoCanContactA">
           If your question is not answered here, please contact us
           <a className={styles.discordLink} href={DISCORD_INVITE_URL} target="_blank" rel="noreferrer">
             via our Discord
           </a>
-          via our Discord
-          in the Airdrop channel
+          via our Discord in the Airdrop channel
         </Trans>
       )
-    },
+    }
   ];
 
   return (

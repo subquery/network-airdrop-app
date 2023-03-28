@@ -19,12 +19,12 @@ const JoinDiscord = () => {
       </Button>
       <Typography.Text className={styles.text}>
         <Trans i18nKey="support.turnOnNotification">
-            Make sure you turn on notifications for the 
-            <a type="link" href={DISCORD_ANNOUNCEMENTS_URL} target="_blank" rel="noreferrer">
-              #announcement
-            </a>
-            channel so you don’t miss any update
-        </Trans>  
+          Make sure you turn on notifications for the
+          <a type="link" href={DISCORD_ANNOUNCEMENTS_URL} target="_blank" rel="noreferrer">
+            #announcement
+          </a>
+          channel so you don’t miss any update
+        </Trans>
       </Typography.Text>
     </div>
   );
@@ -45,12 +45,12 @@ export function Home() {
               </div>
               <Typography.Text className={styles.text}>
                 <Trans i18nKey="support.contact">
-                  If you have any questions, contact us at 
+                  If you have any questions, contact us at
                   <a type="link" href={DISCORD_KEPLER_SUPPORT_URL} target="_blank" rel="noreferrer">
                     #kepler-support
                   </a>
                   channel on Discord
-                </Trans>  
+                </Trans>
               </Typography.Text>
             </div>
           </WalletDetect>
