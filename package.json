@@ -25,6 +25,7 @@
     "apollo": "^2.34.0",
     "assert": "^2.0.0",
     "clsx": "^1.2.1",
+    "env-cmd": "^10.1.0",
     "ethers": "^5.5.3",
     "graphql": "15.6.1",
     "i18next": "^21.6.9",
@@ -47,9 +48,9 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "dev": "yarn codegen && craco start",
-    "build:dev": "yarn codegen && REACT_APP_STAGE=development craco build",
-    "build": "yarn codegen && REACT_APP_STAGE=production craco build",
+    "dev": "yarn codegen && env-cmd -f stage.env craco start",
+    "build:dev": "yarn codegen && env-cmd -f stage.env craco build",
+    "build": "yarn codegen && craco build",
     "codegen": "mkdir -p src/__generated__ && sh ./codegen.sh",
     "test": "craco test",
     "eject": "react-scripts eject",
