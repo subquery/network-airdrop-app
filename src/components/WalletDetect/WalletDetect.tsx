@@ -23,7 +23,7 @@ const AirdropReadMore = () => {
         type="primary"
         className={styles.linkText}
         label={t('airdrop.notYetOpenReadMore')}
-        href="https://blog.subquery.network/kepler-airdrop-details"
+        href="https://blog.subquery.network/subquery-announces-details-of-subquery-kepler-airdrop"
         target="_blank"
       />
 
