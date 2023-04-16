@@ -7,8 +7,7 @@ export const TOKEN = 'kSQT';
 
 export const DISCORD_INVITE_URL = 'https://discord.gg/zAWxMbrS34';
 
-// TODO: Confirm airdrop category name for each round
+const Network = process.env.REACT_APP_NETWORK === 'kepler' ? 'Kepler' : undefined;
 export const AIRDROP_CATEGORIES: { [key: string]: string } = {
-  '0': 'Testnet Participant - Delegator',
-  '1': 'AMA - July 3rd'
+  '0': `${Network ? `${Network} ` : ''}Airdrop - Phase 1 (Indexers)`
 };
