@@ -35,16 +35,16 @@ export const ConnectWallet: React.FC<IConnectWallet> = ({ title, subTitle, logoI
       <Typography variant="h6" className={styles.walletActionTitle}>
         {title ?? t('airdrop.eligible')}
       </Typography>
-      <Typography variant="h6" className={styles.walletActionTitle}>
-        {subTitle ?? t('airdrop.connectWallet')}
-      </Typography>
 
       <button onClick={handleConnectWallet} type="button" className={styles.walletActionButton}>
         <div>
-          <img src="/static/metamaskBanner.png" className={styles.logo} alt="Metamask logo" />
+          <div className={styles.walletMetamask}>
+            <img src="/static/metamask.svg" className={styles.metmaskIcon} alt="Metamask logo" />
+            <Typography className={styles.metamaskTitle}>{t('airdrop.metamask')}</Typography>
+          </div>
           <Typography className={styles.walletActionText}>{t('airdrop.connectBrowserWallet')}</Typography>
         </div>
-        <FaArrowRight className={styles.rightArrow} />
+        <FaArrowRight className={styles.rightArrow} /> 
       </button>
       <div className={styles.switchToBrowserAlert}>
         <Alert className={styles.switchToBrowserText} state="info" text={t('wallet.useBrowserMetamask')} />

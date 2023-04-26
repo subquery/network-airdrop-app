@@ -2,18 +2,21 @@
   border: 1px solid #4388dd;
   margin-top: 2rem;
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 1rem 2rem;
   width: 60%;
-
-  text-align: start;
 
   display: flex;
   justify-content: space-between;
-  align-content: center;
+  align-items: center;
 }
 
 .walletActionContainer :hover {
   border-color: lightcoral;
+  color: var(--sq-gray700);
+}
+
+.walletActionTitle {
+  color: var(--sq-gray700);
 }
 
 .walletActionTitle :hover {
@@ -22,6 +25,7 @@
 
 .rightArrow {
   height: 100%;
+  width: 20px;
   color: var(--sq-gray600);
 }
 
@@ -30,6 +34,25 @@
   color: var(--sq-gray700);
   font-size: 14px;
 }
+
+.walletMetamask {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.metamaskTitle {
+  font-weight: 700;
+  font-size: 20px;
+  margin-left: 10px;
+  letter-spacing: 2px;
+}
+
+.metmaskIcon {
+  width: 50px;
+  height: 50px;
+}
+
 
 .switchToBrowserAlert {
   display: none;
