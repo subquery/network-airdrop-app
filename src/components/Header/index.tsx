@@ -3,52 +3,56 @@
 
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { Address, Button, Dropdown, Typography } from '@subql/react-ui';
-import clsx from 'clsx';
+import { Header as SubqlHeader } from '@subql/components';
+import { Address, Button, Dropdown } from '@subql/react-ui';
 
 import { injectedConntector, useWeb3 } from 'containers';
 
-import styles from './Header.module.css';
+// import styles from './Header.module.css';
 
 const FOUNDATION_URL = 'https://subquery.foundation/';
 const SUBQUERY_URL = 'https://www.subquery.network/';
 const CLAIM_ENABLE = process.env.REACT_APP_CLAIM_ENABLED === 'true';
 
-const HeaderLinks = () => {
-  const { t } = useTranslation();
-  const headerEntryLinks = [
-    {
-      url: FOUNDATION_URL,
-      title: t('header.home')
-    },
-    {
-      url: '/',
-      title: t('header.claim')
-    },
-    {
-      url: SUBQUERY_URL,
-      title: t('header.network')
-    }
-  ];
 
-  return (
-    <div className={styles.textLinks}>
-      {headerEntryLinks.map((headerLink) => {
-        const isExternalLink = headerLink.url.startsWith('http');
-        return isExternalLink ? (
-          <a href={headerLink.url} target="_blank" key={headerLink.url} rel="noreferrer">
-            <Typography className={styles.hostedText}>{headerLink.title}</Typography>
-          </a>
-        ) : (
-          <Typography key={headerLink.url} className={clsx(styles.hostedText, styles.activeText)}>
-            <Link to={headerLink.url}>{headerLink.title}</Link>
-          </Typography>
-        );
-      })}
-    </div>
-  );
-};
+  const headerEntryLinks =[
+    {
+      label:'Home',
+      link: FOUNDATION_URL,
+
+    },
+    {
+      label:'Claim',
+      link: '/',
+
+    },
+    {
+      label: 'SubQuery Network',
+      link: SUBQUERY_URL,
+
+    }];
+
+const dropdownLinks={
+  label: 'Products',
+      links: [
+    {
+      description: 'Explore SubQuery projects built by other teams in the community and hosted on SubQuery’s Managed Service. Get inspired and see what others are building!',
+      label: 'SubQuery Explorer',
+      link: `https://explorer.subquery.network/`
+    },
+    {
+      description: 'Use SubQuery’s Managed Service to host your SubQuery project, upgrade existing projects, and view detailed analytics on how your SubQuery Project is operating.',
+      label: 'SubQuery Managed Service',
+      link: `https://managedservice.subquery.network/`,
+    },
+    {
+      description: 'Decentralise your project with SubQuery Kepler Network, which provides indexed data to the global community in an incentivised and verifiable way. You can join and participate as a Consumer, Delegator, or even as an Indexer.',
+      label: 'SubQuery Kepler',
+      link: "https://kepler.subquery.network",
+    }
+  ]
+}
+
 
 const WalletButton = () => {
   const { account, activate, deactivate, error } = useWeb3();
@@ -86,18 +90,4 @@ const WalletButton = () => {
   );
 };
 
-export const Header: React.VFC = () => (
-  <div className={styles.header}>
-    <div className={styles.inner}>
-      <div className={styles.left}>
-        <a href={FOUNDATION_URL} target="_blank" rel="noreferrer">
-          <img src="/static/sqFoundation.svg" className={styles.logo} alt="SubQuery logo" />
-        </a>
-      </div>
-      <div className={styles.right}>
-        <HeaderLinks />
-        {CLAIM_ENABLE && <WalletButton />}
-      </div>
-    </div>
-  </div>
-);
+export const Header: React.VFC = () => (<>{CLAIM_ENABLE ?<SubqlHeader appNavigation={headerEntryLinks} dropdownLinks={dropdownLinks} rightElement={ <WalletButton />} />:<SubqlHeader appNavigation={headerEntryLinks} dropdownLinks={dropdownLinks} />}</>) ;
