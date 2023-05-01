@@ -3,9 +3,12 @@
 
 import React from 'react';
 import { ContractSDK } from '@subql/contract-sdk';
-import deploymentDetails from '@subql/contract-sdk/publish/testnet.json';
+import keplerDeployment from '@subql/contract-sdk/publish/kepler.json';
+import testnetDeployment from '@subql/contract-sdk/publish/testnet.json';
 
 import { useWeb3 } from '../containers';
+
+const Network = process.env.REACT_APP_NETWORK;
 
 export function useContracts(): ContractSDK | undefined {
   const [contracts, setContracts] = React.useState<ContractSDK | undefined>();
@@ -22,6 +25,7 @@ export function useContracts(): ContractSDK | undefined {
       return;
     }
 
+    const deploymentDetails = Network === 'kepler' ? keplerDeployment : testnetDeployment;
     const pendingContracts = await ContractSDK.create(signerOrProvider, { deploymentDetails });
 
     setContracts(pendingContracts);

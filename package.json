@@ -49,6 +49,7 @@
   },
   "scripts": {
     "dev": "yarn codegen && env-cmd -f stage.env craco start",
+    "prod": "yarn codegen && craco start",
     "build:dev": "yarn codegen && env-cmd -f stage.env craco build",
     "build": "yarn codegen && craco build",
     "codegen": "mkdir -p src/__generated__ && sh ./codegen.sh",
