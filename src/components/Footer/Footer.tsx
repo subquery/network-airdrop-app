@@ -16,16 +16,16 @@ export const Footer: React.FC = () => {
         <div className={styles.primaryRow}>
           <div className={styles.contact}>
             <h2>Join the Open Web3 Data Revolution</h2>
-            <IconLinks />
-          </div>
+            <div className={styles.contacts}>
+              <IconLinks />
 
-          <div className={styles.discord}>
-            <Button type="primary" ghost shape="round" href="https://discord.com/invite/subquery" size="large">
-              <div className={styles.discordButton}>
-                <img src={Discord} alt="discord" className={styles.discordButtonIcon} />
-                <div>{t(`footer.discord`)}</div>
-              </div>
-            </Button>
+              <Button type="primary" ghost shape="round" href="https://discord.com/invite/subquery" size="large">
+                <div className={styles.discordButton}>
+                  <img src={Discord} alt="discord" className={styles.discordButtonIcon} />
+                  <div>{t(`footer.discord`)}</div>
+                </div>
+              </Button>
+            </div>
           </div>
         </div>
         <div className={styles.secondaryRow}>
