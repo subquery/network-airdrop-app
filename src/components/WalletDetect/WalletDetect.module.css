@@ -37,6 +37,10 @@
   padding: 3rem;
   align-items: center;
   justify-content: space-around;
+
+  @media screen and (max-width: 768px) {
+    padding: 2rem 0.75rem;
+  }
 }
 
 .title {
