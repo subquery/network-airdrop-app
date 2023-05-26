@@ -17,6 +17,8 @@ import { convertStrToNumber, fetcherPost } from 'utils';
 
 import styles from './Airdrop.module.css';
 
+const SETTLED_AIRDROPS = [0];
+
 export const AirdropClaimButton: React.FC<{
   unlockedAirdropIds: Array<string>;
 }> = ({ unlockedAirdropIds }) => {
@@ -81,7 +83,7 @@ export const AirdropClaimButton: React.FC<{
     try {
       assert(contracts, 'Contracts should be available.');
       setIsLoading(true);
-      const sortedUnlockedAirdropIds = unlockedAirdropIds.map((airdropId) => convertStrToNumber(airdropId));
+      const sortedUnlockedAirdropIds = unlockedAirdropIds.map((id) => convertStrToNumber(id)).filter((id) => !SETTLED_AIRDROPS.includes(id));
       const approvalTx = await contracts.airdropper.batchClaimAirdrop(sortedUnlockedAirdropIds);
       openNotificationWithIcon({ title: t('notification.txSubmittedTitle') });
 
