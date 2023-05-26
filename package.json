@@ -48,6 +48,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
+    "start": "yarn codegen && env-cmd -f .env craco start", 
     "dev": "yarn codegen && env-cmd -f stage.env craco start",
     "build:dev": "yarn codegen && env-cmd -f stage.env craco build",
     "build": "yarn codegen && craco build",
