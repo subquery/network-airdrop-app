@@ -50,7 +50,9 @@ const getColumns = (t: any): TableProps<SortedUserAirdrops>['columns'] => [
   {
     dataIndex: ['airdrop', 'id'],
     title: <TableTitle title={t('airdrop.category')} />,
-    render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</TableText>,
+    render: (airdropId: string) => (
+      <TableText>{AIRDROP_CATEGORIES[airdropId] ?? `Kepler Airdrop - Updated Phase 1 (Indexers)`}</TableText>
+    ),
     width: '30%'
   },
   {
