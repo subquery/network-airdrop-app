@@ -2448,10 +2448,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@subql/contract-sdk@0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@subql/contract-sdk/-/contract-sdk-0.13.0.tgz#e4c406e663020c4242b3e78d924a3888413deec6"
-  integrity sha512-VkCy+cNqPywuN6JHOjefJkNrlbpjv9VWAh7WaoKFQ+6WEgm1LH+OjYn91pP22eS2tmqpzta2tsEaBX9A4up92w==
+"@subql/contract-sdk@0.13.5":
+  version "0.13.5"
+  resolved "https://registry.npmmirror.com/@subql/contract-sdk/-/contract-sdk-0.13.5.tgz#04eb129a5fa90bad09f02159011939cf92bf4f00"
+  integrity sha512-OLtUXdvT7FuGLmwGmYm3LQpYofmN4+qVjWkulq+hh0sYpgF5b7Rig/ONxdKPrmQ2V+2LyWI8f4xKHMz0j3T/FA==
   dependencies:
     "@openzeppelin/contracts-upgradeable" "^4.5.2"
 
