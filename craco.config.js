@@ -1,6 +1,7 @@
 /* eslint-disable no-empty */
 const { resolve } = require('path');
 const path = require('path');
+const webpackResolve = require('craco-webpack-resolve');
 const {
   compilerOptions: { paths }
 } = require('./tsconfig.json');
@@ -22,5 +23,26 @@ module.exports = {
       utils: resolve(__dirname, 'src/utils'),
       __generated__: resolve(__dirname, 'src/__generated__')
     }
-  }
+  },
+  plugins: [
+    {
+      plugin: webpackResolve,
+      options: {
+        resolve: {
+          fallback: {
+            fs: false,
+            tls: false,
+            net: false,
+            path: false,
+            zlib: false,
+            http: false,
+            https: false,
+            stream: false,
+            crypto: false,
+            url: false
+          }
+        }
+      }
+    }
+  ]
 };
