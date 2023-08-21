@@ -26,6 +26,7 @@ export function useContracts(): ContractSDK | undefined {
     }
 
     const deploymentDetails = Network === 'kepler' ? keplerDeployment : testnetDeployment;
+    // @ts-ignore
     const pendingContracts = await ContractSDK.create(signerOrProvider, { deploymentDetails });
 
     setContracts(pendingContracts);
