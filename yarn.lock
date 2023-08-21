@@ -2855,10 +2855,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@subql/apollo-links@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@subql/apollo-links/-/apollo-links-0.5.2.tgz#3d754cffbcb08c4d9128e2c5f97fadd9330e7de3"
-  integrity sha512-+TLWCJtGu0yiP21la6ow+stgcPRWKVEG3BHBKXmxOMjjX1m/TZr4J4QvlI/VgYGNL8k7ImHvZtlhvkJ4awe0KQ==
+"@subql/apollo-links@^0.5.8":
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/@subql/apollo-links/-/apollo-links-0.5.8.tgz#b223fd8b817a652506553338c9c607d5ccb9f2d4"
+  integrity sha512-awFTL7FbxzEuyX/jIaLEWeq/ifEqPwtaJeUI+gCtkse4ByitGZYTuwoYMG816T8dTrhVfvNWAMk4/1ojxW17bA==
   dependencies:
     "@metamask/eth-sig-util" "5.1.0"
     apollo-link-error "^1.1.13"

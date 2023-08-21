@@ -7,7 +7,7 @@
     "@apollo/client": "^3.6.9",
     "@craco/craco": "^6.4.3",
     "@ethersproject/units": "^5.6.1",
-    "@subql/apollo-links": "^0.5.2",
+    "@subql/apollo-links": "^0.5.8",
     "@subql/contract-sdk": "0.13.5",
     "@subql/react-ui": "1.0.1-19",
     "@testing-library/jest-dom": "^5.14.1",
