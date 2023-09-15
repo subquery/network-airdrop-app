@@ -13,7 +13,7 @@ const getAirdroplink = () => {
     httpOptions,
     authUrl: process.env.REACT_APP_AUTH_URL as string,
     fallbackServiceUrl: process.env.REACT_APP_AIRDROP_SUBQL
-  });
+  }).link;
 };
 
 export const QueryApolloProvider: React.FC = ({ children }) => {

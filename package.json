@@ -7,8 +7,10 @@
     "@apollo/client": "^3.6.9",
     "@craco/craco": "^6.4.3",
     "@ethersproject/units": "^5.6.1",
-    "@subql/apollo-links": "^0.5.8",
-    "@subql/contract-sdk": "0.13.5",
+    "@subql/apollo-links": "^1.0.8",
+    "@subql/contract-sdk": "^0.16.0",
+    "@subql/network-query": "0.3.16-8",
+    "@subql/react-hooks": "0.3.16-12",
     "@subql/react-ui": "1.0.1-19",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
@@ -29,14 +31,15 @@
     "craco-webpack-resolve": "^1.2.1",
     "env-cmd": "^10.1.0",
     "ethers": "^5.5.3",
-    "graphql": "15.6.1",
+    "graphql": "^16.8.0",
+    "graphql-tag": "^2.12.6",
     "i18next": "^21.6.9",
     "i18next-browser-languagedetector": "^6.1.3",
     "marked": "^4.0.18",
     "marked-react": "^1.2.0",
     "moment": "^2.29.4",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-i18next": "^11.15.3",
     "react-icons": "^4.3.1",
     "react-markdown": "^8.0.0",
@@ -50,11 +53,10 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "dev": "yarn codegen && env-cmd -f stage.env craco start",
-    "prod": "yarn codegen && craco start",
-    "build:dev": "yarn codegen && env-cmd -f stage.env craco build",
-    "build": "yarn codegen && craco build",
-    "codegen": "mkdir -p src/__generated__ && sh ./codegen.sh",
+    "dev": "DISABLE_ESLINT_PLUGIN=true & env-cmd -f stage.env craco start",
+    "prod": "craco start",
+    "build:dev": "env-cmd -f stage.env craco build",
+    "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "lint": "eslint --fix .",
@@ -106,6 +108,6 @@
     "*.{css,md}": "prettier --write"
   },
   "resolutions": {
-    "graphql": "15.6.1"
+    "graphql": "16.8.0"
   }
 }
