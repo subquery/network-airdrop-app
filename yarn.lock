@@ -3047,17 +3047,19 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@subql/apollo-links@^0.5.8":
-  version "0.5.8"
-  resolved "https://registry.yarnpkg.com/@subql/apollo-links/-/apollo-links-0.5.8.tgz#b223fd8b817a652506553338c9c607d5ccb9f2d4"
-  integrity sha512-awFTL7FbxzEuyX/jIaLEWeq/ifEqPwtaJeUI+gCtkse4ByitGZYTuwoYMG816T8dTrhVfvNWAMk4/1ojxW17bA==
+"@subql/apollo-links@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.npmjs.org/@subql/apollo-links/-/apollo-links-1.0.8.tgz#9fc8158f4645b2269cec44c65d3f979ffa39a67a"
+  integrity sha512-ydyP6UXU7JkLlwpG4vI7F5YDmsTPMETyQll5CXHj3Q98r+plM9qpH8bcgDf0YCvG4i3yY4rEJ1xOho/ACjKOnw==
   dependencies:
     "@metamask/eth-sig-util" "5.1.0"
     apollo-link-error "^1.1.13"
     axios "^0.27.2"
     buffer "^6.0.3"
+    cross-fetch "^4.0.0"
     ethers "^5.6.8"
     jwt-decode "^3.1.2"
+    lru-cache "^10.0.1"
 
 "@subql/contract-sdk@^0.16.0":
   version "0.16.0"
@@ -5659,6 +5661,13 @@ create-require@^1.1.0:
   resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
 
+cross-fetch@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/cross-fetch/-/cross-fetch-4.0.0.tgz#f037aef1580bb3a1a35164ea2a848ba81b445983"
+  integrity sha512-e4a5N8lVvuLgAWgnCrLr2PP0YyDOTHa9H/Rj54dirp61qXnNq46m82bRhNqIA5VccJtWBvPTFRV3TtvHUKPB1g==
+  dependencies:
+    node-fetch "^2.6.12"
+
 cross-spawn@^6.0.5:
   version "6.0.5"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-6.0.5.tgz#4a5ec7c64dfae22c3a14124dbacdee846d80cbc4"
@@ -7572,12 +7581,7 @@ graphql-tag@2.12.6, graphql-tag@^2.10.1, graphql-tag@^2.12.6:
   dependencies:
     tslib "^2.1.0"
 
-"graphql@14.0.2 - 14.2.0 || ^14.3.1 || ^15.0.0", graphql@15.6.1, graphql@^16.5.0:
-  version "15.6.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.6.1.tgz#9125bdf057553525da251e19e96dab3d3855ddfc"
-  integrity sha512-3i5lu0z6dRvJ48QP9kFxBkJ7h4Kso7PS8eahyTFz5Jm6CvQfLtNIE8LX9N6JLnXTuwR+sIYnXzaWp6anOg0QQw==
-
-graphql@^16.8.0:
+"graphql@14.0.2 - 14.2.0 || ^14.3.1 || ^15.0.0", graphql@16.8.0, graphql@^16.5.0, graphql@^16.8.0:
   version "16.8.0"
   resolved "https://registry.npmjs.org/graphql/-/graphql-16.8.0.tgz#374478b7f27b2dc6153c8f42c1b80157f79d79d4"
   integrity sha512-0oKGaR+y3qcS5mCu1vb7KG+a89vjn06C7Ihq/dDl3jA+A8B3TKomvi3CiEcVLJQGalbu8F52LxkOym7U5sSfbg==
@@ -9369,6 +9373,11 @@ lower-case@^2.0.2:
   dependencies:
     tslib "^2.0.3"
 
+lru-cache@^10.0.1:
+  version "10.0.1"
+  resolved "https://registry.npmjs.org/lru-cache/-/lru-cache-10.0.1.tgz#0a3be479df549cca0e5d693ac402ff19537a6b7a"
+  integrity sha512-IJ4uwUTi2qCccrioU6g9g/5rvvVl13bsdczUUcqbciD9iLr095yj8DQKdObriEvuNSx325N1rV1O0sJFszx75g==
+
 lru-cache@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-6.0.0.tgz#6d6fe6570ebd96aaf90fcad1dafa3b2566db3a94"
@@ -10124,6 +10133,13 @@ node-fetch@^2.6.1, node-fetch@^2.6.7:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
   integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
+  dependencies:
+    whatwg-url "^5.0.0"
+
+node-fetch@^2.6.12:
+  version "2.7.0"
+  resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
+  integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
   dependencies:
     whatwg-url "^5.0.0"
 
