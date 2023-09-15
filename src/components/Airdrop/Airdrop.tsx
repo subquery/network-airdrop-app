@@ -1,19 +1,18 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC, VFC } from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatEther } from '@ethersproject/units';
+import { AirdropClaimStatus, AirdropUser } from '@subql/network-query';
+import { useGetAirdropsByAccountQuery } from '@subql/react-hooks';
 import { Table, TableProps, Tag, Typography } from 'antd';
 import { BigNumber } from 'ethers';
 import i18next from 'i18next';
 import moment from 'moment';
 
-import { GetAirdropsByAccount_airdropUsers_nodes as UserAirdrop } from '__generated__/airdropSubql/GetAirdropsByAccount';
-import { AirdropClaimStatus } from '__generated__/airdropSubql/globalTypes';
 import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from 'appConstants';
 import { useWeb3 } from 'containers';
-import { useAirdropsByAccount } from 'containers/QueryAirdrop';
 import { renderAsync } from 'utils/renderAsync';
 
 import { TableText } from '../Table';
@@ -29,7 +28,7 @@ enum AirdropRoundStatus {
   UNLOCKED = 'UNLOCKED'
 }
 
-interface SortedUserAirdrops extends UserAirdrop {
+interface SortedUserAirdrops extends AirdropUser {
   sortedStatus: AirdropRoundStatus;
   sortedNextMilestone: string;
 }
@@ -46,7 +45,7 @@ const AirdropStatusTag: FC<{ status: AirdropRoundStatus }> = ({ status }) => {
   return <Tag color={color}>{text}</Tag>;
 };
 
-const getColumns = (t: any): TableProps<SortedUserAirdrops>['columns'] => [
+const getColumns = (t: any): TableProps<any>['columns'] => [
   {
     dataIndex: ['airdrop', 'id'],
     title: <TableTitle title={t('airdrop.category')} />,
@@ -84,7 +83,7 @@ const getColumns = (t: any): TableProps<SortedUserAirdrops>['columns'] => [
  */
 
 const sortUserAirdrops = (
-  userAirdrops: Array<UserAirdrop>
+  userAirdrops: Array<AirdropUser>
 ): [Array<SortedUserAirdrops>, Array<string>, BigNumber, BigNumber] => {
   const unlockedAirdropIds: Array<string> = [];
   let unlockedAirdropAmount = BigNumber.from('0');
@@ -146,17 +145,22 @@ const sortUserAirdrops = (
   return [sortedUserAirdrops, unlockedAirdropIds, unlockedAirdropAmount, claimedAirdropAmount];
 };
 
-export const Airdrop: VFC = () => {
+export const Airdrop: FC = () => {
   const { t } = useTranslation();
   const { account } = useWeb3();
-  const accountAirdrop = useAirdropsByAccount({ account: account ?? '' });
+  const accountAirdrop = useGetAirdropsByAccountQuery({
+    variables: {
+      account: account ?? ''
+    }
+  });
+
   return (
     <div className={styles.container}>
       {renderAsync(accountAirdrop, {
         error: (e) => <Typography.Text type="danger">{`Failed to get airdrop information. \n ${e}`}</Typography.Text>,
         data: (data) => {
           if (!data) return null;
-          const airdrops = data?.airdropUsers?.nodes as Array<UserAirdrop>;
+          const airdrops = data?.airdropUsers?.nodes as Array<AirdropUser>;
           const [sortedAirdrops, unlockedAirdropIds, unlockedAirdropAmount, claimedAirdropAmount] =
             sortUserAirdrops(airdrops);
           const { user } = sortedAirdrops[0] ?? {};
@@ -168,7 +172,6 @@ export const Airdrop: VFC = () => {
               </Typography.Title>
               <Typography.Text className={styles.description}>{t('airdrop.description')}</Typography.Text>
               <AirdropAmountHeader
-                airdropUser={user}
                 unlockedAirdropAmount={unlockedAirdropAmount}
                 claimedAirdropAmount={claimedAirdropAmount}
               />

@@ -3,25 +3,34 @@
 
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useGetAirdropClaimsQuery } from '@subql/react-hooks';
 import { Typography } from 'antd';
 import clsx from 'clsx';
 import { BigNumber } from 'ethers';
 
-import { GetAirdropsByAccount_airdropUsers_nodes_user as AirdropUser } from '__generated__/airdropSubql/GetAirdropsByAccount';
+import { useWeb3 } from 'containers';
 import { formatAmount } from 'utils';
 
 import styles from './Airdrop.module.css';
 
 export const AirdropAmountHeader: React.FC<{
-  airdropUser: AirdropUser | null;
   unlockedAirdropAmount: BigNumber;
   claimedAirdropAmount: BigNumber;
-}> = ({ airdropUser, unlockedAirdropAmount, claimedAirdropAmount }) => {
+}> = ({ unlockedAirdropAmount, claimedAirdropAmount }) => {
   const { t } = useTranslation();
-  const totalAirdropAmount = airdropUser?.totalAirdropAmount?.toString() ?? '0';
+  const { account } = useWeb3();
 
+  const airdropClaims = useGetAirdropClaimsQuery({
+    variables: {
+      account: account || ''
+    }
+  });
+
+  // @ts-ignore
+  // const totalAirdropAmount = airdropUser?.totalAirdropAmount?.toString() ?? '0';
+  // const totalAirdropAmount = '0';
   const airdropAmounts = [
-    { amount: totalAirdropAmount, type: t('airdrop.total') },
+    { amount: airdropClaims.data?.airdropAmount?.totalAirdropAmount || '0', type: t('airdrop.total') },
     { amount: unlockedAirdropAmount, type: t('airdrop.unlockedTitle') },
     { amount: claimedAirdropAmount, type: t('airdrop.claimed') }
   ];
