@@ -13,6 +13,7 @@ import { fetcher } from 'utils';
 
 import styles from './App.module.css';
 
+import '@subql/components/dist/subquery-components.css';
 import 'i18n';
 
 function App() {

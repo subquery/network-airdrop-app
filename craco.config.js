@@ -2,6 +2,7 @@
 const { resolve } = require('path');
 const path = require('path');
 const webpackResolve = require('craco-webpack-resolve');
+const CracoLessPlugin = require('craco-less');
 const {
   compilerOptions: { paths }
 } = require('./tsconfig.json');
@@ -43,6 +44,7 @@ module.exports = {
           }
         }
       }
-    }
+    },
+    { plugin: CracoLessPlugin }
   ]
 };
