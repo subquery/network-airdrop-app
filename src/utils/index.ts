@@ -25,3 +25,26 @@ export const fetcherPost = (options: any) => {
 export const formatAmount = (amount: BigNumberish): string => `${formatEther(amount)} ${TOKEN}`;
 
 export const convertStrToNumber = (str: string): number => Number.parseInt(str, 10);
+
+export function convertCountToTime(count: number): string {
+  let countCopy = count
+  let result = '';
+  const years = Math.floor(count / 365);
+  countCopy %= 365;
+  const months = Math.floor(count / 30);
+  countCopy %= 30;
+  const days = count;
+
+  if (years > 0) {
+      result += `${years} year${years > 1 ? 's ' : ' '}`;
+  }
+  if (months > 0) {
+      result += `${months} month${months > 1 ? 's ' : ' '}`;
+  }
+  if (days > 0) {
+      result += `${days} day${days > 1 ? 's' : ''}`;
+  }
+
+  return result.trim();
+}
+

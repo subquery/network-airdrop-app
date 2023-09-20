@@ -64,11 +64,15 @@ export function Home() {
                     }
                   ]}
                 />
-                {activeKey === 'Airdrop' && <Airdrop />}
+
+                {activeKey === 'Airdrop' && (
+                  <>
+                    <Airdrop /> <JoinDiscord />
+                  </>
+                )}
                 {activeKey === 'Vesting' && <Vesting />}
-                <JoinDiscord />
               </div>
-              <Typography className={styles.text}>
+              <Typography className={styles.text} style={{ marginTop: 32 }}>
                 <Trans i18nKey="support.contact">
                   If you have any questions, contact us at
                   <a type="link" href={DISCORD_KEPLER_SUPPORT_URL} target="_blank" rel="noreferrer">

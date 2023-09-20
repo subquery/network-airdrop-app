@@ -1,6 +1,10 @@
+// eslint-disable-next-line simple-import-sort/imports
 import React, { useContext, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import useSWR from 'swr';
+
+// @ts-ignore
+import '@subql/components/dist/subquery-components.css';
 
 import { TERMS_URL } from 'appConstants';
 import { Header } from 'components';
@@ -13,7 +17,6 @@ import { fetcher } from 'utils';
 
 import styles from './App.module.css';
 
-import '@subql/components/dist/subquery-components.css';
 import 'i18n';
 
 function App() {

@@ -58,6 +58,9 @@ const en = {
       successClaim: 'You have claimed airdrop successfully',
       nonToClaim: 'No Claimable Airdrop Available'
     },
+    vesting: {
+      success: "You have claimed successfully "
+    },
     wallet: {
       connectionErr: 'Unfortunately we did not recceive the confirmation, Please try again.',
       connectAndSigned: 'You’ve agreed with the Terms and Conditions.',
