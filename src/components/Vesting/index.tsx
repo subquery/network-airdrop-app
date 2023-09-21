@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { Spinner, Typography } from '@subql/components';
+import VestingPlansConf from '@subql/contract-sdk/publish/vesting.json';
 import { useInterval } from 'ahooks';
 import { Button } from 'antd';
 import { BigNumber } from 'ethers';
@@ -28,6 +29,13 @@ interface VestingAllocationPlanNode {
 }
 
 const oneDay = 86400;
+
+const vestingPlans = VestingPlansConf[process.env.REACT_APP_NETWORK as 'kepler' | 'testnet' | 'mainnet'].map(
+  (contractAddress, index) => ({
+    contractAddress,
+    name: index === 0 ? 'SERIES A INVESTORS' : 'PRIVATE SALE INVESTORS'
+  })
+);
 
 const Vesting: FC<IProps> = () => {
   const vestingContractFactor = useVestingContracts();
@@ -246,7 +254,7 @@ const Vesting: FC<IProps> = () => {
             <div className={styles.vestingChunk} key={node.id}>
               <div className={styles.vestingChunkHeader}>
                 <Typography variant="small" weight={600} style={{ color: 'var(--sq-gray700)' }}>
-                  SERIES A INVESTORS
+                  {vestingPlans.find((i) => i.contractAddress === contractAddress)?.name || ''}
                 </Typography>
 
                 <Button
