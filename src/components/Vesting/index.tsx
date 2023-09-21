@@ -96,16 +96,28 @@ const Vesting: FC<IProps> = () => {
       };
     const vestingContract = await vestingContractFactor(contractAddress);
 
-    // maybe promise.all, but doesn't matter.
-    const claimable = await vestingContract?.claimableAmount(account);
-    const claimed = await vestingContract?.claimed(account);
-    const allocation = await vestingContract?.allocations(account);
+    const fetchData = await Promise.allSettled([
+      vestingContract?.claimableAmount(account),
+      vestingContract?.claimed(account),
+      vestingContract?.allocations(account)
+    ]);
+
+    if (fetchData.some((i) => i.status === 'rejected')) {
+      openNotificationWithIcon({
+        type: NotificationType.ERROR,
+        title: 'Fetch data failure',
+        description:
+          'Use cached data first, please refresh the page and change your RPC endpoint to make sure fetch lastest data.'
+      });
+    }
+
+    const [claimable, claimed, allocation] = fetchData;
 
     return {
       contractAddress,
-      claimable: claimable || BigNumber.from('0'),
-      claimed: claimed || BigNumber.from('0'),
-      allocation: allocation || BigNumber.from('0')
+      claimable: claimable.status === 'fulfilled' ? claimable.value || BigNumber.from('0') : BigNumber.from('0'),
+      claimed: claimed.status === 'fulfilled' ? claimed.value || BigNumber.from('0') : BigNumber.from('0'),
+      allocation: allocation.status === 'fulfilled' ? allocation.value || BigNumber.from('0') : BigNumber.from('0')
     };
   };
 
@@ -114,9 +126,19 @@ const Vesting: FC<IProps> = () => {
     const plansContactAddresses: string[] = accountPlans.data.vestingAllocations.nodes.map(
       (node: VestingAllocationPlanNode) => node.planId.split(':')[0]
     );
-    const res = await Promise.all(plansContactAddresses.map((i) => getClaimableAmount(i)));
 
-    setCliamableTokens(res);
+    try {
+      const res = await Promise.all(plansContactAddresses.map((i) => getClaimableAmount(i)));
+
+      setCliamableTokens(res);
+    } catch (e) {
+      openNotificationWithIcon({
+        type: NotificationType.ERROR,
+        title: 'Fetch data failure',
+        description:
+          'Use cached data first, please refresh the page and change your RPC endpoint to make sure fetch lastest data.'
+      });
+    }
   };
 
   const claimOne = async (contractAddress: string) => {
