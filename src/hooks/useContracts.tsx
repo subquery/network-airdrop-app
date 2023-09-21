@@ -57,13 +57,6 @@ export function useVestingContracts(): (contract: string) => Promise<Vesting | u
     // eslint-disable-next-line camelcase
     const vestingContract = await Vesting__factory.connect(vestingContractAddress, signerOrProvider);
     return vestingContract;
-    // const deploymentDetails = Network === 'kepler' ? keplerDeployment : testnetDeployment;
-    // deploymentDetails.Vesting.address = vestingContractAddress;
-
-    // @ts-ignore
-    // const pendingContracts = await ContractSDK.create(signerOrProvider, { deploymentDetails });
-
-    // return pendingContracts;
   };
 
   return initContract;
