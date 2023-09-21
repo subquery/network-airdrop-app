@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { Spinner, Typography } from '@subql/components';
+import { useInterval } from 'ahooks';
 import { Button } from 'antd';
 import { BigNumber } from 'ethers';
 import { t } from 'i18next';
@@ -184,6 +185,11 @@ const Vesting: FC<IProps> = () => {
     if (!account) return;
     initClaimableAmount();
   }, [accountPlans, account]);
+
+  useInterval(() => {
+    initClaimableAmount();
+    // one minite
+  }, 60000);
 
   return renderAsync(accountPlans, {
     loading: () => (
