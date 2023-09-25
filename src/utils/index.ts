@@ -46,7 +46,9 @@ export function convertCountToTime(count: number): string {
     result += `${days} day${days > 1 ? 's' : ''}`;
   }
 
-  return result.trim();
+  result = result.trim();
+
+  return result || '0 day'
 }
 
 export const roundToSix = (amount: string | BigNumberish): string => {

@@ -302,10 +302,14 @@ const Vesting: FC<IProps> = () => {
                 </Button>
               </div>
               <div className={styles.vestingChunkContent}>
-                <Typography style={{ color: 'var(--sq-gray700)' }}>
-                  {convertCountToTime(lockPeriod)} cliff with linear unlock over the next{' '}
-                  {convertCountToTime(vestingPeriod)}
-                </Typography>
+                {!vestingPeriod ? (
+                  ''
+                ) : (
+                  <Typography style={{ color: 'var(--sq-gray700)' }}>
+                    {convertCountToTime(lockPeriod)} cliff with linear unlock over the next{' '}
+                    {convertCountToTime(vestingPeriod)}
+                  </Typography>
+                )}
 
                 <div className={styles.vestingChunkContentInfo}>
                   <Typography tooltip={formatAmount(amount.sub(planTotalClaimed).sub(planClaimable))}>
