@@ -6,11 +6,13 @@ import { useInterval } from 'ahooks';
 import { Button } from 'antd';
 import { BigNumber } from 'ethers';
 import { t } from 'i18next';
+import moment from 'moment';
 
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
 import { useWeb3, VESTING } from 'containers';
 import { useVestingContracts } from 'hooks';
-import { convertCountToTime, formatAmount, renderAsync } from 'utils';
+import { useSign } from 'hooks/useSign';
+import { convertCountToTime, formatAmount, renderAsync, roundToSix } from 'utils';
 
 import styles from './index.module.less';
 
@@ -40,6 +42,7 @@ const vestingPlans = VestingPlansConf[process.env.REACT_APP_NETWORK as 'kepler' 
 const Vesting: FC<IProps> = () => {
   const vestingContractFactor = useVestingContracts();
   const { account } = useWeb3();
+  const { hasSignedTC, onSignTC } = useSign();
   const accountPlans = useQuery(
     gql`
       query ($account: String!) {
@@ -71,7 +74,13 @@ const Vesting: FC<IProps> = () => {
 
   const [transLoading, setTransLoading] = useState(false);
   const [claimableTokens, setCliamableTokens] = useState<
-    { contractAddress: string; claimable: BigNumber; claimed: BigNumber; allocation: BigNumber }[]
+    {
+      contractAddress: string;
+      claimable: BigNumber;
+      claimed: BigNumber;
+      allocation: BigNumber;
+      startDate: moment.Moment;
+    }[]
   >([]);
 
   const totalAvailableClaim = useMemo(
@@ -101,14 +110,18 @@ const Vesting: FC<IProps> = () => {
         contractAddress,
         claimable: BigNumber.from('0'),
         claimed: BigNumber.from('0'),
-        allocation: BigNumber.from('0')
+        allocation: BigNumber.from('0'),
+        startDate: moment()
       };
     const vestingContract = await vestingContractFactor(contractAddress);
 
     const fetchData = await Promise.allSettled([
       vestingContract?.claimableAmount(account),
       vestingContract?.claimed(account),
-      vestingContract?.allocations(account)
+      vestingContract?.allocations(account),
+
+      // this can be cache, if necessary.
+      vestingContract?.vestingStartDate()
     ]);
 
     if (fetchData.some((i) => i.status === 'rejected')) {
@@ -120,13 +133,14 @@ const Vesting: FC<IProps> = () => {
       });
     }
 
-    const [claimable, claimed, allocation] = fetchData;
+    const [claimable, claimed, allocation, startDate] = fetchData;
 
     return {
       contractAddress,
       claimable: claimable.status === 'fulfilled' ? claimable.value || BigNumber.from('0') : BigNumber.from('0'),
       claimed: claimed.status === 'fulfilled' ? claimed.value || BigNumber.from('0') : BigNumber.from('0'),
-      allocation: allocation.status === 'fulfilled' ? allocation.value || BigNumber.from('0') : BigNumber.from('0')
+      allocation: allocation.status === 'fulfilled' ? allocation.value || BigNumber.from('0') : BigNumber.from('0'),
+      startDate: moment(startDate.status === 'fulfilled' ? +`${startDate.value?.toString()}000` : '').utc(true)
     };
   };
 
@@ -220,24 +234,29 @@ const Vesting: FC<IProps> = () => {
             <Typography variant="large" style={{ color: '#fff' }}>
               Total Locked
             </Typography>
-            <Typography variant="large" style={{ color: '#fff' }} weight={600}>
-              {formatAmount(totalLocked)}
+            <Typography variant="large" style={{ color: '#fff' }} weight={600} tooltip={formatAmount(totalLocked)}>
+              {roundToSix(formatAmount(totalLocked))}
             </Typography>
           </div>
           <div className={styles.vestingHeaderItem}>
             <Typography variant="large" style={{ color: '#fff' }}>
               Total Claimed
             </Typography>
-            <Typography variant="large" style={{ color: '#fff' }} weight={600}>
-              {formatAmount(totalClaimed)}
+            <Typography variant="large" style={{ color: '#fff' }} weight={600} tooltip={formatAmount(totalClaimed)}>
+              {roundToSix(formatAmount(totalClaimed))}
             </Typography>
           </div>
           <div className={styles.vestingHeaderItem}>
             <Typography variant="large" style={{ color: '#fff' }}>
               Available to Claim
             </Typography>
-            <Typography variant="large" style={{ color: '#fff' }} weight={600}>
-              {formatAmount(totalAvailableClaim)}
+            <Typography
+              variant="large"
+              style={{ color: '#fff' }}
+              weight={600}
+              tooltip={formatAmount(totalAvailableClaim)}
+            >
+              {roundToSix(formatAmount(totalAvailableClaim))}
             </Typography>
           </div>
         </div>
@@ -253,14 +272,22 @@ const Vesting: FC<IProps> = () => {
           return (
             <div className={styles.vestingChunk} key={node.id}>
               <div className={styles.vestingChunkHeader}>
-                <Typography variant="small" weight={600} style={{ color: 'var(--sq-gray700)' }}>
-                  {vestingPlans.find((i) => i.contractAddress === contractAddress)?.name || ''}
-                </Typography>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <Typography variant="small" weight={600} style={{ color: 'var(--sq-gray700)' }}>
+                    {vestingPlans.find((i) => i.contractAddress === contractAddress)?.name || ''}
+                  </Typography>
+                  <Typography type="secondary" variant="small" style={{ marginTop: 8 }}>
+                    Vesting start: {claimTokenInfo?.startDate.format('DD/MM/YYYY hh:mm A')}
+                  </Typography>
+                </div>
 
                 <Button
                   shape="round"
                   type="primary"
-                  onClick={() => {
+                  onClick={async () => {
+                    if (!hasSignedTC) {
+                      await onSignTC();
+                    }
                     claimOne(contractAddress);
                   }}
                   loading={transLoading}
@@ -281,9 +308,15 @@ const Vesting: FC<IProps> = () => {
                 </Typography>
 
                 <div className={styles.vestingChunkContentInfo}>
-                  <Typography>Locked: {formatAmount(amount.sub(planTotalClaimed).sub(planClaimable))}</Typography>
-                  <Typography>Claimed: {formatAmount(planTotalClaimed)}</Typography>
-                  <Typography>Available to Claim: {formatAmount(planClaimable)}</Typography>
+                  <Typography tooltip={formatAmount(amount.sub(planTotalClaimed).sub(planClaimable))}>
+                    Locked: {roundToSix(formatAmount(amount.sub(planTotalClaimed).sub(planClaimable)))}
+                  </Typography>
+                  <Typography tooltip={formatAmount(planTotalClaimed)}>
+                    Claimed: {roundToSix(formatAmount(planTotalClaimed))}
+                  </Typography>
+                  <Typography tooltip={formatAmount(planClaimable)}>
+                    Available to Claim: {roundToSix(formatAmount(planClaimable))}
+                  </Typography>
                 </div>
               </div>
             </div>

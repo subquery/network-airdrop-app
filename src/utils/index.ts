@@ -27,24 +27,34 @@ export const formatAmount = (amount: BigNumberish): string => `${formatEther(amo
 export const convertStrToNumber = (str: string): number => Number.parseInt(str, 10);
 
 export function convertCountToTime(count: number): string {
-  let countCopy = count
+  let countCopy = count;
   let result = '';
-  const years = Math.floor(count / 365);
+  const years = Math.floor(countCopy / 365);
   countCopy %= 365;
-  const months = Math.floor(count / 30);
+  const months = Math.floor(countCopy / 30);
   countCopy %= 30;
-  const days = count;
+  const days = countCopy;
 
   if (years > 0) {
-      result += `${years} year${years > 1 ? 's ' : ' '}`;
+    result += `${years} year${years > 1 ? 's ' : ' '}`;
   }
   if (months > 0) {
-      result += `${months} month${months > 1 ? 's ' : ' '}`;
+    result += `${months} month${months > 1 ? 's ' : ' '}`;
   }
+
   if (days > 0) {
-      result += `${days} day${days > 1 ? 's' : ''}`;
+    result += `${days} day${days > 1 ? 's' : ''}`;
   }
 
   return result.trim();
 }
 
+export const roundToSix = (amount: string | BigNumberish): string => {
+  const str = amount.toString();
+
+  if (!str.includes('.')) return str;
+
+  const [left, right] = str.split('.');
+
+  return `${left}.${right.slice(0, 6)}`;
+};
