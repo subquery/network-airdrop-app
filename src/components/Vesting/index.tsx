@@ -1,13 +1,15 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
+import { formatEther } from '@ethersproject/units';
 import { Spinner, Typography } from '@subql/components';
 import VestingPlansConf from '@subql/contract-sdk/publish/vesting.json';
 import { useInterval } from 'ahooks';
-import { Button } from 'antd';
+import { Button, ButtonProps } from 'antd';
 import { BigNumber } from 'ethers';
 import { t } from 'i18next';
 import moment from 'moment';
 
+import { TOKEN } from 'appConstants';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
 import { useWeb3, VESTING } from 'containers';
 import { useVestingContracts } from 'hooks';
@@ -31,6 +33,23 @@ interface VestingAllocationPlanNode {
 }
 
 const oneDay = 86400;
+
+const TransactionButton: FC<ButtonProps> = ({ children, onClick, ...rest }) => {
+  const [loading, setLoading] = useState(false);
+  const innerClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    try {
+      setLoading(true);
+      await onClick?.(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <Button {...rest} onClick={innerClick} loading={loading}>
+      {children}
+    </Button>
+  );
+};
 
 const vestingPlans = VestingPlansConf[process.env.REACT_APP_NETWORK as 'kepler' | 'testnet' | 'mainnet'].map(
   (contractAddress, index) => ({
@@ -104,6 +123,13 @@ const Vesting: FC<IProps> = () => {
     return allAmounts.sub(totalAvailableClaim).sub(totalClaimed);
   }, [accountPlans, totalAvailableClaim, totalClaimed]);
 
+  // const showingText = (
+  //   locked: BigNumber,
+  //   claimed: BigNumber,
+  //   claimable: BigNumber,
+  //   vestingPeriod: number,
+  //   lockPeriod: number
+  // ) => {};
   const getClaimableAmount = async (contractAddress: string) => {
     if (!account)
       return {
@@ -235,7 +261,7 @@ const Vesting: FC<IProps> = () => {
               Total Locked
             </Typography>
             <Typography variant="large" style={{ color: '#fff' }} weight={600} tooltip={formatAmount(totalLocked)}>
-              {roundToSix(formatAmount(totalLocked))}
+              {roundToSix(formatEther(totalLocked))} {TOKEN}
             </Typography>
           </div>
           <div className={styles.vestingHeaderItem}>
@@ -243,7 +269,7 @@ const Vesting: FC<IProps> = () => {
               Total Claimed
             </Typography>
             <Typography variant="large" style={{ color: '#fff' }} weight={600} tooltip={formatAmount(totalClaimed)}>
-              {roundToSix(formatAmount(totalClaimed))}
+              {roundToSix(formatEther(totalClaimed))} {TOKEN}
             </Typography>
           </div>
           <div className={styles.vestingHeaderItem}>
@@ -256,7 +282,7 @@ const Vesting: FC<IProps> = () => {
               weight={600}
               tooltip={formatAmount(totalAvailableClaim)}
             >
-              {roundToSix(formatAmount(totalAvailableClaim))}
+              {roundToSix(formatEther(totalAvailableClaim))} {TOKEN}
             </Typography>
           </div>
         </div>
@@ -281,14 +307,14 @@ const Vesting: FC<IProps> = () => {
                   </Typography>
                 </div>
 
-                <Button
+                <TransactionButton
                   shape="round"
                   type="primary"
                   onClick={async () => {
                     if (!hasSignedTC) {
                       await onSignTC();
                     }
-                    claimOne(contractAddress);
+                    await claimOne(contractAddress);
                   }}
                   loading={transLoading}
                   disabled={
@@ -299,7 +325,7 @@ const Vesting: FC<IProps> = () => {
                   }
                 >
                   Claim Token
-                </Button>
+                </TransactionButton>
               </div>
               <div className={styles.vestingChunkContent}>
                 {!vestingPeriod ? (
@@ -310,16 +336,26 @@ const Vesting: FC<IProps> = () => {
                     {convertCountToTime(vestingPeriod)}
                   </Typography>
                 )}
+                {/* <Typography style={{ color: 'var(--sq-gray700)' }}>
+                  {showingText(
+                    amount.sub(planTotalClaimed).sub(planClaimable),
+                    planTotalClaimed,
+                    planClaimable,
+                    vestingPeriod,
+                    lockPeriod
+                  )}
+                  
+                </Typography> */}
 
                 <div className={styles.vestingChunkContentInfo}>
                   <Typography tooltip={formatAmount(amount.sub(planTotalClaimed).sub(planClaimable))}>
-                    Locked: {roundToSix(formatAmount(amount.sub(planTotalClaimed).sub(planClaimable)))}
+                    Locked: {roundToSix(formatEther(amount.sub(planTotalClaimed).sub(planClaimable)))} {TOKEN}
                   </Typography>
                   <Typography tooltip={formatAmount(planTotalClaimed)}>
-                    Claimed: {roundToSix(formatAmount(planTotalClaimed))}
+                    Claimed: {roundToSix(formatEther(planTotalClaimed))} {TOKEN}
                   </Typography>
                   <Typography tooltip={formatAmount(planClaimable)}>
-                    Available to Claim: {roundToSix(formatAmount(planClaimable))}
+                    Available to Claim: {roundToSix(formatEther(planClaimable))} {TOKEN}
                   </Typography>
                 </div>
               </div>
