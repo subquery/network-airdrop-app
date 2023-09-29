@@ -91,7 +91,6 @@ const Vesting: FC<IProps> = () => {
     }
   );
 
-  const [transLoading, setTransLoading] = useState(false);
   const [claimableTokens, setCliamableTokens] = useState<
     {
       contractAddress: string;
@@ -193,7 +192,6 @@ const Vesting: FC<IProps> = () => {
   const claimOne = async (contractAddress: string) => {
     if (!account) return;
     try {
-      setTransLoading(true);
       const vestingContract = await vestingContractFactor(contractAddress);
       const approvalTx = await vestingContract?.claim();
       if (!approvalTx) {
@@ -224,8 +222,6 @@ const Vesting: FC<IProps> = () => {
         title: 'Transaction failure.',
         description: e.message || t('notification.error')
       });
-    } finally {
-      setTransLoading(false);
     }
   };
 
@@ -316,7 +312,6 @@ const Vesting: FC<IProps> = () => {
                     }
                     await claimOne(contractAddress);
                   }}
-                  loading={transLoading}
                   disabled={
                     !!(
                       claimableTokens.find((i) => i.contractAddress === contractAddress)?.claimable.eq(0) ||
