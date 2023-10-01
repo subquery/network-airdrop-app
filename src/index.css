@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import '~antd/dist/antd.css';
 
 :root {
   --sq-primary-pink: #ff4581;

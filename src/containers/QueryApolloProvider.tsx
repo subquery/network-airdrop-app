@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloLink, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client';
 import { deploymentHttpLink } from '@subql/apollo-links';
 
 const getAirdroplink = () => {
@@ -16,9 +16,12 @@ const getAirdroplink = () => {
   }).link;
 };
 
+export const VESTING = 'VESTING';
+export const vestingLink = new HttpLink({ uri: process.env.REACT_APP_VESTING_SUBQL });
+
 export const QueryApolloProvider: React.FC = ({ children }) => {
   const client = new ApolloClient({
-    link: getAirdroplink(),
+    link: ApolloLink.split((operation) => operation.getContext().clientName === VESTING, vestingLink, getAirdroplink()),
     cache: new InMemoryCache()
   });
 

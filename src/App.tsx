@@ -1,6 +1,10 @@
+// eslint-disable-next-line simple-import-sort/imports
 import React, { useContext, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import useSWR from 'swr';
+
+// @ts-ignore
+import '@subql/components/dist/subquery-components.css';
 
 import { TERMS_URL } from 'appConstants';
 import { Header } from 'components';

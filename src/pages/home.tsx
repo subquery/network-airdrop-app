@@ -1,13 +1,16 @@
+import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Button, Typography } from 'antd';
+import { Typography } from '@subql/components';
+import { Button, Tabs } from 'antd';
 
 import { DISCORD_ANNOUNCEMENTS_URL, DISCORD_INVITE_URL, DISCORD_KEPLER_SUPPORT_URL } from 'appConstants';
 import { Airdrop } from 'components';
 import { BlockchainStatus } from 'components/BlockchainStatus';
 import { FAQ } from 'components/FAQ';
+import Vesting from 'components/Vesting';
 import { WalletDetect } from 'components/WalletDetect/WalletDetect';
 
-import styles from './home.module.css';
+import styles from './home.module.less';
 
 const JoinDiscord = () => {
   const { t } = useTranslation();
@@ -17,7 +20,7 @@ const JoinDiscord = () => {
       <Button type="primary" ghost href={DISCORD_INVITE_URL} shape="round" size="large" target="_blank">
         {t('support.joinDiscord')}
       </Button>
-      <Typography.Text className={styles.text}>
+      <Typography className={styles.text}>
         <Trans i18nKey="support.turnOnNotification">
           Make sure you turn on notifications for the
           <a type="link" href={DISCORD_ANNOUNCEMENTS_URL} target="_blank" rel="noreferrer">
@@ -25,13 +28,14 @@ const JoinDiscord = () => {
           </a>
           channel so you don’t miss any update
         </Trans>
-      </Typography.Text>
+      </Typography>
     </div>
   );
 };
 
 export function Home() {
   const { t } = useTranslation();
+  const [activeKey, setActiveKey] = useState('Airdrop');
   return (
     <div>
       <div className={styles.container}>
@@ -40,10 +44,35 @@ export function Home() {
           <WalletDetect>
             <div className={styles.airdropContainer}>
               <div className={styles.airdropContent}>
-                <Airdrop />
-                <JoinDiscord />
+                <Typography variant="h4" weight={600} style={{ marginBottom: 32 }}>
+                  SQT Airdrop & Vesting
+                </Typography>
+                <Tabs
+                  activeKey={activeKey}
+                  onTabClick={(key) => {
+                    setActiveKey(key);
+                  }}
+                  className={styles.tabs}
+                  items={[
+                    {
+                      key: 'Airdrop',
+                      label: 'Airdrop'
+                    },
+                    {
+                      key: 'Vesting',
+                      label: 'Vesting'
+                    }
+                  ]}
+                />
+
+                {activeKey === 'Airdrop' && (
+                  <>
+                    <Airdrop /> <JoinDiscord />
+                  </>
+                )}
+                {activeKey === 'Vesting' && <Vesting />}
               </div>
-              <Typography.Text className={styles.text}>
+              <Typography className={styles.text} style={{ marginTop: 32 }}>
                 <Trans i18nKey="support.contact">
                   If you have any questions, contact us at
                   <a type="link" href={DISCORD_KEPLER_SUPPORT_URL} target="_blank" rel="noreferrer">
@@ -51,7 +80,7 @@ export function Home() {
                   </a>
                   channel on Discord
                 </Trans>
-              </Typography.Text>
+              </Typography>
             </div>
           </WalletDetect>
         </BlockchainStatus>

@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
-import { ContractSDK } from '@subql/contract-sdk';
+// eslint-disable-next-line camelcase
+import { ContractSDK, Vesting, Vesting__factory } from '@subql/contract-sdk';
 import keplerDeployment from '@subql/contract-sdk/publish/kepler.json';
 import testnetDeployment from '@subql/contract-sdk/publish/testnet.json';
 
@@ -26,6 +27,7 @@ export function useContracts(): ContractSDK | undefined {
     }
 
     const deploymentDetails = Network === 'kepler' ? keplerDeployment : testnetDeployment;
+
     // @ts-ignore
     const pendingContracts = await ContractSDK.create(signerOrProvider, { deploymentDetails });
 
@@ -37,4 +39,25 @@ export function useContracts(): ContractSDK | undefined {
   }, [initSdk]);
 
   return contracts;
+}
+
+export function useVestingContracts(): (contract: string) => Promise<Vesting | undefined> {
+  const web3 = useWeb3();
+
+  const signerOrProvider = React.useMemo(
+    () => (web3.account ? web3.library?.getSigner(web3.account) : web3.library),
+    [web3]
+  );
+
+  const initContract = async (vestingContractAddress: string) => {
+    if (!signerOrProvider) {
+      return;
+    }
+
+    // eslint-disable-next-line camelcase
+    const vestingContract = await Vesting__factory.connect(vestingContractAddress, signerOrProvider);
+    return vestingContract;
+  };
+
+  return initContract;
 }

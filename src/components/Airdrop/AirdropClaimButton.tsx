@@ -6,14 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
 import assert from 'assert';
 import clsx from 'clsx';
-import useSWR from 'swr';
 
-import { TERMS_SIGNATURE_URL } from 'appConstants';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
-import { useWeb3 } from 'containers';
-import { AppContext } from 'contextProvider';
-import { useContracts, useSignTCHistory } from 'hooks';
-import { convertStrToNumber, fetcherPost } from 'utils';
+import { useContracts } from 'hooks';
+import { useSign } from 'hooks/useSign';
+import { convertStrToNumber } from 'utils';
 
 import styles from './Airdrop.module.css';
 
@@ -22,31 +19,12 @@ const SETTLED_AIRDROPS = [0];
 export const AirdropClaimButton: React.FC<{
   unlockedAirdropIds: Array<string>;
 }> = ({ unlockedAirdropIds }) => {
-  const { termsAndConditions, termsAndConditionsVersion } = React.useContext(AppContext);
   const { t } = useTranslation();
-  const { library, account } = useWeb3();
   const contracts = useContracts();
-  const signTCHistoryExist = useSignTCHistory(termsAndConditionsVersion);
-  const [TCSignHash, setTCSignHash] = React.useState<string>();
-  const [hasSignedTC, setHasSignedTC] = React.useState<boolean>(signTCHistoryExist);
   const [hasClaimedIds, setHasClaimedIds] = React.useState<Array<string>>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
-  const signaturePostBody = {
-    account: account ?? '',
-    termsVersion: termsAndConditionsVersion,
-    termsAndConditions,
-    signTermsHash: TCSignHash
-  };
-
-  const { data: signHistorySaveResult } = useSWR(
-    account && TCSignHash ? TERMS_SIGNATURE_URL : null,
-    fetcherPost(signaturePostBody)
-  );
-
-  React.useEffect(() => {
-    setHasSignedTC(signTCHistoryExist || signHistorySaveResult);
-  }, [signHistorySaveResult, signTCHistoryExist]);
+  const { hasSignedTC, onSignTC } = useSign();
 
   const isClaiming = !!hasClaimedIds.find(
     (claimedId) => !!unlockedAirdropIds.find((unlockedAirdropId) => unlockedAirdropId === claimedId)
@@ -60,30 +38,14 @@ export const AirdropClaimButton: React.FC<{
       : t('termsAndConditions.sign')
     : t('airdrop.nonToClaim');
 
-  const onSignTC = async () => {
-    try {
-      if (!termsAndConditions || !library)
-        throw Error(`Failed to load ${!termsAndConditions ? 'Terms and Conditions' : 'metamask lib'}`);
-      const signTermsHash = await library.getSigner().signMessage(termsAndConditions);
-      setTCSignHash(signTermsHash);
-      console.log('signTermsHash', signTermsHash);
-    } catch (error: any) {
-      const err = error?.message ?? 'Opps, we hint an issue.';
-      console.error('onSignTC Error', err);
-      openNotificationWithIcon({
-        type: NotificationType.ERROR,
-        title: 'Agree Terms And Condition',
-        description: err
-      });
-    }
-  };
-
   // TODO: fix takeContractTx
   const onClaimAirdrop = async () => {
     try {
       assert(contracts, 'Contracts should be available.');
       setIsLoading(true);
-      const sortedUnlockedAirdropIds = unlockedAirdropIds.map((id) => convertStrToNumber(id)).filter((id) => !SETTLED_AIRDROPS.includes(id));
+      const sortedUnlockedAirdropIds = unlockedAirdropIds
+        .map((id) => convertStrToNumber(id))
+        .filter((id) => !SETTLED_AIRDROPS.includes(id));
       const approvalTx = await contracts.airdropper.batchClaimAirdrop(sortedUnlockedAirdropIds);
       openNotificationWithIcon({ title: t('notification.txSubmittedTitle') });
 
