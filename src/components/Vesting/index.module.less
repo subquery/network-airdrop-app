@@ -1,6 +1,6 @@
 .vesting {
   padding: 24px;
-  background: #fff;
+  background: var(--dark-mode-card);
   display: flex;
   flex-direction: column;
 
@@ -41,6 +41,12 @@
         justify-content: space-between;
         margin-top: 24px;
       }
+    }
+  }
+
+  .transactionBtn {
+    &:disabled {
+      color: #fff;
     }
   }
 }

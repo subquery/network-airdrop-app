@@ -12,7 +12,7 @@ import { useContracts } from 'hooks';
 import { useSign } from 'hooks/useSign';
 import { convertStrToNumber } from 'utils';
 
-import styles from './Airdrop.module.css';
+import styles from './Airdrop.module.less';
 
 const SETTLED_AIRDROPS = [0];
 

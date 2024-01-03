@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Typography } from '@subql/components';
 import { Button, Tabs } from 'antd';
 
-import { DISCORD_ANNOUNCEMENTS_URL, DISCORD_INVITE_URL, DISCORD_KEPLER_SUPPORT_URL } from 'appConstants';
+import { DISCORD_ANNOUNCEMENTS_URL, DISCORD_INVITE_URL } from 'appConstants';
 import { Airdrop } from 'components';
 import { BlockchainStatus } from 'components/BlockchainStatus';
 import { FAQ } from 'components/FAQ';
@@ -65,23 +65,9 @@ export function Home() {
                       }
                     ]}
                   />
-
-                  {activeKey === 'Airdrop' && (
-                    <>
-                      <Airdrop /> <JoinDiscord />
-                    </>
-                  )}
+                  {activeKey === 'Airdrop' && <Airdrop />}
                   {activeKey === 'Vesting' && <Vesting />}
                 </div>
-                <Typography className={styles.text} style={{ marginTop: 32 }}>
-                  <Trans i18nKey="support.contact">
-                    If you have any questions, contact us at
-                    <a type="link" href={DISCORD_KEPLER_SUPPORT_URL} target="_blank" rel="noreferrer">
-                      #kepler-support
-                    </a>
-                    channel on Discord
-                  </Trans>
-                </Typography>
               </div>
             </WalletDetect>
           </BlockchainStatus>

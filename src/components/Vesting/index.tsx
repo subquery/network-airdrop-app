@@ -46,7 +46,7 @@ const TransactionButton: FC<ButtonProps> = ({ children, onClick, ...rest }) => {
     }
   };
   return (
-    <Button {...rest} onClick={innerClick} loading={loading}>
+    <Button {...rest} onClick={innerClick} loading={loading} className={styles.transactionBtn}>
       {children}
     </Button>
   );
@@ -124,13 +124,6 @@ const Vesting: FC<IProps> = () => {
     return allAmounts.sub(totalAvailableClaim).sub(totalClaimed);
   }, [accountPlans, totalAvailableClaim, totalClaimed]);
 
-  // const showingText = (
-  //   locked: BigNumber,
-  //   claimed: BigNumber,
-  //   claimable: BigNumber,
-  //   vestingPeriod: number,
-  //   lockPeriod: number
-  // ) => {};
   const getClaimableAmount = async (contractAddress: string) => {
     if (!account)
       return {
@@ -239,7 +232,7 @@ const Vesting: FC<IProps> = () => {
 
   return renderAsync(accountPlans, {
     loading: () => (
-      <div className={styles.vesting} style={{ alignItems: 'center' }}>
+      <div className={styles.vesting} style={{ alignItems: 'center', minHeight: 500 }}>
         <Spinner />
       </div>
     ),
@@ -255,31 +248,20 @@ const Vesting: FC<IProps> = () => {
 
         <div className={styles.vestingHeader}>
           <div className={styles.vestingHeaderItem}>
-            <Typography variant="large" style={{ color: '#fff' }}>
-              Total Locked
-            </Typography>
-            <Typography variant="large" style={{ color: '#fff' }} weight={600} tooltip={formatAmount(totalLocked)}>
+            <Typography variant="large">Total Locked</Typography>
+            <Typography variant="large" weight={600} tooltip={formatAmount(totalLocked)}>
               {roundToSix(formatEther(totalLocked))} {TOKEN}
             </Typography>
           </div>
           <div className={styles.vestingHeaderItem}>
-            <Typography variant="large" style={{ color: '#fff' }}>
-              Total Claimed
-            </Typography>
-            <Typography variant="large" style={{ color: '#fff' }} weight={600} tooltip={formatAmount(totalClaimed)}>
+            <Typography variant="large">Total Claimed</Typography>
+            <Typography variant="large" weight={600} tooltip={formatAmount(totalClaimed)}>
               {roundToSix(formatEther(totalClaimed))} {TOKEN}
             </Typography>
           </div>
           <div className={styles.vestingHeaderItem}>
-            <Typography variant="large" style={{ color: '#fff' }}>
-              Available to Claim
-            </Typography>
-            <Typography
-              variant="large"
-              style={{ color: '#fff' }}
-              weight={600}
-              tooltip={formatAmount(totalAvailableClaim)}
-            >
+            <Typography variant="large">Available to Claim</Typography>
+            <Typography variant="large" weight={600} tooltip={formatAmount(totalAvailableClaim)}>
               {roundToSix(formatEther(totalAvailableClaim))} {TOKEN}
             </Typography>
           </div>
@@ -297,7 +279,7 @@ const Vesting: FC<IProps> = () => {
             <div className={styles.vestingChunk} key={node.id}>
               <div className={styles.vestingChunkHeader}>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <Typography variant="small" weight={600} style={{ color: 'var(--sq-gray700)' }}>
+                  <Typography variant="small" weight={600} type="secondary">
                     {vestingPlans.find((i) => i.contractAddress === contractAddress)?.name || ''}
                   </Typography>
                   <Typography type="secondary" variant="small" style={{ marginTop: 8 }}>
@@ -328,21 +310,11 @@ const Vesting: FC<IProps> = () => {
                 {!vestingPeriod ? (
                   ''
                 ) : (
-                  <Typography style={{ color: 'var(--sq-gray700)' }}>
+                  <Typography type="secondary">
                     {convertCountToTime(lockPeriod)} cliff with linear unlock over the next{' '}
                     {convertCountToTime(vestingPeriod)}
                   </Typography>
                 )}
-                {/* <Typography style={{ color: 'var(--sq-gray700)' }}>
-                  {showingText(
-                    amount.sub(planTotalClaimed).sub(planClaimable),
-                    planTotalClaimed,
-                    planClaimable,
-                    vestingPeriod,
-                    lockPeriod
-                  )}
-                  
-                </Typography> */}
 
                 <div className={styles.vestingChunkContentInfo}>
                   <Typography tooltip={formatAmount(amount.sub(planTotalClaimed).sub(planClaimable))}>

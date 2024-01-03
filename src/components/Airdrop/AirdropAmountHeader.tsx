@@ -11,7 +11,7 @@ import { useAccount } from 'wagmi';
 
 import { formatAmount } from 'utils';
 
-import styles from './Airdrop.module.css';
+import styles from './Airdrop.module.less';
 
 export const AirdropAmountHeader: React.FC<{
   unlockedAirdropAmount: BigNumber;
