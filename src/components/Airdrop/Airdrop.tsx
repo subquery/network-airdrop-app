@@ -175,8 +175,9 @@ export const Airdrop: FC = () => {
 
           return (
             <div className={styles.airdropClaimContainer}>
-              <Typography className={styles.airdropClaimTitle}>{t('airdrop.claimTitle', { token: TOKEN })}</Typography>
-              <Typography className={styles.description} type="secondary">
+              <Typography variant="h6">{t('airdrop.claimTitle', { token: TOKEN })}</Typography>
+              <br />
+              <Typography style={{ marginTop: 8 }} type="secondary">
                 {t('airdrop.description')}
               </Typography>
               <AirdropAmountHeader
