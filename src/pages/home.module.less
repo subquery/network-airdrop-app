@@ -1,5 +1,4 @@
 .container {
-  background: var(--sq-background-gradient);
   min-height: 798px;
   display: flex;
 
@@ -8,11 +7,13 @@
 
 .bgImg {
   position: absolute;
-  z-index: -1;
+  z-index: 0;
+  right: 0;
+  pointer-events: none;
+  opacity: 0.79;
 }
 
 .airdropContainer {
-  background: var(--sq-background-gradient);
   width: 100vw;
   height: 100%;
   display: flex;
@@ -21,6 +22,7 @@
   align-items: center;
   overflow: auto;
   padding: 1rem;
+  position: relative;
 }
 
 .airdropContent {

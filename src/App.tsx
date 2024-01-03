@@ -9,19 +9,17 @@ import '@subql/components/dist/subquery-components.css';
 import { TERMS_URL } from 'appConstants';
 import { Header } from 'components';
 import { Footer } from 'components/Footer/Footer';
-import { useWeb3 } from 'containers';
 import { AppContext } from 'contextProvider';
 import { Home, NotFoundPage } from 'pages';
 import { TermsAndConditions } from 'pages/termsAndConditions';
 import { fetcher } from 'utils';
+import { SubqlProvider } from '@subql/components';
 
 import styles from './App.module.css';
 
 import 'i18n';
 
 function App() {
-  const { error: web3Error } = useWeb3();
-  console.log('web3Error', web3Error);
   const { setTermsAndConditions, setTermsAndConditionsVersion } = useContext(AppContext);
 
   const { data, error } = useSWR(TERMS_URL, fetcher);
@@ -35,16 +33,18 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <Header />
-      <div className={styles.appBody}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="/404" element={<NotFoundPage />} />
-          <Route path="*" element={<Home />} />
-        </Routes>
-      </div>
-      <Footer />
+      <SubqlProvider theme="dark">
+        <Header />
+        <div className={styles.appBody}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/404" element={<NotFoundPage />} />
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </div>
+        <Footer />
+      </SubqlProvider>
     </div>
   );
 }

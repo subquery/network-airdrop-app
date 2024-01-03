@@ -7,8 +7,8 @@ import { useGetAirdropClaimsQuery } from '@subql/react-hooks';
 import { Typography } from 'antd';
 import clsx from 'clsx';
 import { BigNumber } from 'ethers';
+import { useAccount } from 'wagmi';
 
-import { useWeb3 } from 'containers';
 import { formatAmount } from 'utils';
 
 import styles from './Airdrop.module.css';
@@ -18,7 +18,7 @@ export const AirdropAmountHeader: React.FC<{
   claimedAirdropAmount: BigNumber;
 }> = ({ unlockedAirdropAmount, claimedAirdropAmount }) => {
   const { t } = useTranslation();
-  const { account } = useWeb3();
+  const { address: account } = useAccount();
 
   const airdropClaims = useGetAirdropClaimsQuery({
     variables: {

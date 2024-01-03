@@ -40,50 +40,52 @@ export function Home() {
     <div>
       <div className={styles.container}>
         <img src="static/airdrop.png" alt="airdrop page img" className={styles.bgImg} />
-        <BlockchainStatus>
-          <WalletDetect>
-            <div className={styles.airdropContainer}>
-              <div className={styles.airdropContent}>
-                <Typography variant="h4" weight={600} style={{ marginBottom: 32 }}>
-                  SQT Airdrop & Vesting
-                </Typography>
-                <Tabs
-                  activeKey={activeKey}
-                  onTabClick={(key) => {
-                    setActiveKey(key);
-                  }}
-                  className={styles.tabs}
-                  items={[
-                    {
-                      key: 'Airdrop',
-                      label: 'Airdrop'
-                    },
-                    {
-                      key: 'Vesting',
-                      label: 'Vesting'
-                    }
-                  ]}
-                />
+        <div style={{ position: 'relative', width: '100%', height: '100%', margin: 'auto' }}>
+          <BlockchainStatus>
+            <WalletDetect>
+              <div className={styles.airdropContainer}>
+                <div className={styles.airdropContent}>
+                  <Typography variant="h4" weight={600} style={{ marginBottom: 32 }}>
+                    SubQuery Community Airdrops and Token Vesting
+                  </Typography>
+                  <Tabs
+                    activeKey={activeKey}
+                    onTabClick={(key) => {
+                      setActiveKey(key);
+                    }}
+                    className={styles.tabs}
+                    items={[
+                      {
+                        key: 'Airdrop',
+                        label: 'Airdrop'
+                      },
+                      {
+                        key: 'Vesting',
+                        label: 'Vesting'
+                      }
+                    ]}
+                  />
 
-                {activeKey === 'Airdrop' && (
-                  <>
-                    <Airdrop /> <JoinDiscord />
-                  </>
-                )}
-                {activeKey === 'Vesting' && <Vesting />}
+                  {activeKey === 'Airdrop' && (
+                    <>
+                      <Airdrop /> <JoinDiscord />
+                    </>
+                  )}
+                  {activeKey === 'Vesting' && <Vesting />}
+                </div>
+                <Typography className={styles.text} style={{ marginTop: 32 }}>
+                  <Trans i18nKey="support.contact">
+                    If you have any questions, contact us at
+                    <a type="link" href={DISCORD_KEPLER_SUPPORT_URL} target="_blank" rel="noreferrer">
+                      #kepler-support
+                    </a>
+                    channel on Discord
+                  </Trans>
+                </Typography>
               </div>
-              <Typography className={styles.text} style={{ marginTop: 32 }}>
-                <Trans i18nKey="support.contact">
-                  If you have any questions, contact us at
-                  <a type="link" href={DISCORD_KEPLER_SUPPORT_URL} target="_blank" rel="noreferrer">
-                    #kepler-support
-                  </a>
-                  channel on Discord
-                </Trans>
-              </Typography>
-            </div>
-          </WalletDetect>
-        </BlockchainStatus>
+            </WalletDetect>
+          </BlockchainStatus>
+        </div>
       </div>
       <FAQ />
     </div>

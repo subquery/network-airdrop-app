@@ -1,1 +1,1 @@
-export { IconLinks } from './IconLinks';
+export { IconLinks } from "./IconLinks";

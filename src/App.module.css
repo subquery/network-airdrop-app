@@ -1,9 +1,35 @@
 .app {
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  background: var(--dark-mode-background);
+  min-height: 100vh;
+
   display: flex;
   flex-direction: column;
-  text-align: center;
-  width: fit-content;
+  justify-content: space-between;
+  align-items: center;
+
+  background-image: url("https://static.subquery.network/design/images/homeFooter.png");
+  @supports (background-image: url("https://static.subquery.network/design/images/homeFooter.webp")) {
+    background-image: url("https://static.subquery.network/design/images/homeFooter.webp");
+  }
+  background-repeat: no-repeat;
+  background-position: center 98%;
+  background-size: 2543px 793px;
+  background-size: max(2543px, 100%) 793px;
 }
+
+@media screen and (max-width: 700px) {
+  .app {
+    min-width: unset;
+    background-image: url("https://static.subquery.network/design/images/mobileFooter.png")!important;
+    background-size: 100vw 1080px;
+    background-position: center bottom;
+  }
+}
+
 
 .appBody {
   flex: 1;

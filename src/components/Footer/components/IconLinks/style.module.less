@@ -1,0 +1,37 @@
+.icons {
+  width: 513px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.qrcode {
+  max-width: 248px;
+  text-align: center;
+  padding: 24px 24px;
+  font-size: 20px;
+
+  p {
+    margin-bottom: 0;
+  }
+
+  img {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media screen and(max-width: 700px) {
+  .icons {
+    width: 100%;
+    flex-wrap: wrap;
+    margin-right: -20px;
+    justify-content: flex-start;
+    .icon {
+      margin-right: 16px;
+      margin-bottom: 16px;
+    }
+  }
+}

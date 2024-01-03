@@ -10,9 +10,9 @@ import { Table, TableProps, Tag, Typography } from 'antd';
 import { BigNumber } from 'ethers';
 import i18next from 'i18next';
 import moment from 'moment';
+import { useAccount } from 'wagmi';
 
 import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from 'appConstants';
-import { useWeb3 } from 'containers';
 import { renderAsync } from 'utils/renderAsync';
 
 import { TableText } from '../Table';
@@ -147,7 +147,7 @@ const sortUserAirdrops = (
 
 export const Airdrop: FC = () => {
   const { t } = useTranslation();
-  const { account } = useWeb3();
+  const { address: account } = useAccount();
   const accountAirdrop = useGetAirdropsByAccountQuery({
     variables: {
       account: account ?? ''

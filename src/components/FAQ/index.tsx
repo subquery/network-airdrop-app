@@ -3,11 +3,9 @@
 
 import * as React from 'react';
 import { ReactNode } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
-import { Typography } from '@subql/react-ui';
-
-import { DISCORD_INVITE_URL } from 'appConstants';
+import { Typography } from '@subql/components';
 
 import styles from './FAQ.module.css';
 
@@ -23,7 +21,7 @@ const FAQItem = ({ question, answer, idx }: IFAQItem) => {
   return (
     <>
       <button className={styles.question} type="button" onClick={() => setShowAnswer(!showAnswer)}>
-        <Typography className={styles.questionTxt}>{question}</Typography>
+        <Typography variant="large">{question}</Typography>
         <div className={styles.questionBtn}>
           {showAnswer ? (
             <MdKeyboardArrowUp className={styles.questionArrow} />
@@ -32,7 +30,11 @@ const FAQItem = ({ question, answer, idx }: IFAQItem) => {
           )}
         </div>
       </button>
-      {showAnswer && <Typography className={styles.answer}>{answer}</Typography>}
+      {showAnswer && (
+        <Typography type="secondary" style={{ textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 24 }}>
+          {answer}
+        </Typography>
+      )}
     </>
   );
 };
@@ -42,54 +44,65 @@ export const FAQ: React.VFC = () => {
 
   const faqs = [
     {
-      question: t('faq.whoCanClaimQ'),
-      answer: t('faq.whoCanClaimA')
-    },
-    {
-      question: t('faq.howCanClaimQ'),
-      answer: <Trans i18nKey="faq.howCanClaimA" />
-    },
-    {
-      question: t('faq.howLongAirdropQ'),
-      answer: t('faq.howLongAirdropA')
-    },
-    {
-      question: t('faq.whenCanClaimQ'),
-      answer: t('faq.whenCanClaimA')
-    },
-    {
-      question: t('faq.troubleshootingQ'),
+      question: 'Who is the SubQuery 50 Million SQT Community Airdrop',
       answer: (
-        <Trans i18nKey="faq.troubleshootingA">
-          Currently we only support Metamask. If you have any questions, please contact us
-          <a className={styles.discordLink} href={DISCORD_INVITE_URL} target="_blank" rel="noreferrer">
-            via Discord
-          </a>
-        </Trans>
+        <>
+          <span>
+            We’ve been busy building SubQuery over the past few years but we owe everything to you, our community! As we
+            get closer to the launch of our mainnet, we’re launching the 50 Million SQT Community Airdrop to reward our
+            most valued community members and to help decentralise our token and network.
+          </span>
+          <span>
+            There will be a lot of announcements, reveals, and exciting alpha for members of our community throughout
+            this program, so sign up and complete onboarding asap and start receiving points towards this Airdrop.
+          </span>
+        </>
       )
     },
     {
-      question: t('faq.whenWillRecieveQ'),
-      answer: t('faq.whenWillRecieveA')
+      question: 'Who can join the 50 Million SQT Community Airdrop Challenge',
+      answer: (
+        <>
+          <span>
+            SubQuery’s 50 Million SQT Community Airdrop Challenge is a safe space and open to all that want to join the
+            SubQuery Community.
+          </span>
+
+          <span>
+            In order to join, you just need to be 18 years or over, and in order to claim any SQT Airdrops you receive,
+            you’ll just need to be able to complete KYC to verify your identity.
+          </span>
+        </>
+      )
     },
     {
-      question: t('faq.whoCanContactQ'),
+      question: 'Do I need to complete KYC',
       answer: (
-        <Trans i18nKey="faq.whoCanContactA">
-          If your question is not answered here, please contact us
-          <a className={styles.discordLink} href={DISCORD_INVITE_URL} target="_blank" rel="noreferrer">
-            via our Discord
-          </a>
-          via our Discord in the Airdrop channel
-        </Trans>
+        <>
+          <span>
+            Yes, legally we are required to. KYC is simply a standard identity verification process, required for legal
+            and compliance purposes while dealing with financial assets (like $SQT tokens rewards). This also filters
+            out bad actors, prevents Sybil attacks, and helps keep the tribe safe and secure.
+          </span>
+
+          <span>
+            You don’t need to complete KYC to join the program, but you will need to complete KYC at the end to claim
+            any of your rewards as SQT airdrops.
+          </span>
+        </>
       )
+    },
+    {
+      question: 'How will points be converted to SQT',
+      answer:
+        'Once the program closes on the 15th of February, we will be distributing the 50 Million SQT to all valid participants proportionally based on the points they receive. Make sure to work your way up the leaderboard as fast as possible!'
     }
   ];
 
   return (
     <div className={styles.faqContainer}>
       <div className={styles.faq}>
-        <Typography className={styles.faqHeader} variant="h5">
+        <Typography variant="h4" weight={600} style={{ marginBottom: 24 }}>
           {t('faq.title')}
         </Typography>
 

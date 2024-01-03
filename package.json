@@ -2,14 +2,25 @@
   "name": "sqt-airdrop",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "dev": "DISABLE_ESLINT_PLUGIN=true GENERATE_SOURCEMAP=false env-cmd -f stage.env craco start",
+    "prod": "craco start",
+    "build:dev": "env-cmd -f stage.env craco build",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject",
+    "lint": "eslint --fix .",
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+  },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@apollo/client": "^3.6.9",
     "@craco/craco": "^6.4.3",
     "@ethersproject/units": "^5.6.1",
+    "@rainbow-me/rainbowkit": "^1.2.0",
     "@subql/apollo-links": "^1.0.8",
-    "@subql/components": "1.0.3-17",
-    "@subql/contract-sdk": "0.16.1-4",
+    "@subql/components": "1.0.3-25",
+    "@subql/contract-sdk": "0.17.1-1",
     "@subql/network-config": "0.3.17-0",
     "@subql/network-query": "0.3.16-12",
     "@subql/react-hooks": "0.3.16-18",
@@ -54,17 +65,9 @@
     "remark-gfm": "^3.0.1",
     "swr": "^1.2.2",
     "typescript": "^4.4.2",
+    "viem": "^1.21.4",
+    "wagmi": "^1.4.6",
     "web-vitals": "^2.1.0"
-  },
-  "scripts": {
-    "dev": "DISABLE_ESLINT_PLUGIN=true & env-cmd -f stage.env craco start",
-    "prod": "craco start",
-    "build:dev": "env-cmd -f stage.env craco build",
-    "build": "craco build",
-    "test": "craco test",
-    "eject": "react-scripts eject",
-    "lint": "eslint --fix .",
-    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "browserslist": {
     "production": [

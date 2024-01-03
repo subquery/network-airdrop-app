@@ -8,10 +8,11 @@ import { Button, ButtonProps } from 'antd';
 import { BigNumber } from 'ethers';
 import { t } from 'i18next';
 import moment from 'moment';
+import { useAccount } from 'wagmi';
 
 import { TOKEN } from 'appConstants';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
-import { useWeb3, VESTING } from 'containers';
+import { VESTING } from 'containers';
 import { useVestingContracts } from 'hooks';
 import { useSign } from 'hooks/useSign';
 import { convertCountToTime, formatAmount, renderAsync, roundToSix } from 'utils';
@@ -60,7 +61,8 @@ const vestingPlans = VestingPlansConf[process.env.REACT_APP_NETWORK as 'kepler' 
 
 const Vesting: FC<IProps> = () => {
   const vestingContractFactor = useVestingContracts();
-  const { account } = useWeb3();
+  const { address: account } = useAccount();
+
   const { hasSignedTC, onSignTC } = useSign();
   const accountPlans = useQuery(
     gql`

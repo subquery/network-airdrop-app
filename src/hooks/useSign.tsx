@@ -1,21 +1,21 @@
 import React, { useMemo } from 'react';
 import useSWR from 'swr';
+import { useAccount, useSignMessage } from 'wagmi';
 
 import { TERMS_SIGNATURE_URL } from 'appConstants';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
-import { useWeb3 } from 'containers';
 import { AppContext } from 'contextProvider';
 import { fetcherPost } from 'utils';
 
 import { useSignTCHistory } from './useSignTCHistory';
 
 export const useSign = () => {
-  const { library, account } = useWeb3();
+  const { address: account } = useAccount();
 
   const { termsAndConditions, termsAndConditionsVersion } = React.useContext(AppContext);
   const signTCHistoryExist = useSignTCHistory(termsAndConditionsVersion);
   const [TCSignHash, setTCSignHash] = React.useState<string>();
-
+  const { signMessageAsync } = useSignMessage();
   const signaturePostBody = useMemo(
     () => ({
       account: account ?? '',
@@ -38,9 +38,9 @@ export const useSign = () => {
 
   const onSignTC = async () => {
     try {
-      if (!termsAndConditions || !library)
+      if (!termsAndConditions)
         throw Error(`Failed to load ${!termsAndConditions ? 'Terms and Conditions' : 'metamask lib'}`);
-      const signTermsHash = await library.getSigner().signMessage(termsAndConditions);
+      const signTermsHash = await signMessageAsync(termsAndConditions);
       setTCSignHash(signTermsHash);
       console.log('signTermsHash', signTermsHash);
     } catch (error: any) {

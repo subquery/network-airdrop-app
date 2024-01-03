@@ -2,40 +2,41 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { UnsupportedChainIdError } from '@web3-react/core';
-import { Button, Typography } from 'antd';
-
-import { handleSwitchNetwork, useWeb3 } from 'containers';
-
-import styles from './BlockchainStatus.module.css';
-
-import 'i18n';
+import { Typography } from '@subql/components';
+import { Button } from 'antd';
+import { t } from 'i18next';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
 
 export const BlockchainStatus: React.FC = ({ children }) => {
-  const { error } = useWeb3();
-  const { t } = useTranslation();
+  const { chain } = useNetwork();
+  const { chains, switchNetwork } = useSwitchNetwork();
 
-  const isMetaMask = React.useMemo(() => !!window.ethereum?.isMetaMask, []);
-
-  if (error instanceof UnsupportedChainIdError) {
+  if (chain?.unsupported) {
     return (
-      <div className={styles.networkContainer}>
-        <div className={styles.networkHint}>
-          <Typography.Title level={2}>{t('unsupportedNetwork.title')}</Typography.Title>
-          <Typography.Text className={styles.networkSubtitle}>{t('unsupportedNetwork.subtitle')}</Typography.Text>
-          {isMetaMask && (
-            <Button
-              onClick={() => handleSwitchNetwork()}
-              shape="round"
-              type="primary"
-              size="large"
-              className={styles.networkButton}
-            >
-              {t('unsupportedNetwork.button')}
-            </Button>
-          )}
-        </div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: 600,
+          background: 'var(--dark-mode-card)',
+          borderRadius: 8,
+          padding: 40,
+          gap: 24,
+          margin: '0 auto'
+        }}
+      >
+        <Typography variant="h4">{t('unsupportedNetwork.title')}</Typography>
+        <Typography>{t('unsupportedNetwork.subtitle')}</Typography>
+        <Button
+          onClick={() => {
+            switchNetwork?.(chains[0].id);
+          }}
+          type="primary"
+          size="large"
+          shape="round"
+        >
+          {t('unsupportedNetwork.button')}
+        </Button>
       </div>
     );
   }

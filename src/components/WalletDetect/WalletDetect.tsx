@@ -2,81 +2,64 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { Button, Toast } from '@subql/react-ui';
-import { Typography } from 'antd';
+import { useTranslation } from 'react-i18next';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { Typography } from '@subql/components';
+import { Button } from 'antd';
 import clsx from 'clsx';
+import { useAccount } from 'wagmi';
 
-import { DISCORD_KEPLER_SUPPORT_URL } from 'appConstants';
-
-import { useWeb3 } from '../../containers';
-import { ConnectWallet } from './ConnectWallet';
 import styles from './WalletDetect.module.css';
 
-const CLAIM_ENABLE = process.env.REACT_APP_CLAIM_ENABLED === 'true';
-
-const AirdropReadMore = () => {
+export const ConnectWalletCom: React.FC = () => {
   const { t } = useTranslation();
-  return (
-    <div className={styles.notYetOpen}>
-      <Button
-        type="primary"
-        className={styles.linkText}
-        label={t('airdrop.notYetOpenReadMore')}
-        href="https://blog.subquery.network/subquery-announces-details-of-subquery-kepler-airdrop"
-        target="_blank"
-      />
 
-      <Typography.Text className={styles.notYetOpenText}>{t('airdrop.notYetOpen')}</Typography.Text>
+  return (
+    <div className={clsx(styles.container)}>
+      <Typography variant="h4" weight={600}>
+        Join SubQuery’s 50 Million SQT Community Airdrop!
+      </Typography>
+      <Typography variant="text" type="secondary">
+        We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet! Connect your
+        wallet and complete onboarding to instantly receive 200 points.
+      </Typography>
+      <Typography type="secondary">The program closes on the 15th of February so be quick!</Typography>
+
+      <ConnectButton.Custom>
+        {({ openConnectModal }) => (
+          <Button
+            shape="round"
+            size="large"
+            onClick={() => openConnectModal()}
+            type="primary"
+            style={{ width: '100%', background: 'var(--sq-blue600)' }}
+            className={styles.connectBtn}
+          >
+            Connect Wallet
+          </Button>
+        )}
+      </ConnectButton.Custom>
+
+      <Typography type="secondary">
+        If you have any issues or questions, contact us on <Typography.Link active>#airdrop-support</Typography.Link>{' '}
+        channel on our Discord
+      </Typography>
     </div>
   );
 };
 
 interface IWalletDetect {
-  title?: string;
-  subTitle?: string;
   containerClassName?: string;
-  walletConnectorClassName?: string;
 }
-export const WalletDetect: React.FC<IWalletDetect> = ({
-  title,
-  subTitle,
-  children,
-  containerClassName,
-  walletConnectorClassName
-}) => {
-  const { account, error } = useWeb3();
+export const WalletDetect: React.FC<IWalletDetect> = ({ children, containerClassName }) => {
+  const { address: account } = useAccount();
   const { t } = useTranslation();
-
-  const [errorAlert, setErrorAlert] = React.useState<string>();
-
-  React.useEffect(() => {
-    if (error) {
-      setErrorAlert(error.message || 'Failed to connect wallet.');
-    }
-  }, [error]);
 
   if (!account) {
     return (
       <div className={clsx(styles.container, containerClassName)}>
-        <div>
-          {errorAlert && <Toast state="error" text={errorAlert} className={styles.error} />}
-          <div className={styles.walletActionContainer}>
-            <span className={styles.title}>{t('airdrop.title')}</span>
-            {CLAIM_ENABLE && <ConnectWallet title={title} subTitle={subTitle} />}
-            {!CLAIM_ENABLE && <AirdropReadMore />}
-          </div>
-        </div>
-        <div className={styles.contact}>
-          <Typography.Text className={styles.contactText}>
-            <Trans i18nKey="support.contact">
-              If you have any questions, contact us at
-              <a type="link" href={DISCORD_KEPLER_SUPPORT_URL} target="_blank" rel="noreferrer">
-                #kepler-support
-              </a>
-              channel on Discord
-            </Trans>
-          </Typography.Text>
+        <div className={styles.walletActionContainer}>
+          <ConnectWalletCom />
         </div>
       </div>
     );
