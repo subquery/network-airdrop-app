@@ -16,8 +16,7 @@ interface IFAQItem {
 }
 
 const FAQItem = ({ question, answer, idx }: IFAQItem) => {
-  const initialShowStatus = idx === 0;
-  const [showAnswer, setShowAnswer] = React.useState<boolean>(initialShowStatus);
+  const [showAnswer, setShowAnswer] = React.useState<boolean>(false);
   return (
     <>
       <button className={styles.question} type="button" onClick={() => setShowAnswer(!showAnswer)}>

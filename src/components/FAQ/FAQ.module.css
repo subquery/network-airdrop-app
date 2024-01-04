@@ -5,6 +5,7 @@
   justify-content: center;
   background-color: var(--dark-mode-card);
   margin-bottom: 220px;
+  position: relative;
 }
 
 .faq {

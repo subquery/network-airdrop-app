@@ -5,6 +5,7 @@ import { Tabs } from 'antd';
 
 import { Airdrop } from 'components';
 import { BlockchainStatus } from 'components/BlockchainStatus';
+import Challenges from 'components/Challenges/Challenges';
 import { FAQ } from 'components/FAQ';
 import Vesting from 'components/Vesting';
 import { WalletDetect } from 'components/WalletDetect/WalletDetect';
@@ -13,7 +14,7 @@ import styles from './home.module.less';
 
 export function Home() {
   const { t } = useTranslation();
-  const [activeKey, setActiveKey] = useState('Airdrop');
+  const [activeKey, setActiveKey] = useState('Challenge');
   return (
     <div>
       <div className={styles.container}>
@@ -34,6 +35,10 @@ export function Home() {
                     className={styles.tabs}
                     items={[
                       {
+                        key: 'Challenge',
+                        label: '50 Million Airdrop Challenge'
+                      },
+                      {
                         key: 'Airdrop',
                         label: 'Airdrop'
                       },
@@ -43,6 +48,7 @@ export function Home() {
                       }
                     ]}
                   />
+                  {activeKey === 'Challenge' && <Challenges />}
                   {activeKey === 'Airdrop' && <Airdrop />}
                   {activeKey === 'Vesting' && <Vesting />}
                 </div>

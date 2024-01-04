@@ -41,6 +41,7 @@
     "antd": "^5.9.2",
     "apollo": "^2.34.0",
     "assert": "^2.0.0",
+    "axios": "^1.6.3",
     "clsx": "^1.2.1",
     "craco-less": "^3.0.1",
     "craco-webpack-resolve": "^1.2.1",
