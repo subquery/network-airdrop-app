@@ -9,6 +9,7 @@ import { useForm } from 'antd/es/form/Form';
 import clsx from 'clsx';
 import { useAccount } from 'wagmi';
 
+import { ContactUs } from 'components/WalletDetect/WalletDetect';
 import { Challenge, IUserInfo, LeaderboardSummary, useChallengesApi } from 'hooks/useChallengesApi';
 
 import styles from './index.module.less';
@@ -18,18 +19,6 @@ interface IProps {}
 const DefaultLoading = () => (
   <div style={{ minHeight: 500, display: 'flex', justifyContent: 'center' }}>
     <Spinner />
-  </div>
-);
-
-const ContactUs = () => (
-  <div style={{ width: '100%', textAlign: 'center' }}>
-    <Typography type="secondary">
-      If you have any issues or questions, contact us on the{' '}
-      <Typography.Link active href="https://subquery.network/privacy" variant="medium">
-        #airdrop-support
-      </Typography.Link>{' '}
-      channel on our Discord
-    </Typography>
   </div>
 );
 

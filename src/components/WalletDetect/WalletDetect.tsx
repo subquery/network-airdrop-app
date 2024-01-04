@@ -11,15 +11,27 @@ import { useAccount } from 'wagmi';
 
 import styles from './WalletDetect.module.css';
 
+export const ContactUs = () => (
+  <div style={{ width: '100%', textAlign: 'center' }}>
+    <Typography type="secondary">
+      If you have any issues or questions, contact us on the{' '}
+      <Typography.Link active href="https://subquery.network/privacy" variant="medium">
+        #airdrop-support
+      </Typography.Link>{' '}
+      channel on our Discord
+    </Typography>
+  </div>
+);
+
 export const ConnectWalletCom: React.FC = () => {
   const { t } = useTranslation();
 
   return (
     <div className={clsx(styles.container)}>
-      <Typography variant="h4" weight={600}>
+      <Typography variant="h4" weight={600} style={{ textAlign: 'center' }}>
         Join SubQuery’s 50 Million SQT Community Airdrop!
       </Typography>
-      <Typography variant="text" type="secondary">
+      <Typography variant="text" type="secondary" style={{ textAlign: 'center' }}>
         We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet! Connect your
         wallet and complete onboarding to instantly receive 200 points.
       </Typography>
@@ -40,10 +52,7 @@ export const ConnectWalletCom: React.FC = () => {
         )}
       </ConnectButton.Custom>
 
-      <Typography type="secondary">
-        If you have any issues or questions, contact us on <Typography.Link active>#airdrop-support</Typography.Link>{' '}
-        channel on our Discord
-      </Typography>
+      <ContactUs />
     </div>
   );
 };
