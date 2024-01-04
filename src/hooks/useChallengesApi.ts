@@ -17,19 +17,50 @@ export interface IUserInfo {
   referral_count: number 
 }
 
-export const useChallengesApi = ({ alert = true }) => {
+export interface Challenge {
+  id: number;
+  name: string;
+  success: boolean;
+  reward: number;
+  reward_type: "FIXED" | "MULTIPLE";
+  description: string;
+  cta: string;
+  cta_label: string;
+}
 
+export interface LeaderboardRecord {
+  rank: number;
+  name: string;
+  raw_score: number;
+  referral_multiplier: number;
+  total_score: number;
+}
+
+export interface LeaderboardSummary {
+  total_participants: number;
+  summary: LeaderboardRecord[];
+}
+
+export interface UserSignupRequest {
+  address: string;
+  email: string;
+  referral_code?: string;
+}
+
+
+export const useChallengesApi = (props: { alert?: boolean} = {}) => {
+  const { alert = true } = props
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const alertResDecorator = <T extends (...args: any) => any>(
     func: T,
   ): ((...args: Parameters<T>) => Promise<ReturnType<T>>) => async (...args: Parameters<T>): Promise<ReturnType<T>> => {
       const res = await func(...args);
 
-      if (alert && res.status !== 200) {
+      if (alert && res.status >= 300) {
         openNotification({
           type: 'error',
           description: res.data.error,
-          duration: 5000,
+          duration: 3,
         });
       }
 
@@ -37,17 +68,32 @@ export const useChallengesApi = ({ alert = true }) => {
     };
 
       
-  const signup = useCallback(async () => {
-    const res = await instance.post('/signup')
+  const signup = useCallback(async (params:UserSignupRequest) => {
+    const res = await instance.post('/signup', params)
+    return res
   }, [])
 
   const getUserInfo = useCallback(async (account: string) => {
-    const res = await instance.get<IUserInfo>(`/${account}`)
+    const res = await instance.get<IUserInfo>(`/user/${account}`)
     return res
+  }, [])
 
+  const getUserChallenges = useCallback(async (account: string) => {
+    const res = await instance.get<Challenge[]>(`/user/${account}/challenges`)
+
+    return res
+  }, [])
+
+  const getUserLeaderboard = useCallback(async (account: string) => {
+    const res = await instance.get<LeaderboardSummary>(`/user/${account}/leaderboard`)
+
+    return res
   }, [])
 
   return {
-    signup
+    signup: alertResDecorator(signup),
+    getUserInfo: alertResDecorator(getUserInfo),
+    getUserChallenges: alertResDecorator(getUserChallenges),
+    getUserLeaderboard: alertResDecorator(getUserLeaderboard)
   }
 }
