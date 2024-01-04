@@ -51,6 +51,7 @@ export const useSign = () => {
         title: 'Agree Terms And Condition',
         description: err
       });
+      throw Error(error);
     }
   };
 

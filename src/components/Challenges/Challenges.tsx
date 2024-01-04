@@ -152,7 +152,12 @@ const Leaderboard = () => {
 
   return (
     <div className={styles.baseCard} style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <Typography variant="h6">The Leaderboard</Typography>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Typography variant="h6">The Leaderboard</Typography>
+        <Typography variant="large">
+          You are ranked {Number(1111).toLocaleString()} of {Number(2222).toLocaleString()} participants
+        </Typography>
+      </div>
       <Typography type="secondary">Compete to get the highest score, you can do it!</Typography>
 
       <div style={{ display: 'flex', background: 'rgba(0, 0, 0, 0.23)', padding: 8, borderRadius: 8, gap: 16 }}>

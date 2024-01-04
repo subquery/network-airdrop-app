@@ -7,6 +7,7 @@ import { Airdrop } from 'components';
 import { BlockchainStatus } from 'components/BlockchainStatus';
 import Challenges from 'components/Challenges/Challenges';
 import { FAQ } from 'components/FAQ';
+import PointsCard from 'components/PointsCard/PointsCard';
 import Vesting from 'components/Vesting';
 import { WalletDetect } from 'components/WalletDetect/WalletDetect';
 
@@ -19,14 +20,18 @@ export function Home() {
     <div>
       <div className={styles.container}>
         <img src="static/airdrop.png" alt="airdrop page img" className={styles.bgImg} />
+
         <div style={{ position: 'relative', width: '100%', height: '100%', margin: '0 auto', padding: '80px 0' }}>
           <BlockchainStatus>
             <WalletDetect>
               <div className={styles.airdropContainer}>
                 <div className={styles.airdropContent}>
-                  <Typography variant="h4" weight={600} style={{ marginBottom: 32 }}>
-                    SubQuery Community Airdrops and Token Vesting
-                  </Typography>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="h4" weight={600} style={{ marginBottom: 32 }}>
+                      SubQuery Community Airdrops and Token Vesting
+                    </Typography>
+                    <PointsCard />
+                  </div>
                   <Tabs
                     activeKey={activeKey}
                     onTabClick={(key) => {

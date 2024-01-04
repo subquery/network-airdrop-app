@@ -236,7 +236,7 @@ const Vesting: FC<IProps> = () => {
         <Spinner />
       </div>
     ),
-    error: (e) => <Typography>{e.message}</Typography>,
+    error: (e) => <Typography>No Vesting available</Typography>,
     data: () => (
       <div className={styles.vesting}>
         <Typography variant="h6" weight={500}>
