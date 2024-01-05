@@ -157,7 +157,7 @@ export const Airdrop: FC = () => {
     <div className={styles.container}>
       {renderAsync(accountAirdrop, {
         loading: () => (
-          <div style={{ minHeight: 500 }}>
+          <div style={{ minHeight: 500, display: 'flex', justifyContent: 'center' }}>
             <Spinner />
           </div>
         ),

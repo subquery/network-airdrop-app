@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { openNotification } from '@subql/components';
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_CHALLENGE_URL,
@@ -54,17 +54,28 @@ export const useChallengesApi = (props: { alert?: boolean} = {}) => {
   const alertResDecorator = <T extends (...args: any) => any>(
     func: T,
   ): ((...args: Parameters<T>) => Promise<ReturnType<T>>) => async (...args: Parameters<T>): Promise<ReturnType<T>> => {
+    try {
       const res = await func(...args);
+      return res;
 
-      if (alert && res.status >= 300) {
-        openNotification({
-          type: 'error',
-          description: res.data.error,
-          duration: 3,
-        });
+    } catch(e: any) {
+      if (alert) {
+        if (e instanceof AxiosError) {
+          const error = e as AxiosError<{ message: string }>
+          if (error.response?.status !== 401) {
+            openNotification({
+              type: 'error',
+              description: error.response?.data.message,
+              duration: 3,
+            });
+          }
+        }
       }
 
-      return res;
+      throw new Error(e)
+    }
+
+
     };
 
       
@@ -75,6 +86,7 @@ export const useChallengesApi = (props: { alert?: boolean} = {}) => {
 
   const getUserInfo = useCallback(async (account: string) => {
     const res = await instance.get<IUserInfo>(`/user/${account}`)
+
     return res
   }, [])
 

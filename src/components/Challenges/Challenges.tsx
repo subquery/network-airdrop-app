@@ -1,9 +1,8 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlineMail } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 import { Markdown, openNotification, Spinner, Typography } from '@subql/components';
-import { useMount } from 'ahooks';
 import { Button, Collapse, Form, Input } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import clsx from 'clsx';
@@ -17,7 +16,15 @@ import styles from './index.module.less';
 interface IProps {}
 
 const DefaultLoading = () => (
-  <div style={{ minHeight: 500, display: 'flex', justifyContent: 'center' }}>
+  <div
+    style={{
+      minHeight: 500,
+      display: 'flex',
+      justifyContent: 'center',
+      background: 'var(--dark-mode-card)',
+      padding: 24
+    }}
+  >
     <Spinner />
   </div>
 );
@@ -118,6 +125,7 @@ const MainChallenges = () => {
   const { getUserChallenges } = useChallengesApi();
 
   const [userChallenges, setUserChallenges] = useState<Challenge[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const challenges = useMemo(
     () =>
@@ -156,15 +164,24 @@ const MainChallenges = () => {
     [userChallenges]
   );
 
-  useMount(async () => {
-    if (!account) return;
-    const res = await getUserChallenges(account);
-    if (res.status === 200) {
-      setUserChallenges(res.data);
+  const initChallenges = async () => {
+    try {
+      if (!account) return;
+      setLoading(true);
+      const res = await getUserChallenges(account);
+      if (res.status === 200) {
+        setUserChallenges(res.data || []);
+      }
+    } finally {
+      setLoading(false);
     }
-  });
+  };
 
-  if (!challenges.length) return <DefaultLoading />;
+  useEffect(() => {
+    initChallenges();
+  }, [account]);
+
+  if (loading) return <DefaultLoading />;
 
   return <Collapse className={styles.darkCollapse} ghost items={challenges} />;
 };
@@ -246,14 +263,16 @@ const Leaderboard = (props: { userInfo?: IUserInfo }) => {
   const { getUserLeaderboard } = useChallengesApi();
 
   const [userLeaderboard, setUserLeaderboard] = useState<LeaderboardSummary>();
-
-  useMount(async () => {
+  const initLeaderboard = async () => {
     if (!account) return;
     const res = await getUserLeaderboard(account);
     if (res.status === 200) {
       setUserLeaderboard(res.data);
     }
-  });
+  };
+  useEffect(() => {
+    initLeaderboard();
+  }, [account]);
 
   if (!userLeaderboard) return <DefaultLoading />;
 
@@ -299,8 +318,8 @@ const Leaderboard = (props: { userInfo?: IUserInfo }) => {
               <div style={{ flex: 1 }}>
                 <Typography tooltip={summary.name} type="secondary">
                   {`${summary.name?.slice(0, 5)}...${summary.name?.slice(
-                    summary.name.length - 6,
-                    summary.name.length - 1
+                    summary.name.length - 5,
+                    summary.name.length
                   )}`}
                 </Typography>
               </div>
@@ -340,7 +359,7 @@ const Leaderboard = (props: { userInfo?: IUserInfo }) => {
 export const Challenges: FC<IProps> = (props) => {
   const { address: account } = useAccount();
   const [userInfo, setUserInfo] = useState<IUserInfo>();
-
+  const [loading, setLoading] = useState(true);
   const { getUserInfo } = useChallengesApi();
 
   const userStage = useMemo(() => {
@@ -351,16 +370,25 @@ export const Challenges: FC<IProps> = (props) => {
 
   const fetchUserInfo = async () => {
     if (!account) return;
-    const res = await getUserInfo(account);
+    try {
+      setLoading(true);
+      const res = await getUserInfo(account);
 
-    if (res.status === 200) {
-      setUserInfo(res.data);
+      if (res.status === 200) {
+        setUserInfo(res.data);
+      }
+    } catch (e) {
+      setUserInfo(undefined);
+    } finally {
+      setLoading(false);
     }
   };
 
-  useMount(() => fetchUserInfo());
+  useEffect(() => {
+    fetchUserInfo();
+  }, [account]);
 
-  if (!userInfo) return <DefaultLoading />;
+  if (loading) return <DefaultLoading />;
 
   return (
     <>
