@@ -31,7 +31,7 @@ const PointsCard: FC<IProps> = () => {
   return (
     <div className={styles.pointsCard}>
       <Typography>{userInfo?.total_score.toLocaleString() || 0} points</Typography>
-      <Typography>{(userInfo?.referral_count || 0) + 1}x referral bouns</Typography>
+      <Typography>{userInfo?.multiplier || 0}x referral bouns</Typography>
       <Typography>Ranked # {userInfo?.rank || 0}</Typography>
     </div>
   );

@@ -14,7 +14,8 @@ export interface IUserInfo {
   total_score: number;
   rank: number;
   referral_code: string;
-  referral_count: number 
+  referral_count: number;
+  multiplier: number;
 }
 
 export interface Challenge {

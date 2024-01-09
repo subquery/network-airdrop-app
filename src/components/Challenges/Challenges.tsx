@@ -73,9 +73,11 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
         <Form.Item
           name="email"
           rules={[
-            { required: true, message: 'Email is required' },
             {
               async validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(new Error('Email is required'));
+                }
                 if (!/^[A-Za-z0-9]+([-_.][A-Za-z0-9]+)*@([A-Za-z0-9]+[-.])+[A-Za-z0-9]{2,5}$/.test(value)) {
                   return Promise.reject(new Error('Email is invalid'));
                 }
@@ -187,7 +189,7 @@ const MainChallenges = () => {
 };
 
 const Referral = (props: { userInfo?: IUserInfo }) => {
-  const { address: account } = useAccount();
+  const { address } = useAccount();
 
   return (
     <div
@@ -334,8 +336,8 @@ const Leaderboard = (props: { userInfo?: IUserInfo }) => {
             </div>
           );
           let ellipsis: React.ReactNode = '';
-          if (userLeaderboard.summary.length === 10 && index === userLeaderboard.summary.length - 5) {
-            const leftParticipants = (props.userInfo?.rank || 7) - 7;
+          if (index >= 1) {
+            const leftParticipants = summary.rank - userLeaderboard.summary[index - 1].rank - 1;
             if (leftParticipants) {
               ellipsis = (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -364,7 +366,7 @@ export const Challenges: FC<IProps> = (props) => {
 
   const userStage = useMemo(() => {
     if (!userInfo?.email) return 0;
-    if (userInfo.email && !userInfo.verified_email) return 1;
+    // if (userInfo.email && !userInfo.verified_email) return 1;
     return 2;
   }, [userInfo]);
 
@@ -394,7 +396,7 @@ export const Challenges: FC<IProps> = (props) => {
     <>
       <div className={styles.baseCard}>
         {userStage === 0 && <FirstStep freshFunc={fetchUserInfo} />}
-        {userStage === 1 && <SecondStep />}
+        {/* {userStage === 1 && <SecondStep />} */}
         {userStage === 2 && <MainChallenges />}
       </div>
       {userStage === 2 && (

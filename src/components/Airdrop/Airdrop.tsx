@@ -188,6 +188,7 @@ export const Airdrop: FC = () => {
               {sortedAirdrops.length > 0 ? (
                 <>
                   <Table
+                    className={styles.darkTable}
                     columns={getColumns(t)}
                     dataSource={[...sortedAirdrops]}
                     rowKey="id"
