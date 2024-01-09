@@ -1,6 +1,3 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 import { initReactI18next } from 'react-i18next';
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
