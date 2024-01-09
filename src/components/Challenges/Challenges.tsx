@@ -15,6 +15,8 @@ import styles from './index.module.less';
 
 interface IProps {}
 
+const rootUrl = new URL(window.location.href).origin || 'https://seekers.subquery.network';
+
 const DefaultLoading = () => (
   <div
     style={{
@@ -240,7 +242,7 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
       </Typography>
       <Input
         className={styles.darkInput}
-        value={`https://airdrop.subquery.foundation/?referral=${props.userInfo?.referral_code}`}
+        value={`${rootUrl}/?referral=${props.userInfo?.referral_code}`}
         onChange={() => ({})}
       />
 
@@ -252,9 +254,7 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
           size="large"
           style={{ flex: 1 }}
           onClick={() => {
-            navigator.clipboard.writeText(
-              `https://airdrop.subquery.foundation/?referral=${props.userInfo?.referral_code}`
-            );
+            navigator.clipboard.writeText(`${rootUrl}/?referral=${props.userInfo?.referral_code}`);
 
             openNotification({
               type: 'success',
@@ -281,7 +281,7 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
           rel="noreferrer"
           href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`@SubQueryNetwork is running the SubQuery Seekers campaign where you can complete fun quests to earn points and receive SQT tokens in their 50 million $SQT airdrop #SQTSeekers
 
-Join me here to get a bonus: https://airdrop.subquery.foundation/?referral=${props.userInfo?.referral_code}`)}`}
+Join me here to get a bonus: ${rootUrl}/?referral=${props.userInfo?.referral_code}`)}`}
         >
           <Button shape="round" ghost type="primary" size="large" style={{ width: '100%' }}>
             Post on X (Twitter)
