@@ -174,7 +174,7 @@ const MainChallenges = () => {
             <Markdown.Preview>{challenge.description}</Markdown.Preview>
 
             {challenge.cta && (
-              <a href={challenge.cta}>
+              <a href={challenge.cta} target="_blank">
                 <Button shape="round" size="large" type="primary" style={{ marginTop: 16, width: '100%' }}>
                   {challenge.cta_label}
                 </Button>
@@ -209,8 +209,7 @@ const MainChallenges = () => {
 };
 
 const Referral = (props: { userInfo?: IUserInfo }) => {
-  const { address } = useAccount();
-
+  const newReferralMultiple = Math.max(props.userInfo?.referral_count ?? 0, 1) + 1;
   return (
     <div
       className={styles.baseCard}
@@ -221,7 +220,9 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
         When your friend signs up and onboards with your referral link, you both increase the multiplier on your score.
       </Typography>
       <Typography type="secondary">
-        After your next referral, your score multiplier will be 2x and your total points will increase to 2,800!
+        You've already referred {props.userInfo?.referral_count || 0} new users. After your next referral, your new
+        score multiplier will be {newReferralMultiple}x and your total points will increase to{' '}
+        {((props.userInfo?.raw_score ?? 200) * newReferralMultiple).toLocaleString()}!
       </Typography>
       <Input
         className={styles.darkInput}
