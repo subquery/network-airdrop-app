@@ -62,6 +62,26 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
           We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet!
         </Typography>
       </div>
+      {query.get('referral') && (
+        <div
+          style={{
+            background: 'var(--sq-gradient)',
+            padding: 16,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 8
+          }}
+        >
+          <Typography variant="h6" weight={600}>
+            AWESOME!
+          </Typography>
+          <Typography variant="large">
+            You&apos;ve already got a 1.21 referral bounus and an extra 200 points after onboarding!
+          </Typography>
+        </div>
+      )}
       <Input className={styles.darkInput} placeholder={account} disabled />
 
       <Typography variant="medium" type="secondary" style={{ maxWidth: 806 }}>
