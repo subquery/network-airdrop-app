@@ -41,16 +41,18 @@ export function Home() {
                     items={[
                       {
                         key: 'Challenge',
-                        label: '50 Million Airdrop Challenge'
+                        label: 'SubQuery Seekers Program'
                       },
                       {
                         key: 'Airdrop',
-                        label: 'Airdrop'
-                      },
+                        label: 'Other Airdrops'
+                      }
+                      /*
                       {
                         key: 'Vesting',
-                        label: 'Vesting'
+                        label: 'Private Sale Vesting'
                       }
+                      */
                     ]}
                   />
                   {activeKey === 'Challenge' && <Challenges />}

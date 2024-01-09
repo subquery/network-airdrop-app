@@ -57,9 +57,11 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <Typography variant="h6">SubQuery’s 50 Million SQT Airdrop Challenge</Typography>
+        <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge</Typography>
         <Typography variant="medium" type="secondary">
-          We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet!
+          We are giving away 50 Million SQT to our most valued community members in the SubQuery Seekers Program. Simply
+          register for the campaign, and start exploring the challenges. The more challenges you complete, the more SQT
+          tokens you can earn!
         </Typography>
       </div>
       {query.get('referral') && (
@@ -84,7 +86,7 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
       )}
       <Input className={styles.darkInput} placeholder={account} disabled />
 
-      <Typography variant="medium" type="secondary" style={{ maxWidth: 806 }}>
+      <Typography variant="medium" type="secondary">
         Enter your email address so we can send you important information about the 50 Million SQT Airdrop Challenge and
         so you can complete KYC when the program finishes.
       </Typography>
@@ -112,7 +114,7 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
       </Form>
 
       <Typography variant="medium" type="secondary">
-        By entering your email you acknowledge and consent to our{' '}
+        By entering your email you have read and agree to our{' '}
         <Typography.Link active href="https://subquery.network/privacy" target="_blank" variant="medium">
           privacy policy
         </Typography.Link>
@@ -127,16 +129,17 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
   );
 };
 
-const SecondStep = () => (
+const SecondStep = (email: string = 'james.bayly@subquery.network') => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
     <MdOutlineMail style={{ fontSize: '100px', color: '#fff' }} />
-    <Typography variant="h6">SubQuery&apos;s 50 Million SQT Airdrop Challenge</Typography>
+    <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge</Typography>
     <Typography variant="medium" type="secondary">
-      We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet!
+      We are giving away 50 Million SQT to our most valued community members in the SubQuery Seekers Program. Simply
+      register for the campaign, and start exploring the challenges. The more challenges you complete, the more SQT
+      tokens you can earn!
     </Typography>
     <Typography type="secondary" style={{ maxWidth: 806, textAlign: 'center', padding: '0 3em' }}>
-      We’ve just sent an onboarding email to your email address (james.bayly@subquery.network). Go and click on the link
-      in it to continue!
+      We’ve just sent an onboarding email to your email address ({email}). Go and click on the link in it to continue!
     </Typography>
     <ContactUs />
   </div>
@@ -208,9 +211,10 @@ const MainChallenges = () => {
   return (
     <div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
-        <Typography variant="h6">SubQuery’s 50 Million SQT Airdrop Challenge</Typography>
+        <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge</Typography>
         <Typography variant="medium" type="secondary">
-          We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet!
+          We are giving away 50 Million SQT to our most valued community members in the SubQuery Seekers Program. Simply
+          complete the challenges below - the more challenges you complete, the more SQT tokens you can earn!
         </Typography>
       </div>
       <Collapse className={styles.darkCollapse} ghost items={challenges} />
@@ -227,7 +231,7 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
     >
       <Typography variant="h6">Refer a Friend to Multiply your Score!</Typography>
       <Typography type="secondary">
-        When your friend signs up and onboards with your referral link, you both increase the multiplier on your score.
+        When your friends sign up and onboard via your referral link, you both increase the multiplier on your score.
       </Typography>
       <Typography type="secondary">
         You&apos;ve already referred {props.userInfo?.referral_count || 0} new users. After your next referral, your new
@@ -264,7 +268,7 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
         <a
           style={{ flex: 1 }}
           target="_blank"
-          href="mailto:?subject=I wanted you to see this site&body=Check out this site http://www.website.com."
+          href={`mailto:yourfriend@email.com?subject=Join%20me%20on%20the%20SubQuery%20Seekers%2050%20Million%20SQT%20Challenge%20&body=Hi%20there%2C%0D%0A%0D%0AI%20recently%20joined%20the%20SubQuery%20Seekers%2050%20Million%20SQT%20challenge%20and%20I%20want%20to%20invite%20you%20too!%0D%0A%0D%0ASubQuery%20are%20giving%20away%2050%20Million%20SQT%20to%20their%20most%20valued%20community%20members%20in%20the%20SubQuery%20Seekers%20Program.%20Simply%20register%20for%20the%20campaign%20using%20this%20referral%20link%2C%20and%20start%20exploring%20the%20challenges.%20The%20more%20challenges%20we%20complete%2C%20the%20more%20SQT%20tokens%20we%20can%20earn!%20%F0%9F%A5%B3%0D%0A%0D%0AI%E2%80%99ve%20been%20having%20a%20blast%20so%20far%2C%20learning%20about%20SubQuery%2C%20blockchain%20data%20indexing%20and%20the%20overall%20web3%20infrastructure%20revolution%20they%20have%20planned.%0D%0A%0D%0AHere%E2%80%99s%20my%20invite%20link%20if%20you%20want%20to%20sign%20up%20and%20complete%20onboarding%20to%20instantly%20earn%20200%20points%3A%20https%3A%2F%2Fairdrop.subquery.foundation%2F%3Freferral%3D${props.userInfo?.referral_code}%0D%0A%0D%0ASee%20you%20there!%20%F0%9F%91%80`}
           rel="noreferrer"
         >
           <Button shape="round" ghost type="primary" size="large" style={{ width: '100%' }}>
@@ -275,9 +279,9 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
           style={{ flex: 1 }}
           target="_blank"
           rel="noreferrer"
-          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-            'Hello world, https://subquery.network'
-          )}&hashtags=${encodeURIComponent('airdrop,subquery')}`}
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`@SubQueryNetwork is running the SubQuery Seekers campaign where you can complete fun quests to earn points and receive SQT tokens in their 50 million $SQT airdrop #SQTSeekers
+
+Join me here to get a bonus: https://airdrop.subquery.foundation/?referral=${props.userInfo?.referral_code}`)}`}
         >
           <Button shape="round" ghost type="primary" size="large" style={{ width: '100%' }}>
             Post on X (Twitter)

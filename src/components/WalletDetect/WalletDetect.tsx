@@ -29,13 +29,14 @@ export const ConnectWalletCom: React.FC = () => {
   return (
     <div className={clsx(styles.container)}>
       <Typography variant="h4" weight={600} style={{ textAlign: 'center' }}>
-        Join SubQuery’s 50 Million SQT Community Airdrop!
+        Join SubQuery Seekers 50 Million SQT Challenge
       </Typography>
       <Typography variant="text" type="secondary" style={{ textAlign: 'center' }}>
-        We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet! Connect your
-        wallet and complete onboarding to instantly receive 200 points.
+        We are giving away 50 Million SQT to our most valued community members in the SubQuery Seekers Program. Simply
+        register for the campaign, and start exploring the challenges. The more challenges you complete, the more SQT
+        tokens you can earn!
       </Typography>
-      <Typography type="secondary">The program closes on the 15th of February so be quick!</Typography>
+      <Typography type="secondary">The program closes on the 10th of April 2024 so be quick!</Typography>
 
       <ConnectButton.Custom>
         {({ openConnectModal }) => (
