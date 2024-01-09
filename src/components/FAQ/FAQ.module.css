@@ -1,5 +1,5 @@
 .faqContainer {
-  width: 100%;
+  width: 100vw;
   padding: 80px;
   display: flex;
   justify-content: center;

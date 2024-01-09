@@ -205,7 +205,17 @@ const MainChallenges = () => {
 
   if (loading) return <DefaultLoading />;
 
-  return <Collapse className={styles.darkCollapse} ghost items={challenges} />;
+  return (
+    <div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
+        <Typography variant="h6">SubQuery’s 50 Million SQT Airdrop Challenge</Typography>
+        <Typography variant="medium" type="secondary">
+          We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet!
+        </Typography>
+      </div>
+      <Collapse className={styles.darkCollapse} ghost items={challenges} />
+    </div>
+  );
 };
 
 const Referral = (props: { userInfo?: IUserInfo }) => {
