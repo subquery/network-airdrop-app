@@ -1,6 +1,3 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 const en = {
   translation: {
     header: {
@@ -59,7 +56,7 @@ const en = {
       nonToClaim: 'No Claimable Airdrop Available'
     },
     vesting: {
-      success: "You have claimed successfully "
+      success: 'You have claimed successfully '
     },
     wallet: {
       connectionErr: 'Unfortunately we did not recceive the confirmation, Please try again.',

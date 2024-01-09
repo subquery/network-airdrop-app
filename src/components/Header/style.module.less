@@ -1,0 +1,38 @@
+.header {
+  padding: 0 80px;
+  z-index: 999;
+  color: #fff;
+  width: 100vw;
+  background: transparent;
+  border-bottom: 1px solid rgba(52, 65, 75, 0.6);
+  display: flex;
+  justify-content: center;
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  :global {
+    .subql-header {
+      max-width: var(--main-pc-width, 1280px);
+      display: flex;
+      align-items: center;
+    }
+
+    .subql-left-header {
+      .sq-dropdown-trigger {
+        .subql-typography {
+          color: var(--sq-blue600);
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .header {
+    padding: 0;
+    border-bottom: none;
+    flex-direction: column;
+  }
+}

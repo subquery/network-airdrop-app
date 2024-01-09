@@ -1,12 +1,11 @@
 .container {
   width: 100%;
   height: 100%;
-  padding: 1rem;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
   align-items: center;
   margin: auto;
+  gap: 24px;
 }
 
 .error {
@@ -15,6 +14,9 @@
 
 .content {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .contact {
@@ -28,13 +30,12 @@
 }
 
 .walletActionContainer {
-  min-width: 50%;
-  border-radius: 0.5rem;
-  min-height: 50vh;
-  background: white;
+  border-radius: 8px;
+  background: var(--dark-mode-card);
   display: flex;
   flex-direction: column;
-  padding: 3rem;
+  width: 600px;
+  padding: 40px;
   align-items: center;
   justify-content: space-around;
 

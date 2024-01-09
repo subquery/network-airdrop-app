@@ -1,6 +1,3 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 import { useState, VFC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, TextInput, Toast, Typography } from '@subql/react-ui';

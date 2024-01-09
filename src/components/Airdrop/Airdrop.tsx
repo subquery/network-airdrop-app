@@ -1,23 +1,19 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatEther } from '@ethersproject/units';
+import { Spinner, Tag, Typography } from '@subql/components';
 import { AirdropClaimStatus, AirdropUser } from '@subql/network-query';
 import { useGetAirdropsByAccountQuery } from '@subql/react-hooks';
-import { Table, TableProps, Tag, Typography } from 'antd';
+import { Table, TableProps } from 'antd';
 import { BigNumber } from 'ethers';
 import i18next from 'i18next';
 import moment from 'moment';
+import { useAccount } from 'wagmi';
 
 import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from 'appConstants';
-import { useWeb3 } from 'containers';
 import { renderAsync } from 'utils/renderAsync';
 
-import { TableText } from '../Table';
-import { TableTitle } from '../Table/TableTitle';
-import styles from './Airdrop.module.css';
+import styles from './Airdrop.module.less';
 import { AirdropAmountHeader } from './AirdropAmountHeader';
 import { AirdropClaimButton } from './AirdropClaimButton';
 
@@ -34,9 +30,9 @@ interface SortedUserAirdrops extends AirdropUser {
 }
 
 const AirdropStatusTag: FC<{ status: AirdropRoundStatus }> = ({ status }) => {
-  const statusMapping: { [key: string]: { color: string; text: string } } = {
+  const statusMapping: { [key: string]: { color: 'success' | 'info' | 'default' | 'error'; text: string } } = {
     [AirdropRoundStatus.CLAIMED]: { color: 'success', text: i18next.t('airdrop.claimed') },
-    [AirdropRoundStatus.UNLOCKED]: { color: 'processing', text: i18next.t('airdrop.unlocked') },
+    [AirdropRoundStatus.UNLOCKED]: { color: 'info', text: i18next.t('airdrop.unlocked') },
     [AirdropRoundStatus.LOCKED]: { color: 'default', text: i18next.t('airdrop.locked') },
     [AirdropRoundStatus.EXPIRED]: { color: 'error', text: i18next.t('airdrop.expired') }
   };
@@ -48,28 +44,28 @@ const AirdropStatusTag: FC<{ status: AirdropRoundStatus }> = ({ status }) => {
 const getColumns = (t: any): TableProps<any>['columns'] => [
   {
     dataIndex: ['airdrop', 'id'],
-    title: <TableTitle title={t('airdrop.category')} />,
-    render: (airdropId: string) => <TableText>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</TableText>,
+    title: <Typography>{t('airdrop.category')}</Typography>,
+    render: (airdropId: string) => <Typography>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</Typography>,
     width: '30%'
   },
   {
     dataIndex: 'amount',
-    title: <TableTitle title={t('airdrop.amount')} />,
-    render: (amount) => <TableText>{`${formatEther(amount)} ${TOKEN}`}</TableText>,
+    title: <Typography>{t('airdrop.amount')}</Typography>,
+    render: (amount) => <Typography>{`${formatEther(amount)} ${TOKEN}`}</Typography>,
     align: 'right',
     width: '20%'
   },
   {
     dataIndex: 'sortedStatus',
-    title: <TableTitle title={t('airdrop.status')} />,
+    title: <Typography>{t('airdrop.status')}</Typography>,
     render: (airdropStatus) => <AirdropStatusTag status={airdropStatus} />,
     align: 'center',
     width: '15%'
   },
   {
     dataIndex: 'sortedNextMilestone',
-    title: <TableTitle title={t('airdrop.nextMilestone')} />,
-    render: (sortedNextMilestone) => <TableText>{sortedNextMilestone}</TableText>,
+    title: <Typography>{t('airdrop.nextMilestone')}</Typography>,
+    render: (sortedNextMilestone) => <Typography>{sortedNextMilestone}</Typography>,
     width: '35%'
   }
 ];
@@ -147,7 +143,7 @@ const sortUserAirdrops = (
 
 export const Airdrop: FC = () => {
   const { t } = useTranslation();
-  const { account } = useWeb3();
+  const { address: account } = useAccount();
   const accountAirdrop = useGetAirdropsByAccountQuery({
     variables: {
       account: account ?? ''
@@ -157,7 +153,16 @@ export const Airdrop: FC = () => {
   return (
     <div className={styles.container}>
       {renderAsync(accountAirdrop, {
-        error: (e) => <Typography.Text type="danger">{`Failed to get airdrop information. \n ${e}`}</Typography.Text>,
+        loading: () => (
+          <div style={{ minHeight: 500, display: 'flex', justifyContent: 'center' }}>
+            <Spinner />
+          </div>
+        ),
+        error: (e) => (
+          <div style={{ minHeight: 500 }}>
+            <Typography style={{ color: 'var(--sq-error)' }}>{`Failed to get airdrop information. \n ${e}`}</Typography>
+          </div>
+        ),
         data: (data) => {
           if (!data) return null;
           const airdrops = data?.airdropUsers?.nodes as Array<AirdropUser>;
@@ -167,17 +172,20 @@ export const Airdrop: FC = () => {
 
           return (
             <div className={styles.airdropClaimContainer}>
-              <Typography.Title level={3} className={styles.airdropClaimTitle}>
-                {t('airdrop.claimTitle', { token: TOKEN })}
-              </Typography.Title>
-              <Typography.Text className={styles.description}>{t('airdrop.description')}</Typography.Text>
+              <Typography variant="h6">{t('airdrop.claimTitle', { token: TOKEN })}</Typography>
+              <br />
+              <Typography style={{ marginTop: 8 }} type="secondary">
+                {t('airdrop.description')}
+              </Typography>
               <AirdropAmountHeader
                 unlockedAirdropAmount={unlockedAirdropAmount}
                 claimedAirdropAmount={claimedAirdropAmount}
               />
+
               {sortedAirdrops.length > 0 ? (
                 <>
                   <Table
+                    className={styles.darkTable}
                     columns={getColumns(t)}
                     dataSource={[...sortedAirdrops]}
                     rowKey="id"
@@ -186,7 +194,7 @@ export const Airdrop: FC = () => {
                   <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds} />
                 </>
               ) : (
-                <Typography.Text>{t('airdrop.nonToClaim')}</Typography.Text>
+                <Typography type="secondary">{t('airdrop.nonToClaim')}</Typography>
               )}
             </div>
           );

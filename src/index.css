@@ -56,7 +56,6 @@ html,
 body,
 #root,
 #root > div {
-  height: 100%;
   width: 100vw;
 }
 
@@ -77,4 +76,10 @@ code {
   color: #fff;
   border-color: var(--sq-primary-blue);
   background: var(--sq-primary-blue);
+}
+
+.ant-btn-primary.ant-btn-background-ghost {
+  border-color: var(--sq-primary-blue);
+  background:transparent;
+  color: var(--sq-primary-blue);
 }

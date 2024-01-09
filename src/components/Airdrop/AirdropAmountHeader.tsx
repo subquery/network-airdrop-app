@@ -1,24 +1,21 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetAirdropClaimsQuery } from '@subql/react-hooks';
 import { Typography } from 'antd';
 import clsx from 'clsx';
 import { BigNumber } from 'ethers';
+import { useAccount } from 'wagmi';
 
-import { useWeb3 } from 'containers';
 import { formatAmount } from 'utils';
 
-import styles from './Airdrop.module.css';
+import styles from './Airdrop.module.less';
 
 export const AirdropAmountHeader: React.FC<{
   unlockedAirdropAmount: BigNumber;
   claimedAirdropAmount: BigNumber;
 }> = ({ unlockedAirdropAmount, claimedAirdropAmount }) => {
   const { t } = useTranslation();
-  const { account } = useWeb3();
+  const { address: account } = useAccount();
 
   const airdropClaims = useGetAirdropClaimsQuery({
     variables: {

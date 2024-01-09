@@ -1,0 +1,103 @@
+.container {
+  background: var(--dark-mode-card);
+  padding: 24px;
+}
+
+.button {
+  margin-top: 2rem;
+}
+
+.claimButton {
+  background: var(--sq-primary-blue) !important;
+}
+
+.button:disabled {
+  color: #fff;
+}
+
+.airdropClaimTitle {
+  display: flex;
+  align-items: flex-start;
+}
+
+.description {
+  display: flex;
+  align-items: flex-start;
+  text-align: start;
+}
+
+.airdropClaimAmount {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--sq-gradient);
+  border-radius: 6px;
+  color: white;
+}
+
+.amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: start;
+}
+
+/* TODO: add theme */
+.text {
+  color: white !important;
+  font-size: 18px;
+}
+
+.amountTitle {
+  font-weight: 400;
+}
+
+.amountText {
+  font-weight: 600;
+}
+
+// use !important for now.
+// will do dark mode in components library.
+.darkTable {
+  :global {
+    .ant-table {
+      background: var(--dark-mode-card);
+    }
+    .ant-table-thead {
+      .ant-table-cell {
+        background: var(--dark-mode-card);
+        border-bottom-color: var(--sq-gray700);
+
+        &::before {
+          background-color: var(--sq-gray700)!important;
+        }
+
+        .subql-typography {
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    .ant-table-tbody {
+      .ant-table-cell {
+        background-color: var(--dark-mode-card)!important;  
+        border-bottom-color: var(--sq-gray700);
+      }
+
+      .ant-table-placeholder {
+        background: var(--dark-mode-card)!important;
+
+        .ant-empty-description {
+          color: #fff;
+        }
+
+        .ant-table-cell {
+          background: var(--dark-mode-card)!important;
+          border-bottom-color: var(--sq-gray700);
+        }
+      }
+    }
+  }
+}

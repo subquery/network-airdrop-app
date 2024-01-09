@@ -3,18 +3,17 @@
 
 import React from 'react';
 import useSWR from 'swr';
+import { useAccount } from 'wagmi';
 
 import { TERMS_SIGNATURE_URL } from 'appConstants';
 import { fetcher } from 'utils';
-
-import { useWeb3 } from '../containers';
 
 const getSignatureHistoryId = (termsAndConditionsVersion: string, account: string) =>
   `${termsAndConditionsVersion}:${account}`;
 
 export function useSignTCHistory(termsAndConditionsVersion: string): boolean {
   const [hasSignedTC, setHasSignedTC] = React.useState<boolean>(false);
-  const { account } = useWeb3();
+  const { address: account } = useAccount();
 
   const signatureId = getSignatureHistoryId(termsAndConditionsVersion, account ?? '');
   const { data, error } = useSWR(`${TERMS_SIGNATURE_URL}/${signatureId}`, fetcher);
