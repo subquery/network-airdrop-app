@@ -19,7 +19,7 @@
     "@ethersproject/units": "^5.6.1",
     "@rainbow-me/rainbowkit": "^1.2.0",
     "@subql/apollo-links": "^1.0.8",
-    "@subql/components": "1.0.3-26",
+    "@subql/components": "1.0.3-27",
     "@subql/contract-sdk": "0.17.1-1",
     "@subql/network-config": "0.3.17-0",
     "@subql/network-query": "0.3.16-12",
