@@ -170,7 +170,7 @@ const MainChallenges = () => {
           </div>
         ),
         children: (
-          <div>
+          <div className={styles.markdownWrapper}>
             <Markdown.Preview>{challenge.description}</Markdown.Preview>
 
             {challenge.cta && (

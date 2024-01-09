@@ -123,3 +123,14 @@
     margin-bottom: 0;
   }
 }
+
+.markdownWrapper {
+  :global {
+    .subql-markdown-preview {
+      * {
+        word-break: break-all;
+        overflow-wrap: anywhere;
+      }
+    }
+  }
+}
