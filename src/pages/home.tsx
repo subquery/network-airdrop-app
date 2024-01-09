@@ -28,7 +28,7 @@ export function Home() {
                 <div className={styles.airdropContent}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="h4" weight={600} style={{ marginBottom: 32 }}>
-                      SubQuery Community Airdrops and Token Vesting
+                      SubQuery Seekers Program and Airdrops
                     </Typography>
                     <PointsCard />
                   </div>

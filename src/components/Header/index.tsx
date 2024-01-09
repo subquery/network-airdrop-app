@@ -60,8 +60,12 @@ export const Header: React.VFC = () => {
             link: 'https://subquery.foundation/sale'
           },
           {
-            label: 'Airdrop',
-            link: '/'
+            label: 'SubQuery Seekers',
+            link: 'https://seekers.subquery.foundation/'
+          },
+          {
+            label: 'Airdrop Claim',
+            link: 'https://airdrop.subquery.foundation/'
           },
           {
             label: 'Blog',
