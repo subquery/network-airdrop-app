@@ -79,6 +79,10 @@ export const FAQ: React.VFC = () => {
             In order to join, you just need to be 18 years or over, and in order to claim any SQT Airdrops you receive,
             you’ll just need to be able to complete KYC to verify your identity.
           </span>
+          <span>
+            Additionally, due to compliance and regulations jurisdictions such as the USA, New Zealand, Philippines,
+            Iran, North Korea, Syria, Cuba will not be able to participate.
+          </span>
         </>
       )
     },
