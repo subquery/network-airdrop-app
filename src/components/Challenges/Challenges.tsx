@@ -78,7 +78,7 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
             AWESOME!
           </Typography>
           <Typography variant="large">
-            You&apos;ve already got a 1.21 referral bounus and an extra 200 points after onboarding!
+            By using this referral link, you and your friend have both a referral bonus after you onboard!
           </Typography>
         </div>
       )}
@@ -86,7 +86,7 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
 
       <Typography variant="medium" type="secondary" style={{ maxWidth: 806 }}>
         Enter your email address so we can send you important information about the 50 Million SQT Airdrop Challenge and
-        so we can complete KYC when the program finishes.
+        so you can complete KYC when the program finishes.
       </Typography>
 
       <Form form={form}>
@@ -98,7 +98,7 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
                 if (!value) {
                   return Promise.reject(new Error('Email is required'));
                 }
-                if (!/^[A-Za-z0-9]+([-_.][A-Za-z0-9]+)*@([A-Za-z0-9]+[-.])+[A-Za-z0-9]{2,5}$/.test(value)) {
+                if (!/^\S+@\S+\.\S+$/.test(value)) {
                   return Promise.reject(new Error('Email is invalid'));
                 }
 
@@ -113,13 +113,13 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
 
       <Typography variant="medium" type="secondary">
         By entering your email you acknowledge and consent to our{' '}
-        <Typography.Link active href="https://subquery.network/privacy" variant="medium">
+        <Typography.Link active href="https://subquery.network/privacy" target="_blank" variant="medium">
           privacy policy
         </Typography.Link>
       </Typography>
 
       <Button type="primary" shape="round" size="large" onClick={signupWithCode} loading={loading}>
-        Submit
+        Sign Up
       </Button>
 
       <ContactUs />
@@ -254,8 +254,8 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
 
             openNotification({
               type: 'success',
-              description: 'Copy success',
-              duration: 1
+              description: 'Referral Link Copied to Clipboard. Go out there and share it!',
+              duration: 5
             });
           }}
         >
