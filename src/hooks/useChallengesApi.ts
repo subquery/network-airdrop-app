@@ -61,11 +61,13 @@ export const useChallengesApi = (props: { alert?: boolean } = {}) => {
         if (alert) {
           if (e instanceof AxiosError) {
             const error = e as AxiosError<{ message: string }>;
-            openNotification({
-              type: 'error',
-              description: error.response?.data.message,
-              duration: 10
-            });
+            if (error.response?.data.message) {
+              openNotification({
+                type: 'error',
+                description: error.response?.data.message,
+                duration: 10
+              });
+            }
           }
         }
 
@@ -110,6 +112,7 @@ export const useChallengesApi = (props: { alert?: boolean } = {}) => {
 
   return {
     signup: alertResDecorator(signup),
+    // remove alert decorator or not?
     getUserInfo: alertResDecorator(getUserInfo),
     getUserChallenges: alertResDecorator(getUserChallenges),
     getUserLeaderboard: alertResDecorator(getUserLeaderboard),
