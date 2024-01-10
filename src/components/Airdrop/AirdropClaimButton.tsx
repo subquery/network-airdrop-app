@@ -30,10 +30,10 @@ export const AirdropClaimButton: React.FC<{
   const buttonText = !contracts
     ? t('airdrop.initContract')
     : canClaim
-    ? hasSignedTC
-      ? t('airdrop.claim')
-      : t('termsAndConditions.sign')
-    : t('airdrop.nonToClaim');
+      ? hasSignedTC
+        ? t('airdrop.claim')
+        : t('termsAndConditions.sign')
+      : t('airdrop.nonToClaim');
 
   // TODO: fix takeContractTx
   const onClaimAirdrop = async () => {

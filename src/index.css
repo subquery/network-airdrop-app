@@ -80,6 +80,6 @@ code {
 
 .ant-btn-primary.ant-btn-background-ghost {
   border-color: var(--sq-primary-blue);
-  background:transparent;
+  background: transparent;
   color: var(--sq-primary-blue);
 }

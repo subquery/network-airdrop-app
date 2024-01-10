@@ -1,2 +1,2 @@
-export { IconLinks } from "./IconLinks";
-export { Email } from "./email";
+export { IconLinks } from './IconLinks';
+export { Email } from './email';
