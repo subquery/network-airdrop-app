@@ -103,10 +103,24 @@ export const useChallengesApi = (props: { alert?: boolean} = {}) => {
     return res
   }, [])
 
+  const sendEmail = useCallback(async (account) => {
+    const res = await instance.get(`/user/${account}/verify`)
+
+    return res
+  }, [])
+
+  const verifyEmail = useCallback(async (account) => {
+    const res = await instance.post(`/user/verify_email/${account}`)
+
+    return res
+  }, [])
+
   return {
     signup: alertResDecorator(signup),
     getUserInfo: alertResDecorator(getUserInfo),
     getUserChallenges: alertResDecorator(getUserChallenges),
-    getUserLeaderboard: alertResDecorator(getUserLeaderboard)
+    getUserLeaderboard: alertResDecorator(getUserLeaderboard),
+    sendEmail: alertResDecorator(sendEmail),
+    verifyEmail: alertResDecorator(verifyEmail)
   }
 }
