@@ -110,7 +110,7 @@ export const useChallengesApi = (props: { alert?: boolean} = {}) => {
   }, [])
 
   const verifyEmail = useCallback(async (account) => {
-    const res = await instance.post(`/user/verify_email/${account}`)
+    const res = await instance.post(`/verify_email/${account}`)
 
     return res
   }, [])
