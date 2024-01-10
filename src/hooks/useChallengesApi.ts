@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 import { openNotification } from '@subql/components';
-import axios, { AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios';
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_CHALLENGE_URL,
+  baseURL: process.env.REACT_APP_CHALLENGE_URL
 });
 
 export interface IUserInfo {
@@ -23,7 +23,7 @@ export interface Challenge {
   name: string;
   success: boolean;
   reward: number;
-  reward_type: "FIXED" | "MULTIPLE";
+  reward_type: 'FIXED' | 'MULTIPLE';
   description: string;
   cta: string;
   cta_label: string;
@@ -48,65 +48,72 @@ export interface UserSignupRequest {
   referral_code?: string;
 }
 
-
-export const useChallengesApi = (props: { alert?: boolean} = {}) => {
-  const { alert = true } = props
+export const useChallengesApi = (props: { alert?: boolean } = {}) => {
+  const { alert = true } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const alertResDecorator = <T extends (...args: any) => any>(
-    func: T,
-  ): ((...args: Parameters<T>) => Promise<ReturnType<T>>) => async (...args: Parameters<T>): Promise<ReturnType<T>> => {
-    try {
-      const res = await func(...args);
-      return res;
-
-    } catch(e: any) {
-      if (alert) {
-        if (e instanceof AxiosError) {
-          const error = e as AxiosError<{ message: string }>
-          if (error.response?.status !== 401) {
+  const alertResDecorator =
+    <T extends (...args: any) => any>(func: T): ((...args: Parameters<T>) => Promise<ReturnType<T>>) =>
+    async (...args: Parameters<T>): Promise<ReturnType<T>> => {
+      try {
+        const res = await func(...args);
+        return res;
+      } catch (e: any) {
+        if (alert) {
+          if (e instanceof AxiosError) {
+            const error = e as AxiosError<{ message: string }>;
             openNotification({
               type: 'error',
               description: error.response?.data.message,
-              duration: 3,
+              duration: 10
             });
           }
         }
+
+        throw new Error(e);
       }
-
-      throw new Error(e)
-    }
-
-
     };
 
-      
-  const signup = useCallback(async (params:UserSignupRequest) => {
-    const res = await instance.post('/signup', params)
-    return res
-  }, [])
+  const signup = useCallback(async (params: UserSignupRequest) => {
+    const res = await instance.post('/signup', params);
+    return res;
+  }, []);
 
   const getUserInfo = useCallback(async (account: string) => {
-    const res = await instance.get<IUserInfo>(`/user/${account}`)
+    const res = await instance.get<IUserInfo>(`/user/${account}`);
 
-    return res
-  }, [])
+    return res;
+  }, []);
 
   const getUserChallenges = useCallback(async (account: string) => {
-    const res = await instance.get<Challenge[]>(`/user/${account}/challenges`)
+    const res = await instance.get<Challenge[]>(`/user/${account}/challenges`);
 
-    return res
-  }, [])
+    return res;
+  }, []);
 
   const getUserLeaderboard = useCallback(async (account: string) => {
-    const res = await instance.get<LeaderboardSummary>(`/user/${account}/leaderboard`)
+    const res = await instance.get<LeaderboardSummary>(`/user/${account}/leaderboard`);
 
-    return res
-  }, [])
+    return res;
+  }, []);
+
+  const sendEmail = useCallback(async (account) => {
+    const res = await instance.get(`/user/${account}/verify`);
+
+    return res;
+  }, []);
+
+  const verifyEmail = useCallback(async (account) => {
+    const res = await instance.post(`/verify_email/${account}`);
+
+    return res;
+  }, []);
 
   return {
     signup: alertResDecorator(signup),
     getUserInfo: alertResDecorator(getUserInfo),
     getUserChallenges: alertResDecorator(getUserChallenges),
-    getUserLeaderboard: alertResDecorator(getUserLeaderboard)
-  }
-}
+    getUserLeaderboard: alertResDecorator(getUserLeaderboard),
+    sendEmail: alertResDecorator(sendEmail),
+    verifyEmail: alertResDecorator(verifyEmail)
+  };
+};

@@ -9,6 +9,7 @@ import '@subql/components/dist/subquery-components.css';
 import { TERMS_URL } from 'appConstants';
 import { Header } from 'components';
 import { Footer } from 'components/Footer/Footer';
+import Onboard from 'components/Onboard/Onboard';
 import { AppContext } from 'contextProvider';
 import { Home, NotFoundPage } from 'pages';
 import { TermsAndConditions } from 'pages/termsAndConditions';
@@ -38,6 +39,7 @@ function App() {
         <div className={styles.appBody}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/onboard/:id" element={<Onboard />} />
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
             <Route path="/404" element={<NotFoundPage />} />
             <Route path="*" element={<Home />} />

@@ -131,21 +131,43 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
   );
 };
 
-const SecondStep = (email: string = 'james.bayly@subquery.network') => (
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-    <MdOutlineMail style={{ fontSize: '100px', color: '#fff' }} />
-    <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge</Typography>
-    <Typography variant="medium" type="secondary">
-      We are giving away 50 Million SQT to our most valued community members in the SubQuery Seekers Program. Simply
-      register for the campaign, and start exploring the challenges. The more challenges you complete, the more SQT
-      tokens you can earn!
-    </Typography>
-    <Typography type="secondary" style={{ maxWidth: 806, textAlign: 'center', padding: '0 3em' }}>
-      We’ve just sent an onboarding email to your email address ({email}). Go and click on the link in it to continue!
-    </Typography>
-    <ContactUs />
-  </div>
-);
+const SecondStep = (props: { email: string }) => {
+  const { address: account } = useAccount();
+  const { sendEmail } = useChallengesApi();
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+      <MdOutlineMail style={{ fontSize: '100px', color: '#fff' }} />
+      <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge</Typography>
+      <Typography variant="medium" type="secondary">
+        We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet!
+      </Typography>
+      <Typography type="secondary" style={{ maxWidth: 806, textAlign: 'center', padding: '0 3em' }}>
+        We have sent an onboarding email to your email address ({props.email}), if you didn&apos;t get it, you can{' '}
+        <Typography.Link
+          active
+          style={{ textDecoration: 'underline' }}
+          onClick={async () => {
+            await sendEmail(account);
+            openNotification({
+              type: 'success',
+              description:
+                'We have sent you a new verification link, please check your email address (including your spam account)',
+              duration: 10
+            });
+          }}
+        >
+          request another one
+        </Typography.Link>
+        .
+      </Typography>
+      <Typography variant="medium" type="secondary">
+        Go and click on the link in it to continue! (check for it in your spam)
+      </Typography>
+      <ContactUs />
+    </div>
+  );
+};
 
 const MainChallenges = () => {
   const { address: account } = useAccount();
@@ -401,7 +423,7 @@ export const Challenges: FC<IProps> = (props) => {
 
   const userStage = useMemo(() => {
     if (!userInfo?.email) return 0;
-    // if (userInfo.email && !userInfo.verified_email) return 1;
+    if (userInfo.email && !userInfo.verified_email) return 1;
     return 2;
   }, [userInfo]);
 
@@ -431,7 +453,7 @@ export const Challenges: FC<IProps> = (props) => {
     <>
       <div className={styles.baseCard}>
         {userStage === 0 && <FirstStep freshFunc={fetchUserInfo} />}
-        {/* {userStage === 1 && <SecondStep />} */}
+        {userStage === 1 && <SecondStep email={userInfo?.email || 'james.bayly@subquery.network'} />}
         {userStage === 2 && <MainChallenges />}
       </div>
       {userStage === 2 && (
