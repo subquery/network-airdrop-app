@@ -17,7 +17,8 @@ const Onboard: FC<IProps> = (props) => {
       await verifyEmail(params.id);
       openNotification({
         type: 'success',
-        description: 'Email verify success'
+        description: 'Your email has been verified',
+        duration: 10
       });
     } finally {
       navigate('/');

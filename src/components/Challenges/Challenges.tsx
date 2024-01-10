@@ -143,14 +143,17 @@ const SecondStep = (props: { email: string }) => {
         We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet!
       </Typography>
       <Typography type="secondary" style={{ maxWidth: 806, textAlign: 'center', padding: '0 3em' }}>
-        We’ve just sent an onboarding email to your email address ({props.email}), if you didn&apos;t get it, you can{' '}
+        We have sent an onboarding email to your email address ({props.email}), if you didn&apos;t get it, you can{' '}
         <Typography.Link
           active
+          style={{ textDecoration: 'underline' }}
           onClick={async () => {
             await sendEmail(account);
             openNotification({
               type: 'success',
-              description: 'Send email success'
+              description:
+                'We have sent you a new verification link, please check your email address (including your spam account)',
+              duration: 10
             });
           }}
         >
