@@ -80,7 +80,7 @@ export const Footer: React.FC = () => (
         maxWidth: 1280
       }}
     >
-      <Typography style={{ color: 'var(--sq-gray500)' }}>SubQuery © 2023</Typography>
+      <Typography style={{ color: 'var(--sq-gray500)' }}>SubQuery © 2024</Typography>
       <Typography style={{ color: 'var(--sq-gray500)', margin: '0 16px' }}>
         <a href="https://subquery.network/privacy" className={styles.externalLink}>
           Privacy Policy
