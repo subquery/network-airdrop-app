@@ -1,6 +1,5 @@
 .faqContainer {
-  width: 100vw;
-  padding: 80px;
+  width: 100%;
   display: flex;
   justify-content: center;
   background-color: var(--dark-mode-card);
@@ -13,6 +12,7 @@
   flex-direction: column;
   align-items: center;
   gap: 29px;
+  padding: 1em;
   @media screen and (max-width: 768px) {
     width: 100%;
   }
@@ -29,7 +29,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 854px;
+  max-width: 854px;
   gap: 24px;
 }
 

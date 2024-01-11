@@ -14,7 +14,7 @@ export const BlockchainStatus: React.FC = ({ children }) => {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          width: 600,
+          maxWidth: 600,
           background: 'var(--dark-mode-card)',
           borderRadius: 8,
           padding: 40,

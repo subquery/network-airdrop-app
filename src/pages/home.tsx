@@ -26,7 +26,14 @@ export function Home() {
             <WalletDetect>
               <div className={styles.airdropContainer}>
                 <div className={styles.airdropContent}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      flexFlow: 'row wrap',
+                      marginBottom: '1em'
+                    }}
+                  >
                     <Typography variant="h4" weight={600} style={{ marginBottom: 32 }}>
                       SubQuery Seekers Program and Airdrops
                     </Typography>
