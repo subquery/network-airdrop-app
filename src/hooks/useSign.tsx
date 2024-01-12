@@ -40,7 +40,10 @@ export const useSign = () => {
     try {
       if (!termsAndConditions)
         throw Error(`Failed to load ${!termsAndConditions ? 'Terms and Conditions' : 'metamask lib'}`);
-      const signTermsHash = await signMessageAsync(termsAndConditions);
+
+      const signTermsHash = await signMessageAsync({
+        message: termsAndConditions
+      });
       setTCSignHash(signTermsHash);
       console.log('signTermsHash', signTermsHash);
     } catch (error: any) {

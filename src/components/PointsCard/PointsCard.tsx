@@ -26,7 +26,7 @@ const PointsCard: FC<IProps> = () => {
 
   useInterval(() => {
     initUserInfo();
-  }, 5000);
+  }, 30000);
 
   return (
     <div className={styles.pointsCard}>

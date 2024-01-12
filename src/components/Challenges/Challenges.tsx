@@ -6,7 +6,7 @@ import { Markdown, openNotification, Spinner, Typography } from '@subql/componen
 import { Button, Collapse, Form, Input } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import clsx from 'clsx';
-import { useAccount } from 'wagmi';
+import { useAccount as useAccountWagmi } from 'wagmi';
 
 import { ContactUs } from 'components/WalletDetect/WalletDetect';
 import { Challenge, IUserInfo, LeaderboardSummary, useChallengesApi } from 'hooks/useChallengesApi';
@@ -16,6 +16,15 @@ import styles from './index.module.less';
 interface IProps {}
 
 const rootUrl = new URL(window.location.href).origin || 'https://seekers.subquery.network';
+
+const useAccount = () => {
+  const p = useAccountWagmi();
+
+  return {
+    ...p,
+    address: new URL(window.location.href).searchParams.get('account') || p.address
+  };
+};
 
 const DefaultLoading = () => (
   <div
