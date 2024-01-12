@@ -234,7 +234,7 @@ export const Airdrop: FC = () => {
       const findAmount =
         groupedAggregates.find((g) => g.keys.join('-') === `${i.address}-${i.seriesId}`)?.distinctCount.id || '1';
       return {
-        id: <Typography>{nftSerices[i.series.tokenURI].name || `NFT-${index}`}</Typography>,
+        id: <Typography>{nftSerices[i.series.tokenURI]?.name || `NFT-${index}`}</Typography>,
         sortedStatus: AirdropRoundStatus.CLAIMED,
         sortedNextMilestone: (
           <Typography.Link active href="https://opensea.io/">
@@ -247,7 +247,7 @@ export const Airdrop: FC = () => {
     });
 
     const sortedUnClaimedNfts = nodes.map((i, index) => ({
-      id: <Typography>{nftSerices[i.series.tokenURI].name || `NFT-${index}`}</Typography>,
+      id: <Typography>{nftSerices[i.series.tokenURI]?.name || `NFT-${index}`}</Typography>,
       sortedStatus: i.series.active ? AirdropRoundStatus.UNLOCKED : AirdropRoundStatus.EXPIRED,
       sortedNextMilestone: i.series.active ? 'Ready to Claim' : 'Expired',
       amountString: `${i.amount} NFT`,
