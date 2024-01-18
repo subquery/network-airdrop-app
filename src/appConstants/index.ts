@@ -3,7 +3,7 @@ export * from './colors';
 
 export const DATE_FORMAT = 'DD-MMM-YYYY, h:mm a';
 
-export const TOKEN = 'kSQT';
+export const TOKEN = 'SQT';
 
 export const DISCORD_INVITE_URL = 'https://discord.gg/zAWxMbrS34';
 

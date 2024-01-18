@@ -4,8 +4,9 @@
 import React from 'react';
 // eslint-disable-next-line camelcase
 import { ContractSDK, Vesting, Vesting__factory } from '@subql/contract-sdk';
-import keplerDeployment from '@subql/contract-sdk/publish/kepler.json';
+import mainnetDeployment from '@subql/contract-sdk/publish/mainnet.json';
 import testnetDeployment from '@subql/contract-sdk/publish/testnet.json';
+import { SQNetworks } from '@subql/network-config';
 import { providers } from 'ethers';
 import { HttpTransport } from 'viem';
 import { PublicClient, usePublicClient, useWalletClient, WalletClient } from 'wagmi';
@@ -71,17 +72,19 @@ export function useContracts(): ContractSDK | undefined {
       return;
     }
 
-    const deploymentDetails = Network === 'kepler' ? keplerDeployment : testnetDeployment;
+    const deploymentDetails = Network === 'mainnet' ? mainnetDeployment : testnetDeployment;
 
-    // @ts-ignore
-    const pendingContracts = await ContractSDK.create(signerOrProvider, { deploymentDetails });
+    const pendingContracts = ContractSDK.create(signerOrProvider, {
+      network: Network as SQNetworks
+    });
 
     setContracts(pendingContracts);
   }, [signerOrProvider]);
 
   React.useEffect(() => {
+    if (!signerOrProvider) return;
     initSdk();
-  }, [initSdk]);
+  }, [initSdk, signerOrProvider]);
 
   return contracts;
 }

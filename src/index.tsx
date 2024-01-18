@@ -7,6 +7,7 @@ import { AppContextProvider } from 'contextProvider';
 import App from './App';
 import { QueryApolloProvider } from './containers';
 
+import 'conf/polyfill';
 import './index.css';
 
 ReactDOM.render(

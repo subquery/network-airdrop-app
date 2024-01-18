@@ -50,8 +50,8 @@ const en = {
       nextMilestone: 'Next Milestone',
       claimTitle: ' Your {{token}} Airdrop',
       description:
-        'Ambassadors and the best Indexers from the SubQuery Frontier test network are eligible to receive the kSQT airdrops.',
-      claim: 'Claim Your Unlocked Tokens',
+        'Ambassadors and the best Indexers from the SubQuery Frontier test network are eligible to receive the SQT airdrops.',
+      claim: 'Claim Unlocked',
       successClaim: 'You have claimed airdrop successfully',
       nonToClaim: 'No Claimable Airdrop Available'
     },
@@ -91,16 +91,16 @@ const en = {
         <br/>7. Once the transaction is confirmed, you will see a success message popped up on the claim page. You can always check the progress on the Karura block explorer.`,
       howLongAirdropQ: 'How long is the airdrop available for?',
       howLongAirdropA:
-        'Eligible users will be able to claim their kSQT airdrop tokens for a three month period from the date of our Kepler network launch. You will lose access to any airdrop tokens if you do not claim them by the end of the period.',
+        'Eligible users will be able to claim their SQT airdrop tokens for a three month period from the date of our Kepler network launch. You will lose access to any airdrop tokens if you do not claim them by the end of the period.',
       whenCanClaimQ: 'How do I know when I can claim my tokens?',
       whenCanClaimA:
         'We will also post messages on our Twitter, Telegram and Discord at the appropriate time to notify the community.',
       troubleshootingQ: 'Wallet Troubleshooting',
       troubleshootingA:
         'Currently we only support Metamask. If you have any questions, please contact us <1>via Discord</1>.',
-      whenWillRecieveQ: 'When will I receive my kSQT tokens from the Airdrop?',
+      whenWillRecieveQ: 'When will I receive my SQT tokens from the Airdrop?',
       whenWillRecieveA:
-        'kSQT tokens will be available when the Kepler Network launches. The exact date will be announced closer to the time.',
+        'SQT tokens will be available when the Kepler Network launches. The exact date will be announced closer to the time.',
       whoCanContactQ: 'Who can I contact for help?',
       whoCanContactA:
         'If your question is not answered here, please contact us <1>via our Discord</1> in the Airdrop channel'

@@ -1,17 +1,18 @@
-import { FC } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatEther } from '@ethersproject/units';
+import { gql, useQuery } from '@apollo/client';
 import { Spinner, Tag, Typography } from '@subql/components';
-import { AirdropClaimStatus, AirdropUser } from '@subql/network-query';
-import { useGetAirdropsByAccountQuery } from '@subql/react-hooks';
+import { renderAsyncArray } from '@subql/react-hooks';
+import { mergeAsync } from '@subql/react-hooks/dist/utils';
 import { Table, TableProps } from 'antd';
 import { BigNumber } from 'ethers';
 import i18next from 'i18next';
-import moment from 'moment';
+import { uniqWith } from 'lodash-es';
 import { useAccount } from 'wagmi';
 
-import { AIRDROP_CATEGORIES, DATE_FORMAT, TOKEN } from 'appConstants';
-import { renderAsync } from 'utils/renderAsync';
+import { TOKEN } from 'appConstants';
+import { GIFT } from 'containers';
+import { useIpfs } from 'hooks/useIpfs';
 
 import styles from './Airdrop.module.less';
 import { AirdropAmountHeader } from './AirdropAmountHeader';
@@ -24,10 +25,56 @@ enum AirdropRoundStatus {
   UNLOCKED = 'UNLOCKED'
 }
 
-interface SortedUserAirdrops extends AirdropUser {
+export interface tableItem {
+  id: ReactNode;
   sortedStatus: AirdropRoundStatus;
-  sortedNextMilestone: string;
+  sortedNextMilestone: ReactNode;
+  amountString: ReactNode;
 }
+
+export interface IUnclaimedGifts {
+  userUnclaimedNfts: {
+    nodes: {
+      amount: string;
+      seriesId: string;
+      id: string;
+      series: {
+        active: boolean;
+        tokenURI: string;
+      };
+    }[];
+  };
+}
+
+export interface IClaimedGifts {
+  userNfts: {
+    nodes: {
+      id: string;
+      address: string;
+      seriesId: string;
+      series: {
+        active: boolean;
+        tokenURI: string;
+      };
+    }[];
+
+    groupedAggregates: {
+      keys: [string, string];
+      distinctCount: {
+        id: string;
+      };
+    }[];
+  };
+}
+
+export type NftIpfs = {
+  [key: string]: {
+    name: string;
+    description: string;
+    external_url: string;
+    image: string;
+  };
+};
 
 const AirdropStatusTag: FC<{ status: AirdropRoundStatus }> = ({ status }) => {
   const statusMapping: { [key: string]: { color: 'success' | 'info' | 'default' | 'error'; text: string } } = {
@@ -43,15 +90,15 @@ const AirdropStatusTag: FC<{ status: AirdropRoundStatus }> = ({ status }) => {
 
 const getColumns = (t: any): TableProps<any>['columns'] => [
   {
-    dataIndex: ['airdrop', 'id'],
+    dataIndex: 'id',
     title: <Typography>{t('airdrop.category')}</Typography>,
-    render: (airdropId: string) => <Typography>{AIRDROP_CATEGORIES[airdropId] ?? `Airdrop-${airdropId}`}</Typography>,
+    render: (airdropId: string) => airdropId,
     width: '30%'
   },
   {
-    dataIndex: 'amount',
+    dataIndex: 'amountString',
     title: <Typography>{t('airdrop.amount')}</Typography>,
-    render: (amount) => <Typography>{`${formatEther(amount)} ${TOKEN}`}</Typography>,
+    render: (amount) => <Typography>{amount}</Typography>,
     align: 'right',
     width: '20%'
   },
@@ -78,81 +125,152 @@ const getColumns = (t: any): TableProps<any>['columns'] => [
  * @returns [sortedAirdropArray for table, unlockedAirdropIds, unlockedAirdropAmount, claimedAirdropAmount]
  */
 
-const sortUserAirdrops = (
-  userAirdrops: Array<AirdropUser>
-): [Array<SortedUserAirdrops>, Array<string>, BigNumber, BigNumber] => {
-  const unlockedAirdropIds: Array<string> = [];
-  let unlockedAirdropAmount = BigNumber.from('0');
-  let claimedAirdropAmount = BigNumber.from('0');
-
-  const sortedUserAirdrops = userAirdrops.map((userAirdrop) => {
-    const { status, airdrop, amount } = userAirdrop;
-    const hasUserClaimed = status === AirdropClaimStatus.CLAIMED;
-    const startTime = moment.utc(airdrop?.startTime).local();
-    const endTime = moment.utc(airdrop?.endTime).local();
-
-    // Cal claimed amount
-    if (hasUserClaimed) {
-      claimedAirdropAmount = BigNumber.from(amount.toString()).add(claimedAirdropAmount);
-    }
-
-    // Before airdrop claim period
-    const isAfterStartTime = startTime.isAfter();
-    if (isAfterStartTime) {
-      return {
-        ...userAirdrop,
-        sortedStatus: AirdropRoundStatus.LOCKED,
-        sortedNextMilestone: i18next.t('airdrop.whenUnlock', { date: startTime.format(DATE_FORMAT) })
-      };
-    }
-
-    // After airdrop claim period
-    const isBeforeEndTime = endTime.isBefore();
-    if (isBeforeEndTime) {
-      const sortedStatus = hasUserClaimed ? AirdropRoundStatus.CLAIMED : AirdropRoundStatus.EXPIRED;
-      const sortedNextMilestone = hasUserClaimed
-        ? i18next.t('airdrop.youHvClaimed')
-        : i18next.t('airdrop.whenExpired', { date: endTime.format(DATE_FORMAT) });
-
-      return {
-        ...userAirdrop,
-        sortedStatus,
-        sortedNextMilestone
-      };
-    }
-
-    // moment().isBetween(startTime, endTime);
-    if (!hasUserClaimed) {
-      airdrop?.id && unlockedAirdropIds.push(airdrop?.id); // airdropId must exist
-      unlockedAirdropAmount = BigNumber.from(amount.toString()).add(unlockedAirdropAmount);
-    }
-    const sortedStatus = hasUserClaimed ? AirdropRoundStatus.CLAIMED : AirdropRoundStatus.UNLOCKED;
-    const sortedNextMilestone = hasUserClaimed
-      ? i18next.t('airdrop.youHvClaimed')
-      : i18next.t('airdrop.whenExpires', { date: endTime.format(DATE_FORMAT) });
-
-    return {
-      ...userAirdrop,
-      sortedStatus,
-      sortedNextMilestone
-    };
-  });
-
-  return [sortedUserAirdrops, unlockedAirdropIds, unlockedAirdropAmount, claimedAirdropAmount];
-};
-
 export const Airdrop: FC = () => {
   const { t } = useTranslation();
   const { address: account } = useAccount();
-  const accountAirdrop = useGetAirdropsByAccountQuery({
-    variables: {
-      account: account ?? ''
+  const { catSingle } = useIpfs();
+
+  const [nftSerices, setNftSerices] = useState<NftIpfs>({});
+
+  const accountUnclaimGifts = useQuery<IUnclaimedGifts>(
+    gql`
+      query ($address: String!) {
+        userUnclaimedNfts(filter: { address: { equalTo: $address } }) {
+          nodes {
+            id
+            amount
+            seriesId
+            series {
+              active
+              tokenURI
+            }
+          }
+        }
+      }
+    `,
+    {
+      variables: {
+        address: account
+      },
+      fetchPolicy: 'network-only',
+      context: {
+        clientName: GIFT
+      },
+      pollInterval: 15000
     }
-  });
+  );
+
+  const accountClaimedGifts = useQuery<IClaimedGifts>(
+    gql`
+      query ($address: String!) {
+        userNfts(filter: { address: { equalTo: $address } }) {
+          nodes {
+            id
+            address
+            seriesId
+            series {
+              active
+              tokenURI
+            }
+          }
+
+          groupedAggregates(groupBy: [ADDRESS, SERIES_ID]) {
+            keys
+            distinctCount {
+              id
+            }
+          }
+        }
+      }
+    `,
+    {
+      variables: {
+        address: account
+      },
+      fetchPolicy: 'network-only',
+      context: {
+        clientName: GIFT
+      },
+      pollInterval: 15000
+    }
+  );
+
+  const getNftSericesNames = async () => {
+    const tokenCids = [
+      ...new Set(
+        accountUnclaimGifts.data?.userUnclaimedNfts.nodes
+          .map((i) => i.series.tokenURI)
+          .concat(accountClaimedGifts.data?.userNfts.nodes.map((i) => i.series.tokenURI) || []) || []
+      )
+    ];
+
+    const res = await Promise.allSettled(tokenCids.map((cid) => catSingle(cid)));
+
+    const nftSericesInfos = res.reduce((cur, add, index) => {
+      if (add.status === 'fulfilled') {
+        // eslint-disable-next-line no-param-reassign
+        cur[tokenCids[index]] = JSON.parse(Buffer.from(add.value).toString('utf8'));
+      }
+
+      return cur;
+    }, {} as NftIpfs);
+
+    setNftSerices(nftSericesInfos);
+  };
+
+  const sortGifts = (userUnClaimGifts: IUnclaimedGifts, claimedGiftsData: IClaimedGifts): tableItem[] => {
+    const {
+      userUnclaimedNfts: { nodes }
+    } = userUnClaimGifts;
+
+    const {
+      userNfts: { nodes: claimedNfts, groupedAggregates }
+    } = claimedGiftsData;
+
+    const sortedClaimedNfts = uniqWith(
+      claimedNfts,
+      (a, b) => `${a.address}-${a.series.tokenURI}` === `${b.address}-${b.series.tokenURI}`
+    ).map((i, index) => {
+      const findAmount =
+        groupedAggregates.find((g) => g.keys.join('-') === `${i.address}-${i.seriesId}`)?.distinctCount.id || '1';
+      return {
+        id: <Typography>{nftSerices[i.series.tokenURI]?.name || `NFT-${index}`}</Typography>,
+        sortedStatus: AirdropRoundStatus.CLAIMED,
+        sortedNextMilestone: (
+          <Typography.Link active href="https://opensea.io/">
+            View in OpenSea
+          </Typography.Link>
+        ),
+        amountString: `${findAmount} NFT`,
+        key: `${i.address}${i.id}unclaim`
+      };
+    });
+
+    const sortedUnClaimedNfts = nodes.map((i, index) => ({
+      id: <Typography>{nftSerices[i.series.tokenURI]?.name || `NFT-${index}`}</Typography>,
+      sortedStatus: i.series.active ? AirdropRoundStatus.UNLOCKED : AirdropRoundStatus.EXPIRED,
+      sortedNextMilestone: i.series.active ? 'Ready to Claim' : 'Expired',
+      amountString: `${i.amount} NFT`,
+      key: `${i.seriesId}${i.id}claim`
+    }));
+
+    return [...sortedUnClaimedNfts, ...sortedClaimedNfts];
+  };
+
+  useEffect(() => {
+    if (!accountClaimedGifts.loading && !accountUnclaimGifts.loading) {
+      getNftSericesNames();
+    }
+  }, [accountUnclaimGifts.data?.userUnclaimedNfts, accountClaimedGifts.data]);
 
   return (
     <div className={styles.container}>
-      {renderAsync(accountAirdrop, {
+      {renderAsyncArray(mergeAsync(accountUnclaimGifts, accountClaimedGifts), {
+        empty: () => (
+          <div style={{ minHeight: 500 }}>
+            <Typography style={{ color: 'var(--sq-error)' }}>Failed to get airdrop information.</Typography>
+          </div>
+        ),
         loading: () => (
           <div style={{ minHeight: 500, display: 'flex', justifyContent: 'center' }}>
             <Spinner />
@@ -165,10 +283,13 @@ export const Airdrop: FC = () => {
         ),
         data: (data) => {
           if (!data) return null;
-          const airdrops = data?.airdropUsers?.nodes as Array<AirdropUser>;
-          const [sortedAirdrops, unlockedAirdropIds, unlockedAirdropAmount, claimedAirdropAmount] =
-            sortUserAirdrops(airdrops);
-          const { user } = sortedAirdrops[0] ?? {};
+          const [unClaimGifts, userNfts] = data;
+          const renderTable = sortGifts(
+            unClaimGifts || { userUnclaimedNfts: { nodes: [] } },
+            userNfts || { userNfts: { nodes: [], groupedAggregates: [] } }
+          );
+
+          const unlockSeriesIds = unClaimGifts?.userUnclaimedNfts.nodes.map((i) => i.seriesId) || [];
 
           return (
             <div className={styles.airdropClaimContainer}>
@@ -177,21 +298,18 @@ export const Airdrop: FC = () => {
               <Typography style={{ marginTop: 8 }} type="secondary">
                 {t('airdrop.description')}
               </Typography>
-              <AirdropAmountHeader
-                unlockedAirdropAmount={unlockedAirdropAmount}
-                claimedAirdropAmount={claimedAirdropAmount}
-              />
+              <AirdropAmountHeader unlockedAirdropAmount={BigNumber.from(0)} claimedAirdropAmount={BigNumber.from(0)} />
 
-              {sortedAirdrops.length > 0 ? (
+              {renderTable.length > 0 ? (
                 <>
                   <Table
                     className={styles.darkTable}
                     columns={getColumns(t)}
-                    dataSource={[...sortedAirdrops]}
-                    rowKey="id"
+                    dataSource={[...renderTable]}
                     pagination={{ hideOnSinglePage: true }}
+                    rowKey="key"
                   />
-                  <AirdropClaimButton unlockedAirdropIds={unlockedAirdropIds} />
+                  <AirdropClaimButton unlockSeriesIds={unlockSeriesIds} />
                 </>
               ) : (
                 <Typography type="secondary">{t('airdrop.nonToClaim')}</Typography>

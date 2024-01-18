@@ -18,10 +18,16 @@ const getAirdroplink = () => {
 
 export const VESTING = 'VESTING';
 export const vestingLink = new HttpLink({ uri: process.env.REACT_APP_VESTING_SUBQL });
+export const GIFT = 'GIFT';
+export const giftLink = new HttpLink({ uri: process.env.REACT_APP_AIRDROP_GIFT_SUBQL });
 
 export const QueryApolloProvider: React.FC = ({ children }) => {
   const client = new ApolloClient({
-    link: ApolloLink.split((operation) => operation.getContext().clientName === VESTING, vestingLink, getAirdroplink()),
+    link: ApolloLink.split(
+      (operation) => operation.getContext().clientName === GIFT,
+      giftLink,
+      ApolloLink.split((operation) => operation.getContext().clientName === VESTING, vestingLink, getAirdroplink())
+    ),
     cache: new InMemoryCache()
   });
 

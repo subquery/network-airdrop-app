@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetAirdropClaimsQuery } from '@subql/react-hooks';
 import { Typography } from 'antd';
 import clsx from 'clsx';
 import { BigNumber } from 'ethers';
@@ -17,17 +16,11 @@ export const AirdropAmountHeader: React.FC<{
   const { t } = useTranslation();
   const { address: account } = useAccount();
 
-  const airdropClaims = useGetAirdropClaimsQuery({
-    variables: {
-      account: account || ''
-    }
-  });
-
   // @ts-ignore
   // const totalAirdropAmount = airdropUser?.totalAirdropAmount?.toString() ?? '0';
   // const totalAirdropAmount = '0';
   const airdropAmounts = [
-    { amount: airdropClaims.data?.airdropAmount?.totalAirdropAmount || '0', type: t('airdrop.total') },
+    { amount: '0', type: t('airdrop.total') },
     { amount: unlockedAirdropAmount, type: t('airdrop.unlockedTitle') },
     { amount: claimedAirdropAmount, type: t('airdrop.claimed') }
   ];

@@ -52,7 +52,7 @@ export const useChallengesApi = (props: { alert?: boolean } = {}) => {
   const { alert = true } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const alertResDecorator =
-    <T extends (...args: any) => any>(func: T): ((...args: Parameters<T>) => Promise<ReturnType<T>>) =>
+    <T extends (...args: any[]) => any>(func: T): ((...args: Parameters<T>) => Promise<ReturnType<T>>) =>
     async (...args: Parameters<T>): Promise<ReturnType<T>> => {
       try {
         const res = await func(...args);
