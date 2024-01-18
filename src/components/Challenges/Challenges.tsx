@@ -264,7 +264,8 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
     >
       <Typography variant="h6">Refer a Friend to Multiply your Score!</Typography>
       <Typography type="secondary">
-        When your friends sign up and onboard via your referral link, you both increase the multiplier on your score.
+        When your friends sign up, onboard, and pass KYC via your referral link, you both increase the multiplier on
+        your score.
       </Typography>
       <Typography type="secondary">
         You&apos;ve already referred {props.userInfo?.referral_count || 0} new users. After your next referral, your new
