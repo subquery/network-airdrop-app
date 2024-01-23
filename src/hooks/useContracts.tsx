@@ -4,8 +4,6 @@
 import React from 'react';
 // eslint-disable-next-line camelcase
 import { ContractSDK, Vesting, Vesting__factory } from '@subql/contract-sdk';
-import mainnetDeployment from '@subql/contract-sdk/publish/mainnet.json';
-import testnetDeployment from '@subql/contract-sdk/publish/testnet.json';
 import { SQNetworks } from '@subql/network-config';
 import { providers } from 'ethers';
 import { HttpTransport } from 'viem';
@@ -71,12 +69,10 @@ export function useContracts(): ContractSDK | undefined {
       setContracts(undefined);
       return;
     }
-
-    const deploymentDetails = Network === 'mainnet' ? mainnetDeployment : testnetDeployment;
-
     const pendingContracts = ContractSDK.create(signerOrProvider, {
       network: Network as SQNetworks
     });
+    console.warn(pendingContracts);
 
     setContracts(pendingContracts);
   }, [signerOrProvider]);
