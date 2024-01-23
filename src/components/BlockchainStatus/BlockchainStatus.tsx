@@ -14,12 +14,10 @@ export const BlockchainStatus: React.FC = ({ children }) => {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          maxWidth: 600,
           background: 'var(--dark-mode-card)',
           borderRadius: 8,
           padding: 40,
-          gap: 24,
-          margin: '0 auto'
+          gap: 24
         }}
       >
         <Typography variant="h4">{t('unsupportedNetwork.title')}</Typography>
