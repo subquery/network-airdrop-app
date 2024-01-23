@@ -22,53 +22,55 @@ export function Home() {
         <img src="static/airdrop.png" alt="airdrop page img" className={styles.bgImg} />
 
         <div style={{ position: 'relative', width: '100%', height: '100%', margin: '0 auto', padding: '80px 0' }}>
-          <BlockchainStatus>
-            <WalletDetect>
-              <div className={styles.airdropContainer}>
-                <div className={styles.airdropContent}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      flexFlow: 'row wrap',
-                      marginBottom: '1em'
-                    }}
-                  >
-                    <Typography variant="h4" weight={600} style={{ marginBottom: 32 }}>
-                      SubQuery Seekers Program and Airdrops
-                    </Typography>
-                    <PointsCard />
-                  </div>
-                  <Tabs
-                    activeKey={activeKey}
-                    onTabClick={(key) => {
-                      setActiveKey(key);
-                    }}
-                    className={styles.tabs}
-                    items={[
-                      {
-                        key: 'Challenge',
-                        label: 'SubQuery Seekers Program'
-                      },
-                      {
-                        key: 'Airdrop',
-                        label: 'Other Airdrops'
-                      }
-                      /*
+          <WalletDetect>
+            <div className={styles.airdropContainer}>
+              <div className={styles.airdropContent}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    flexFlow: 'row wrap',
+                    marginBottom: '1em'
+                  }}
+                >
+                  <Typography variant="h4" weight={600} style={{ marginBottom: 32 }}>
+                    SubQuery Seekers Program and Airdrops
+                  </Typography>
+                  <PointsCard />
+                </div>
+                <Tabs
+                  activeKey={activeKey}
+                  onTabClick={(key) => {
+                    setActiveKey(key);
+                  }}
+                  className={styles.tabs}
+                  items={[
+                    {
+                      key: 'Challenge',
+                      label: 'SubQuery Seekers Program'
+                    },
+                    {
+                      key: 'Airdrop',
+                      label: 'Other Airdrops'
+                    }
+                    /*
                       {
                         key: 'Vesting',
                         label: 'Private Sale Vesting'
                       }
                       */
-                    ]}
-                  />
-                  {activeKey === 'Challenge' && <Challenges />}
-                  {activeKey === 'Airdrop' && <Airdrop />}
-                  {activeKey === 'Vesting' && <Vesting />}
-                </div>
+                  ]}
+                />
+                {activeKey === 'Challenge' && <Challenges />}
+                {activeKey === 'Airdrop' && (
+                  <BlockchainStatus>
+                    <Airdrop />
+                  </BlockchainStatus>
+                )}
+                {activeKey === 'Vesting' && <Vesting />}
               </div>
-            </WalletDetect>
-          </BlockchainStatus>
+            </div>
+          </WalletDetect>
         </div>
       </div>
       <FAQ />
