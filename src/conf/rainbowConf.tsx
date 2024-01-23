@@ -5,13 +5,13 @@ import React from 'react';
 import { connectorsForWallets, darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { metaMaskWallet, rainbowWallet, talismanWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { polygon, polygonMumbai } from 'wagmi/chains';
+import { base, baseSepolia } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
 // goerli and mainnet just for get data actually not supported
-const supportedChains = process.env.REACT_APP_NETWORK === 'testnet' ? [polygonMumbai] : [polygon];
+const supportedChains = process.env.REACT_APP_NETWORK === 'testnet' ? [baseSepolia] : [base];
 
 // This should ok. It seems is a bug of Ts.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -123,8 +123,8 @@ const en = {
     },
     unsupportedNetwork: {
       title: 'You are connected to the wrong network',
-      subtitle: 'Please switch your network to Polygon to view and claim your airdrop.',
-      button: 'Switch Network to Polygon'
+      subtitle: 'Please switch your network to Base to view and claim your airdrop.',
+      button: 'Switch Network to Base'
     }
   }
 };
