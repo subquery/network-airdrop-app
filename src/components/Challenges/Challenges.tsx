@@ -140,7 +140,7 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
   );
 };
 
-const SecondStep = (props: { email: string }) => {
+const SecondStep = () => {
   const { address: account } = useAccount();
   const { sendEmail } = useChallengesApi();
 
@@ -152,7 +152,7 @@ const SecondStep = (props: { email: string }) => {
         We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet!
       </Typography>
       <Typography type="secondary" style={{ maxWidth: 806, textAlign: 'center', padding: '0 3em' }}>
-        We have sent an onboarding email to your email address ({props.email}), if you didn&apos;t get it, you can{' '}
+        We have sent an onboarding email to your email address, if you didn&apos;t get it, you can{' '}
         <Typography.Link
           active
           style={{ textDecoration: 'underline' }}
@@ -432,8 +432,8 @@ export const Challenges: FC<IProps> = (props) => {
   const { getUserInfo } = useChallengesApi();
 
   const userStage = useMemo(() => {
-    if (!userInfo?.email) return 0;
-    if (userInfo.email && !userInfo.verified_email) return 1;
+    if (!userInfo) return 0;
+    if (!userInfo.verified_email) return 1;
     return 2;
   }, [userInfo]);
 
@@ -463,7 +463,7 @@ export const Challenges: FC<IProps> = (props) => {
     <>
       <div className={styles.baseCard}>
         {userStage === 0 && <FirstStep freshFunc={fetchUserInfo} />}
-        {userStage === 1 && <SecondStep email={userInfo?.email || 'james.bayly@subquery.network'} />}
+        {userStage === 1 && <SecondStep />}
         {userStage === 2 && <MainChallenges />}
       </div>
       {userStage === 2 && (
