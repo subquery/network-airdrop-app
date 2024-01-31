@@ -8,14 +8,15 @@ const instance = axios.create({
 
 export interface IUserInfo {
   address: string;
-  email: string;
   verified_email: boolean;
   raw_score: number;
+  challenge_score: number;
   total_score: number;
-  rank: number;
   referral_code: string;
   referral_count: number;
-  multiplier: number;
+  kyc_referral_count: number;
+  rank: number;
+  has_kyc: boolean;
 }
 
 export interface Challenge {
