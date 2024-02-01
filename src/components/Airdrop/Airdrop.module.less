@@ -7,10 +7,6 @@
   margin-top: 2rem;
 }
 
-.claimButton {
-  background: var(--sq-primary-blue) !important;
-}
-
 .button:disabled {
   color: #fff;
 }
@@ -99,5 +95,12 @@
         }
       }
     }
+  }
+}
+
+:global {
+  .ant-btn-primary.ant-btn-background-ghost:disabled {
+    color: var(--sq-gray400);
+    border-color: var(--sq-gray400);
   }
 }

@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
 import { useContracts } from 'hooks';
 import { useSign } from 'hooks/useSign';
+import { mapContractError } from 'utils';
 
 import styles from './Airdrop.module.less';
 
@@ -48,14 +49,14 @@ export const AirdropClaimButton: React.FC<{
         for (const seriesId of unlockSeriesIds) {
           openNotification({
             type: 'info',
-            description: `Claiming Nft Series`,
+            description: `Claiming Nft Series ${seriesId}`,
             duration: 3
           });
           const approvalTx = await contracts.sqtGift.batchMint(seriesId);
           await approvalTx.wait();
           openNotification({
             type: 'success',
-            description: 'Claim Nft Series success',
+            description: `Claim Nft Series ${seriesId} success`,
             duration: 3
           });
         }
@@ -65,7 +66,7 @@ export const AirdropClaimButton: React.FC<{
       openNotificationWithIcon({
         type: NotificationType.ERROR,
         title: 'Transaction failure.',
-        description: error?.message ?? t('notification.error')
+        description: mapContractError(error) ?? t('notification.error')
       });
     } finally {
       setIsLoading(false);
@@ -75,13 +76,14 @@ export const AirdropClaimButton: React.FC<{
   return (
     <Button
       type="primary"
+      ghost
       shape="round"
-      block
       disabled={!canClaim}
       size="large"
       onClick={hasSignedTC ? onClaimAirdrop : onSignTC}
       className={clsx(styles.button, canClaim && styles.claimButton)}
       loading={isLoading}
+      style={{ flex: 1 }}
     >
       {buttonText}
     </Button>

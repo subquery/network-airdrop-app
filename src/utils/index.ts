@@ -1,3 +1,4 @@
+import contractErrorCodes from '@subql/contract-sdk/publish/revertcode.json';
 import { BigNumberish } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
@@ -59,4 +60,14 @@ export const roundToSix = (amount: string | BigNumberish): string => {
   const [left, right] = str.split('.');
 
   return `${left}.${right.slice(0, 6)}`;
+};
+
+
+export const mapContractError = (error: any,) => {
+  const rawErrorMsg = error?.data?.message ?? error?.message ?? error?.error ?? error ?? '';
+
+  const revertCode = Object.keys(contractErrorCodes).find((key) =>
+    rawErrorMsg.toString().match(`reverted: ${key}`),
+  ) as keyof typeof contractErrorCodes;
+  return revertCode ? contractErrorCodes[revertCode] : undefined;
 };
