@@ -1,11 +1,12 @@
 /* eslint-disable no-await-in-loop */
 import { FC, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import { formatEther } from '@ethersproject/units';
 import { openNotification, Spinner, Tag, Typography } from '@subql/components';
 import { renderAsyncArray } from '@subql/react-hooks';
 import { mergeAsync } from '@subql/react-hooks/dist/utils';
+import { useMount } from 'ahooks';
 import { Button, Table, TableProps } from 'antd';
 import { BigNumber } from 'ethers';
 import i18next from 'i18next';
@@ -162,6 +163,8 @@ export const Airdrop: FC = () => {
 
   const [nftSerices, setNftSerices] = useState<NftIpfs>({});
   const [redeemLoading, setRedeemLoading] = useState<boolean>(false);
+  const [redeemable, setRedeemable] = useState<boolean>(false);
+
   const accountUnclaimGifts = useQuery<IUnclaimedGifts>(
     gql`
       query ($address: String!) {
@@ -225,7 +228,7 @@ export const Airdrop: FC = () => {
     }
   );
 
-  const accountRedeemedGifts = useQuery<IRedeemedGifts>(
+  const [getAccountRedeemedGifts, accountRedeemedGifts] = useLazyQuery<IRedeemedGifts>(
     gql`
       query ($address: String!) {
         userRedeemedNfts(filter: { address: { equalTo: $address } }) {
@@ -261,6 +264,15 @@ export const Airdrop: FC = () => {
       pollInterval: 15000
     }
   );
+
+  const getRedeemable = async () => {
+    try {
+      const fetchedRedeemable = await contracts?.sqtRedeem.redeemable();
+      setRedeemable(fetchedRedeemable || false);
+    } catch (e) {
+      // don't care about this
+    }
+  };
 
   const redeemNft = async (nfts: IClaimedGifts['userNfts']['nodes']) => {
     if (!contracts) return;
@@ -412,82 +424,102 @@ export const Airdrop: FC = () => {
     }
   }, [accountUnclaimGifts.data?.userUnclaimedNfts, accountClaimedGifts.data]);
 
+  useEffect(() => {
+    if (redeemable) {
+      getAccountRedeemedGifts();
+    }
+  }, [redeemable]);
+
+  useMount(() => {
+    getRedeemable();
+  });
+
   return (
     <div className={styles.container}>
-      {renderAsyncArray(mergeAsync(accountUnclaimGifts, accountClaimedGifts, accountRedeemedGifts), {
-        empty: () => (
-          <div style={{ minHeight: 500 }}>
-            <Typography style={{ color: 'var(--sq-error)' }}>Failed to get airdrop information.</Typography>
-          </div>
-        ),
-        loading: () => (
-          <div style={{ minHeight: 500, display: 'flex', justifyContent: 'center' }}>
-            <Spinner />
-          </div>
-        ),
-        error: (e) => (
-          <div style={{ minHeight: 500 }}>
-            <Typography style={{ color: 'var(--sq-error)' }}>{`Failed to get airdrop information. \n ${e}`}</Typography>
-          </div>
-        ),
-        data: (data) => {
-          if (!data) return null;
-          const [unClaimGifts, userNfts, redeemedNfts] = data;
-          const redeemNftsTokenIds = redeemedNfts?.userRedeemedNfts.nodes.map((i) => i.tokenId) || [];
-
-          const renderTable = sortGifts(
-            unClaimGifts || { userUnclaimedNfts: { nodes: [] } },
-            userNfts || { userNfts: { nodes: [], groupedAggregates: [] } },
-            redeemedNfts || { userRedeemedNfts: { nodes: [], groupedAggregates: [] } }
-          );
-
-          const unlockSeriesIds = unClaimGifts?.userUnclaimedNfts.nodes.map((i) => i.seriesId) || [];
-          const canRedeemNfts = userNfts?.userNfts.nodes.filter((i) => !redeemNftsTokenIds.includes(i.id)) || [];
-
-          return (
-            <div className={styles.airdropClaimContainer}>
-              <Typography variant="h6">{t('airdrop.claimTitle', { token: TOKEN })}</Typography>
-              <br />
-              <Typography style={{ marginTop: 8 }} type="secondary">
-                {t('airdrop.description')}
-              </Typography>
-              <AirdropAmountHeader unlockedAirdropAmount={BigNumber.from(0)} claimedAirdropAmount={BigNumber.from(0)} />
-
-              {renderTable.length > 0 ? (
-                <>
-                  <Table
-                    className={styles.darkTable}
-                    columns={getColumns(t)}
-                    dataSource={[...renderTable]}
-                    pagination={{ hideOnSinglePage: true }}
-                    rowKey="key"
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 8 }}>
-                    <Button
-                      type="primary"
-                      ghost
-                      shape="round"
-                      size="large"
-                      style={{ flex: 1 }}
-                      disabled={!canRedeemNfts.length}
-                      loading={redeemLoading}
-                      onClick={async () => {
-                        await redeemNft(canRedeemNfts);
-                        accountRedeemedGifts.refetch();
-                      }}
-                    >
-                      Redeem All NFT
-                    </Button>
-                    <AirdropClaimButton unlockSeriesIds={unlockSeriesIds} />
-                  </div>
-                </>
-              ) : (
-                <Typography type="secondary">{t('airdrop.nonToClaim')}</Typography>
-              )}
+      {renderAsyncArray(
+        mergeAsync(accountUnclaimGifts, accountClaimedGifts, redeemable ? accountRedeemedGifts : { loading: false }),
+        {
+          empty: () => (
+            <div style={{ minHeight: 500 }}>
+              <Typography style={{ color: 'var(--sq-error)' }}>Failed to get airdrop information.</Typography>
             </div>
-          );
+          ),
+          loading: () => (
+            <div style={{ minHeight: 500, display: 'flex', justifyContent: 'center' }}>
+              <Spinner />
+            </div>
+          ),
+          error: (e) => (
+            <div style={{ minHeight: 500 }}>
+              <Typography
+                style={{ color: 'var(--sq-error)' }}
+              >{`Failed to get airdrop information. \n ${e}`}</Typography>
+            </div>
+          ),
+          data: (data) => {
+            if (!data) return null;
+            const [unClaimGifts, userNfts, redeemedNfts] = data;
+            const redeemNftsTokenIds = redeemedNfts?.userRedeemedNfts.nodes.map((i) => i.tokenId) || [];
+
+            const renderTable = sortGifts(
+              unClaimGifts || { userUnclaimedNfts: { nodes: [] } },
+              userNfts || { userNfts: { nodes: [], groupedAggregates: [] } },
+              redeemedNfts || { userRedeemedNfts: { nodes: [], groupedAggregates: [] } }
+            );
+
+            const unlockSeriesIds = unClaimGifts?.userUnclaimedNfts.nodes.map((i) => i.seriesId) || [];
+            const canRedeemNfts = userNfts?.userNfts.nodes.filter((i) => !redeemNftsTokenIds.includes(i.id)) || [];
+
+            return (
+              <div className={styles.airdropClaimContainer}>
+                <Typography variant="h6">{t('airdrop.claimTitle', { token: TOKEN })}</Typography>
+                <br />
+                <Typography style={{ marginTop: 8 }} type="secondary">
+                  {t('airdrop.description')}
+                </Typography>
+                <AirdropAmountHeader
+                  unlockedAirdropAmount={BigNumber.from(0)}
+                  claimedAirdropAmount={BigNumber.from(0)}
+                />
+
+                {renderTable.length > 0 ? (
+                  <>
+                    <Table
+                      className={styles.darkTable}
+                      columns={getColumns(t)}
+                      dataSource={[...renderTable]}
+                      pagination={{ hideOnSinglePage: true }}
+                      rowKey="key"
+                    />
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 8 }}>
+                      {redeemable && (
+                        <Button
+                          type="primary"
+                          ghost
+                          shape="round"
+                          size="large"
+                          style={{ flex: 1 }}
+                          disabled={!canRedeemNfts.length}
+                          loading={redeemLoading}
+                          onClick={async () => {
+                            await redeemNft(canRedeemNfts);
+                            accountRedeemedGifts.refetch();
+                          }}
+                        >
+                          Redeem All NFT
+                        </Button>
+                      )}
+                      <AirdropClaimButton unlockSeriesIds={unlockSeriesIds} />
+                    </div>
+                  </>
+                ) : (
+                  <Typography type="secondary">{t('airdrop.nonToClaim')}</Typography>
+                )}
+              </div>
+            );
+          }
         }
-      })}
+      )}
     </div>
   );
 };
