@@ -72,7 +72,6 @@ export function useContracts(): ContractSDK | undefined {
     const pendingContracts = ContractSDK.create(signerOrProvider, {
       network: Network as SQNetworks
     });
-    console.warn(pendingContracts);
 
     setContracts(pendingContracts);
   }, [signerOrProvider]);

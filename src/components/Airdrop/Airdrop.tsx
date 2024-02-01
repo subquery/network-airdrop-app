@@ -1,10 +1,12 @@
+/* eslint-disable no-await-in-loop */
 import { FC, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { gql, useQuery } from '@apollo/client';
-import { Spinner, Tag, Typography } from '@subql/components';
+import { formatEther } from '@ethersproject/units';
+import { openNotification, Spinner, Tag, Typography } from '@subql/components';
 import { renderAsyncArray } from '@subql/react-hooks';
 import { mergeAsync } from '@subql/react-hooks/dist/utils';
-import { Table, TableProps } from 'antd';
+import { Button, Table, TableProps } from 'antd';
 import { BigNumber } from 'ethers';
 import i18next from 'i18next';
 import { uniqWith } from 'lodash-es';
@@ -12,7 +14,9 @@ import { useAccount } from 'wagmi';
 
 import { TOKEN } from 'appConstants';
 import { GIFT } from 'containers';
+import { useContracts } from 'hooks';
 import { useIpfs } from 'hooks/useIpfs';
+import { mapContractError } from 'utils';
 
 import styles from './Airdrop.module.less';
 import { AirdropAmountHeader } from './AirdropAmountHeader';
@@ -22,7 +26,8 @@ enum AirdropRoundStatus {
   CLAIMED = 'CLAIMED',
   EXPIRED = 'EXPIRED',
   LOCKED = 'LOCKED',
-  UNLOCKED = 'UNLOCKED'
+  UNLOCKED = 'UNLOCKED',
+  REDEEMED = 'REDEEMED'
 }
 
 export interface tableItem {
@@ -67,6 +72,29 @@ export interface IClaimedGifts {
   };
 }
 
+export interface IRedeemedGifts {
+  userRedeemedNfts: {
+    nodes: {
+      id: string;
+      tokenId: string;
+      seriesId: string;
+      series: {
+        active: boolean;
+        tokenURI: string;
+      };
+      address: string;
+      amount: string;
+    }[];
+
+    groupedAggregates: {
+      keys: [string, string];
+      distinctCount: {
+        id: string;
+      };
+    }[];
+  };
+}
+
 export type NftIpfs = {
   [key: string]: {
     name: string;
@@ -81,7 +109,8 @@ const AirdropStatusTag: FC<{ status: AirdropRoundStatus }> = ({ status }) => {
     [AirdropRoundStatus.CLAIMED]: { color: 'success', text: i18next.t('airdrop.claimed') },
     [AirdropRoundStatus.UNLOCKED]: { color: 'info', text: i18next.t('airdrop.unlocked') },
     [AirdropRoundStatus.LOCKED]: { color: 'default', text: i18next.t('airdrop.locked') },
-    [AirdropRoundStatus.EXPIRED]: { color: 'error', text: i18next.t('airdrop.expired') }
+    [AirdropRoundStatus.EXPIRED]: { color: 'error', text: i18next.t('airdrop.expired') },
+    [AirdropRoundStatus.REDEEMED]: { color: 'success', text: i18next.t('airdrop.redeemed') }
   };
 
   const { color, text } = statusMapping[status] || { color: 'default', text: 'unknown' };
@@ -129,9 +158,10 @@ export const Airdrop: FC = () => {
   const { t } = useTranslation();
   const { address: account } = useAccount();
   const { catSingle } = useIpfs();
+  const contracts = useContracts();
 
   const [nftSerices, setNftSerices] = useState<NftIpfs>({});
-
+  const [redeemLoading, setRedeemLoading] = useState<boolean>(false);
   const accountUnclaimGifts = useQuery<IUnclaimedGifts>(
     gql`
       query ($address: String!) {
@@ -195,6 +225,87 @@ export const Airdrop: FC = () => {
     }
   );
 
+  const accountRedeemedGifts = useQuery<IRedeemedGifts>(
+    gql`
+      query ($address: String!) {
+        userRedeemedNfts(filter: { address: { equalTo: $address } }) {
+          nodes {
+            id
+            tokenId
+            seriesId
+            amount
+            address
+            series {
+              tokenURI
+              active
+              id
+            }
+          }
+          groupedAggregates(groupBy: [ADDRESS, SERIES_ID]) {
+            keys
+            distinctCount {
+              id
+            }
+          }
+        }
+      }
+    `,
+    {
+      variables: {
+        address: account
+      },
+      fetchPolicy: 'network-only',
+      context: {
+        clientName: GIFT
+      },
+      pollInterval: 15000
+    }
+  );
+
+  const redeemNft = async (nfts: IClaimedGifts['userNfts']['nodes']) => {
+    if (!contracts) return;
+    try {
+      setRedeemLoading(true);
+      // const nftAddress = new Array(nfts.length).fill(contracts?.sqtGift.address);
+      // const tokenIds = nfts.map((nft) => nft.id);
+      // eslint-disable-next-line no-restricted-syntax
+      for (const nft of nfts) {
+        const nftName = nftSerices[nft.series.tokenURI]?.name
+          ? `${nftSerices[nft.series.tokenURI]?.name}-${nft.id}`
+          : nft.id;
+
+        const approved = await contracts.sqtGift.getApproved(nft.id);
+        if (!approved) {
+          openNotification({
+            type: 'info',
+            description: `Before you redeem NFT ${nftName}, you need to approve the contract to spend your NFT`
+          });
+          const approve = await contracts.sqtGift.approve(contracts.sqtRedeem.address, nft.id);
+          await approve?.wait();
+        }
+        const tx = await contracts?.sqtRedeem.redeem(contracts.sqtGift.address, nft.id);
+        const receipt = await tx?.wait();
+
+        if (receipt) {
+          openNotification({
+            type: 'success',
+            description: `Redeem NFT ${nftName} success`,
+            duration: 3
+          });
+        }
+      }
+    } catch (e: any) {
+      console.error(e);
+      openNotification({
+        type: 'error',
+        description: `Redeem NFT failed, ${mapContractError(e) ?? e.message ?? ''}`,
+        duration: 3
+      });
+    } finally {
+      setRedeemLoading(false);
+    }
+  };
+
   const getNftSericesNames = async () => {
     const tokenCids = [
       ...new Set(
@@ -218,7 +329,11 @@ export const Airdrop: FC = () => {
     setNftSerices(nftSericesInfos);
   };
 
-  const sortGifts = (userUnClaimGifts: IUnclaimedGifts, claimedGiftsData: IClaimedGifts): tableItem[] => {
+  const sortGifts = (
+    userUnClaimGifts: IUnclaimedGifts,
+    claimedGiftsData: IClaimedGifts,
+    redeemedGifts: IRedeemedGifts
+  ): tableItem[] => {
     const {
       userUnclaimedNfts: { nodes }
     } = userUnClaimGifts;
@@ -227,24 +342,58 @@ export const Airdrop: FC = () => {
       userNfts: { nodes: claimedNfts, groupedAggregates }
     } = claimedGiftsData;
 
-    const sortedClaimedNfts = uniqWith(
-      claimedNfts,
+    const {
+      userRedeemedNfts: { nodes: redeemedNfts, groupedAggregates: redeemedGroupedAggregates }
+    } = redeemedGifts;
+
+    const sortedRedeemedNfts = uniqWith(
+      redeemedNfts,
       (a, b) => `${a.address}-${a.series.tokenURI}` === `${b.address}-${b.series.tokenURI}`
     ).map((i, index) => {
       const findAmount =
-        groupedAggregates.find((g) => g.keys.join('-') === `${i.address}-${i.seriesId}`)?.distinctCount.id || '1';
+        redeemedGroupedAggregates.find((g) => g.keys.join('-') === `${i.address}-${i.seriesId}`)?.distinctCount.id ||
+        '1';
+
       return {
         id: <Typography>{nftSerices[i.series.tokenURI]?.name || `NFT-${index}`}</Typography>,
-        sortedStatus: AirdropRoundStatus.CLAIMED,
-        sortedNextMilestone: (
-          <Typography.Link active href="https://opensea.io/">
-            View in OpenSea
-          </Typography.Link>
-        ),
-        amountString: `${findAmount} NFT`,
-        key: `${i.address}${i.id}unclaim`
+        sortedStatus: AirdropRoundStatus.REDEEMED,
+        sortedNextMilestone: 'View in Wallet',
+        amountString: `${formatEther(BigNumber.from(i.amount).mul(findAmount))} SQT`,
+        key: `${i.address}${i.id}redeem`,
+        // those fields are used to filter by claimed
+        uniKey: `${i.address}${i.seriesId}`,
+        count: findAmount
       };
     });
+
+    const sortedClaimedNfts = uniqWith(
+      claimedNfts,
+      (a, b) => `${a.address}-${a.series.tokenURI}` === `${b.address}-${b.series.tokenURI}`
+    )
+      .map((i, index) => {
+        const findAmount =
+          groupedAggregates.find((g) => g.keys.join('-') === `${i.address}-${i.seriesId}`)?.distinctCount.id || '1';
+
+        const uniKey = `${i.address}${i.seriesId}`;
+
+        const renderAmount = +findAmount - +(sortedRedeemedNfts.find((ii) => ii.uniKey === uniKey)?.count || 0);
+
+        return {
+          id: <Typography>{nftSerices[i.series.tokenURI]?.name || `NFT-${index}`}</Typography>,
+          sortedStatus: AirdropRoundStatus.CLAIMED,
+          sortedNextMilestone: (
+            <div style={{ display: 'flex', gap: 8 }}>
+              <Typography.Link active href="https://opensea.io/">
+                View in OpenSea
+              </Typography.Link>
+            </div>
+          ),
+          amountString: `${renderAmount} NFT`,
+          key: `${i.address}${i.id}unclaim`,
+          count: renderAmount
+        };
+      })
+      .filter((i) => i.count > 0);
 
     const sortedUnClaimedNfts = nodes.map((i, index) => ({
       id: <Typography>{nftSerices[i.series.tokenURI]?.name || `NFT-${index}`}</Typography>,
@@ -254,7 +403,7 @@ export const Airdrop: FC = () => {
       key: `${i.seriesId}${i.id}claim`
     }));
 
-    return [...sortedUnClaimedNfts, ...sortedClaimedNfts];
+    return [...sortedUnClaimedNfts, ...sortedClaimedNfts, ...sortedRedeemedNfts];
   };
 
   useEffect(() => {
@@ -265,7 +414,7 @@ export const Airdrop: FC = () => {
 
   return (
     <div className={styles.container}>
-      {renderAsyncArray(mergeAsync(accountUnclaimGifts, accountClaimedGifts), {
+      {renderAsyncArray(mergeAsync(accountUnclaimGifts, accountClaimedGifts, accountRedeemedGifts), {
         empty: () => (
           <div style={{ minHeight: 500 }}>
             <Typography style={{ color: 'var(--sq-error)' }}>Failed to get airdrop information.</Typography>
@@ -283,13 +432,17 @@ export const Airdrop: FC = () => {
         ),
         data: (data) => {
           if (!data) return null;
-          const [unClaimGifts, userNfts] = data;
+          const [unClaimGifts, userNfts, redeemedNfts] = data;
+          const redeemNftsTokenIds = redeemedNfts?.userRedeemedNfts.nodes.map((i) => i.tokenId) || [];
+
           const renderTable = sortGifts(
             unClaimGifts || { userUnclaimedNfts: { nodes: [] } },
-            userNfts || { userNfts: { nodes: [], groupedAggregates: [] } }
+            userNfts || { userNfts: { nodes: [], groupedAggregates: [] } },
+            redeemedNfts || { userRedeemedNfts: { nodes: [], groupedAggregates: [] } }
           );
 
           const unlockSeriesIds = unClaimGifts?.userUnclaimedNfts.nodes.map((i) => i.seriesId) || [];
+          const canRedeemNfts = userNfts?.userNfts.nodes.filter((i) => !redeemNftsTokenIds.includes(i.id)) || [];
 
           return (
             <div className={styles.airdropClaimContainer}>
@@ -309,7 +462,24 @@ export const Airdrop: FC = () => {
                     pagination={{ hideOnSinglePage: true }}
                     rowKey="key"
                   />
-                  <AirdropClaimButton unlockSeriesIds={unlockSeriesIds} />
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 8 }}>
+                    <Button
+                      type="primary"
+                      ghost
+                      shape="round"
+                      size="large"
+                      style={{ flex: 1 }}
+                      disabled={!canRedeemNfts.length}
+                      loading={redeemLoading}
+                      onClick={async () => {
+                        await redeemNft(canRedeemNfts);
+                        accountRedeemedGifts.refetch();
+                      }}
+                    >
+                      Redeem All NFT
+                    </Button>
+                    <AirdropClaimButton unlockSeriesIds={unlockSeriesIds} />
+                  </div>
                 </>
               ) : (
                 <Typography type="secondary">{t('airdrop.nonToClaim')}</Typography>

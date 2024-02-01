@@ -41,6 +41,7 @@ const en = {
       locked: 'Locked',
       initContract: 'Loading… This Will Take Few Seconds',
       claimed: 'Claimed',
+      redeemed: 'Redeemed',
       expired: 'Expired',
       total: 'Your Total Allocation',
       whenUnlock: 'Avaliable {{date}}',
