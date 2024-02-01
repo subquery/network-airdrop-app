@@ -3,7 +3,7 @@ import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlineMail } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 import { Markdown, openNotification, Spinner, Typography } from '@subql/components';
-import { Button, Collapse, Form, Input } from 'antd';
+import { Button, Collapse, Form, Input, Modal } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import clsx from 'clsx';
 import { useAccount as useAccountWagmi } from 'wagmi';
@@ -457,6 +457,36 @@ export const Challenges: FC<IProps> = (props) => {
   useEffect(() => {
     fetchUserInfo();
   }, [account]);
+
+  useEffect(() => {
+    let closeModal: {
+      destroy: () => void;
+    };
+    if (userStage === 2 && !userInfo?.has_kyc) {
+      closeModal = Modal.info({
+        title: 'You have not yet passed KYC',
+        content:
+          'If you want to receive any rewards from the SubQuery Seekers challenge, you must pass KYC before the end of the program on the 10th of April',
+        cancelButtonProps: {
+          style: { display: 'none' }
+        },
+        okButtonProps: {
+          type: 'primary',
+          shape: 'round',
+          size: 'large'
+        },
+        okText: 'Complete KYC Process',
+        onOk: () => {
+          window.open('https://in.sumsub.com/idensic/l/#/uni_cJnVIbYwk7jHnjtK', '_blank');
+        },
+        className: styles.kycModal
+      });
+    }
+
+    return () => {
+      closeModal?.destroy();
+    };
+  }, [userStage, userInfo]);
 
   if (loading) return <DefaultLoading />;
 
