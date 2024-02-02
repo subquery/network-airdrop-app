@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@subql/components';
 import { Tabs } from 'antd';
+
 import { Airdrop } from 'components';
 import { BlockchainStatus } from 'components/BlockchainStatus';
 import Challenges from 'components/Challenges/Challenges';
