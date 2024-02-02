@@ -49,12 +49,11 @@ const en = {
       whenExpired: 'Expired {{date}}',
       whenExpires: 'Expires {{date}}',
       nextMilestone: 'Next Milestone',
-      claimTitle: ' Your {{token}} Airdrop',
-      description:
-        'Ambassadors and the best Indexers from the SubQuery Frontier test network are eligible to receive the SQT airdrops.',
+      claimTitle: 'Claim {{token}} and other NFT',
+      description: 'If you are eligible to claim any SQT tokens, you can see them below.',
       claim: 'Claim Unlocked',
-      successClaim: 'You have claimed airdrop successfully',
-      nonToClaim: 'No Claimable Airdrop Available'
+      successClaim: 'You have claimed tokens successfully',
+      nonToClaim: 'No Claimable Tokens Available'
     },
     vesting: {
       success: 'You have claimed successfully '
