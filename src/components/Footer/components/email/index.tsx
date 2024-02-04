@@ -34,7 +34,7 @@ export const Email: React.FC = () => {
   };
   const handleEnter = async () => {
     if (isSubmit) return;
-    if (!/^[A-Za-z0-9]+([-_.][A-Za-z0-9]+)*@([A-Za-z0-9]+[-.])+[A-Za-z0-9]{2,5}$/.test(email)) {
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
       message.error('Please enter a correct email address!');
       return;
     }
