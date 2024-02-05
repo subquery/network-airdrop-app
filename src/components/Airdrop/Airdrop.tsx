@@ -11,6 +11,7 @@ import { Button, Table, TableProps } from 'antd';
 import { BigNumber } from 'ethers';
 import i18next from 'i18next';
 import { uniqWith } from 'lodash-es';
+import moment from 'moment';
 import { useAccount } from 'wagmi';
 
 import { TOKEN } from 'appConstants';
@@ -164,7 +165,14 @@ export const Airdrop: FC = () => {
   const [nftSerices, setNftSerices] = useState<NftIpfs>({});
   const [redeemLoading, setRedeemLoading] = useState<boolean>(false);
   const [redeemable, setRedeemable] = useState<boolean>(false);
-  const [currentUserPublicSaleResult, setCurrentUserPublicSaleResult] = useState<number>(0);
+
+  const [currentUserPublicSaleResult, setCurrentUserPublicSaleResult] = useState<
+    {
+      category: string;
+      amount: number;
+      unlock: string;
+    }[]
+  >([]);
 
   const accountUnclaimGifts = useQuery<IUnclaimedGifts>(
     gql`
@@ -272,9 +280,11 @@ export const Airdrop: FC = () => {
     try {
       const res = await fetch(`https://sq-airdrop-backend.subquery.network/public-sale/token-claim/${account}`);
 
-      const text = await res.text();
+      if (res.status === 200) {
+        const json = await res.json();
 
-      setCurrentUserPublicSaleResult(+text);
+        setCurrentUserPublicSaleResult(json);
+      }
     } catch (e) {
       // don't care about this
     }
@@ -486,16 +496,14 @@ export const Airdrop: FC = () => {
                 userNfts || { userNfts: { nodes: [], groupedAggregates: [] } },
                 redeemedNfts || { userRedeemedNfts: { nodes: [], groupedAggregates: [] } }
               ),
-              currentUserPublicSaleResult > 0
-                ? {
-                    id: <Typography>Public Sale Token Claim</Typography>,
-                    sortedStatus: AirdropRoundStatus.LOCKED,
-                    sortedNextMilestone: 'Unlock date: (Feb 22)',
-                    amountString: `${currentUserPublicSaleResult} SQT`,
-                    key: 'publicSale'
-                  }
-                : null
-            ].filter((i) => i);
+              ...currentUserPublicSaleResult.map((i, index) => ({
+                id: <Typography>{i.category}</Typography>,
+                sortedStatus: AirdropRoundStatus.LOCKED,
+                sortedNextMilestone: `Unlock date: ${i.unlock !== '' ? moment(i.unlock).format('YYYY-MM-DD') : '-'}`,
+                amountString: `${i.amount} SQT`,
+                key: `publicSale${index}`
+              }))
+            ];
 
             const unlockSeriesIds = unClaimGifts?.userUnclaimedNfts.nodes.map((i) => i.seriesId) || [];
             const canRedeemNfts = userNfts?.userNfts.nodes.filter((i) => !redeemNftsTokenIds.includes(i.id)) || [];
