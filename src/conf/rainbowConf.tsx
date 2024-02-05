@@ -3,7 +3,13 @@
 
 import React from 'react';
 import { connectorsForWallets, darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { metaMaskWallet, rainbowWallet, talismanWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
+import {
+  metaMaskWallet,
+  rainbowWallet,
+  safeWallet,
+  talismanWallet,
+  walletConnectWallet
+} from '@rainbow-me/rainbowkit/wallets';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { base, baseSepolia } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
@@ -26,6 +32,7 @@ const connectors = connectorsForWallets([
   {
     groupName: 'Recommended',
     wallets: [
+      safeWallet({ chains }),
       metaMaskWallet({ projectId: 'c7ea561f79adc119587d163a68860570', chains }),
       walletConnectWallet({ projectId: 'c7ea561f79adc119587d163a68860570', chains }),
       talismanWalletConnector,
