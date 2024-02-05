@@ -6,7 +6,7 @@ import { formatEther } from '@ethersproject/units';
 import { openNotification, Spinner, Tag, Typography } from '@subql/components';
 import { renderAsyncArray } from '@subql/react-hooks';
 import { mergeAsync } from '@subql/react-hooks/dist/utils';
-import { useMount } from 'ahooks';
+import { useMount, useRequest } from 'ahooks';
 import { Button, Table, TableProps } from 'antd';
 import { BigNumber } from 'ethers';
 import i18next from 'i18next';
@@ -164,6 +164,7 @@ export const Airdrop: FC = () => {
   const [nftSerices, setNftSerices] = useState<NftIpfs>({});
   const [redeemLoading, setRedeemLoading] = useState<boolean>(false);
   const [redeemable, setRedeemable] = useState<boolean>(false);
+  const [currentUserPublicSaleResult, setCurrentUserPublicSaleResult] = useState<number>(0);
 
   const accountUnclaimGifts = useQuery<IUnclaimedGifts>(
     gql`
@@ -264,6 +265,20 @@ export const Airdrop: FC = () => {
       pollInterval: 15000
     }
   );
+
+  const getPublicSaleResult = async () => {
+    if (!account) return;
+
+    try {
+      const res = await fetch(`https://sq-airdrop-backend.subquery.network/public-sale/token-claim/${account}`);
+
+      const text = await res.text();
+
+      setCurrentUserPublicSaleResult(+text);
+    } catch (e) {
+      // don't care about this
+    }
+  };
 
   const getRedeemable = async () => {
     try {
@@ -430,6 +445,10 @@ export const Airdrop: FC = () => {
     }
   }, [redeemable]);
 
+  useEffect(() => {
+    getPublicSaleResult();
+  }, [account]);
+
   useMount(() => {
     getRedeemable();
   });
@@ -461,11 +480,22 @@ export const Airdrop: FC = () => {
             const [unClaimGifts, userNfts, redeemedNfts] = data;
             const redeemNftsTokenIds = redeemedNfts?.userRedeemedNfts.nodes.map((i) => i.tokenId) || [];
 
-            const renderTable = sortGifts(
-              unClaimGifts || { userUnclaimedNfts: { nodes: [] } },
-              userNfts || { userNfts: { nodes: [], groupedAggregates: [] } },
-              redeemedNfts || { userRedeemedNfts: { nodes: [], groupedAggregates: [] } }
-            );
+            const renderTable = [
+              ...sortGifts(
+                unClaimGifts || { userUnclaimedNfts: { nodes: [] } },
+                userNfts || { userNfts: { nodes: [], groupedAggregates: [] } },
+                redeemedNfts || { userRedeemedNfts: { nodes: [], groupedAggregates: [] } }
+              ),
+              currentUserPublicSaleResult > 0
+                ? {
+                    id: <Typography>Public Sale Token Claim</Typography>,
+                    sortedStatus: AirdropRoundStatus.LOCKED,
+                    sortedNextMilestone: 'Unlock date: (Feb 22)',
+                    amountString: `${currentUserPublicSaleResult} SQT`,
+                    key: 'publicSale'
+                  }
+                : null
+            ].filter((i) => i);
 
             const unlockSeriesIds = unClaimGifts?.userUnclaimedNfts.nodes.map((i) => i.seriesId) || [];
             const canRedeemNfts = userNfts?.userNfts.nodes.filter((i) => !redeemNftsTokenIds.includes(i.id)) || [];
@@ -487,7 +517,7 @@ export const Airdrop: FC = () => {
                     <Table
                       className={styles.darkTable}
                       columns={getColumns(t)}
-                      dataSource={[...renderTable]}
+                      dataSource={renderTable}
                       pagination={{ hideOnSinglePage: true }}
                       rowKey="key"
                     />
