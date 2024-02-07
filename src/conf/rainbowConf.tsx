@@ -3,15 +3,21 @@
 
 import React from 'react';
 import { connectorsForWallets, darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { metaMaskWallet, rainbowWallet, talismanWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
+import {
+  metaMaskWallet,
+  rainbowWallet,
+  safeWallet,
+  talismanWallet,
+  walletConnectWallet
+} from '@rainbow-me/rainbowkit/wallets';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { base, baseSepolia } from 'wagmi/chains';
+import { base, baseSepolia, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
 // goerli and mainnet just for get data actually not supported
-const supportedChains = process.env.REACT_APP_NETWORK === 'testnet' ? [baseSepolia] : [base];
+const supportedChains = process.env.REACT_APP_NETWORK === 'testnet' ? [polygon, baseSepolia] : [base];
 
 // This should ok. It seems is a bug of Ts.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -26,6 +32,7 @@ const connectors = connectorsForWallets([
   {
     groupName: 'Recommended',
     wallets: [
+      safeWallet({ chains }),
       metaMaskWallet({ projectId: 'c7ea561f79adc119587d163a68860570', chains }),
       walletConnectWallet({ projectId: 'c7ea561f79adc119587d163a68860570', chains }),
       talismanWalletConnector,
