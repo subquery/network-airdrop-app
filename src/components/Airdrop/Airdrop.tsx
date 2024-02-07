@@ -276,7 +276,6 @@ export const Airdrop: FC = () => {
 
   const getPublicSaleResult = async () => {
     if (!account) return;
-
     try {
       const res = await fetch(`https://sq-airdrop-backend.subquery.network/public-sale/token-claim/${account}`);
 
