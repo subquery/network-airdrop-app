@@ -39,7 +39,7 @@ export function Home() {
                 <Typography variant="h4" weight={600} style={{ marginBottom: 32 }}>
                   {activeKey === 'Challenge' ? 'SubQuery Seekers Program' : 'SubQuery Token Claim'}
                 </Typography>
-                <PointsCard />
+                {activeKey === 'Challenge' ? <PointsCard /> : null}
               </div>
               <Tabs
                 style={{ display: 'none' }}
