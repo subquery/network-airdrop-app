@@ -43,7 +43,8 @@ export const ConnectWalletCom: React.FC<{ mode?: 'challenge' | 'airdrop' }> = ({
       ) : (
         <>
           <Typography>
-            To use airdrop, you need to connect your wallet. If you don&apos;t have a wallet, you can create one.
+            To use the claim application, you need to connect your wallet. If you don&apos;t have a wallet, you can
+            create one.
           </Typography>
         </>
       )}

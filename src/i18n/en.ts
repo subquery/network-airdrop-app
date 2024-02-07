@@ -50,7 +50,7 @@ const en = {
       whenExpires: 'Expires {{date}}',
       nextMilestone: 'Next Milestone',
       claimTitle: 'Claim {{token}} and other NFT',
-      description: 'If you are eligible to claim any SQT of NFTs, you can see and claim them below.',
+      description: 'If you are eligible to claim any SQT or NFTs, you can see and claim them below.',
       claim: 'Claim Unlocked',
       successClaim: 'You have claimed tokens successfully',
       nonToClaim: 'No Claimable Tokens Available'

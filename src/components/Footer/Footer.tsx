@@ -17,7 +17,7 @@ export const Footer: React.FC = () => (
           <a href="https://subquery.foundation/sale">Public Sale</a>
         </Typography>
         <Typography style={{ margin: 8 }}>
-          <a href="/">Airdrop</a>
+          <a href="/">SQT Claim</a>
         </Typography>
 
         <Typography style={{ margin: 8 }}>
