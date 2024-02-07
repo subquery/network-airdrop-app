@@ -6,7 +6,7 @@ import { formatEther } from '@ethersproject/units';
 import { openNotification, Spinner, Tag, Typography } from '@subql/components';
 import { renderAsyncArray } from '@subql/react-hooks';
 import { mergeAsync } from '@subql/react-hooks/dist/utils';
-import { useMount, useRequest } from 'ahooks';
+import { useMount } from 'ahooks';
 import { Button, Table, TableProps } from 'antd';
 import { BigNumber } from 'ethers';
 import i18next from 'i18next';
