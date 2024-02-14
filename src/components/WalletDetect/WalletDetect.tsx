@@ -43,8 +43,9 @@ export const ConnectWalletCom: React.FC<{ mode?: 'challenge' | 'airdrop' }> = ({
       ) : (
         <>
           <Typography>
-            To use the claim application, you need to connect your wallet. If you don&apos;t have a wallet, you can
-            create one.
+            To use the claim application, you need to connect your Ethereum wallet. If you don&apos;t have an Ethereum
+            wallet, you can create one using Metamask, Talisman, RainbowWallet, or any other WalletConnect compatible
+            wallet.
           </Typography>
         </>
       )}
