@@ -232,7 +232,7 @@ const MainChallenges = () => {
         challenges.push({
           id: 0,
           name: 'Complete KYC for your account',
-          success: false, // TODO Update
+          success: false, // TODO we need the user profile object here
           reward: 0,
           reward_type: 'FIXED',
           description: 'You must complete KYC for your account in order to receive any rewards',
