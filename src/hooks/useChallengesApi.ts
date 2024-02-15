@@ -28,6 +28,7 @@ export interface Challenge {
   description: string;
   cta: string;
   cta_label: string;
+  sort_order: number;
 }
 
 export interface LeaderboardRecord {

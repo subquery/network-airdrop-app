@@ -228,7 +228,19 @@ const MainChallenges = () => {
       setLoading(true);
       const res = await getUserChallenges(account);
       if (res.status === 200) {
-        setUserChallenges(res.data || []);
+        const challenges: Challenge[] = res.data;
+        challenges.push({
+          id: 0,
+          name: 'Complete KYC for your account',
+          success: false, // TODO Update
+          reward: 0,
+          reward_type: 'FIXED',
+          description: 'You must complete KYC for your account in order to receive any rewards',
+          cta: 'Start KYC', // TODO
+          cta_label: 'Start KYC',
+          sort_order: 0
+        });
+        setUserChallenges(challenges.sort((a, b) => (a.sort_order < b.sort_order ? -1 : 1)) || []);
       }
     } finally {
       setLoading(false);
