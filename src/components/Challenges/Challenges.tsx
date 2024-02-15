@@ -235,8 +235,10 @@ const MainChallenges = () => {
           success: false, // TODO we need the user profile object here
           reward: 0,
           reward_type: 'FIXED',
-          description: 'You must complete KYC for your account in order to receive any rewards',
-          cta: 'Start KYC', // TODO
+          description: `You must complete KYC for your account in order to receive any rewards, click Start KYC and ensure that you complete KYC with the same wallet and email address as you are using for your Seekers account
+            
+          Please note, we sync this challenge every hour so please be patient and your progress will automatically update.`,
+          cta: 'https://in.sumsub.com/idensic/l/#/uni_cJnVIbYwk7jHnjtK', // TODO
           cta_label: 'Start KYC',
           sort_order: 0
         });
