@@ -1,8 +1,20 @@
 .container {
   background: var(--dark-mode-card);
   padding: 24px;
-  min-width: 661px;
+  border-radius: 15px;
+  min-width: 361px;
+}
 
+@media screen and (min-width: 768px) {
+  .container {
+    min-width: 861px;
+  }
+}
+
+.airdropContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .button {
@@ -45,7 +57,13 @@
 /* TODO: add theme */
 .text {
   color: white !important;
-  font-size: 18px;
+  font-size: 13px;
+}
+
+@media screen and (min-width: 768px) {
+  .text {
+    font-size: 18px;
+  }
 }
 
 .amountTitle {
