@@ -4,6 +4,7 @@
 import React from 'react';
 import { connectorsForWallets, darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import {
+  coinbaseWallet,
   metaMaskWallet,
   rainbowWallet,
   safeWallet,
@@ -24,18 +25,15 @@ const supportedChains = process.env.REACT_APP_NETWORK === 'testnet' ? [polygon, 
 // @ts-ignore
 const { chains, publicClient } = configureChains(supportedChains, [publicProvider()]);
 
-const talismanWalletConnector = talismanWallet({
-  chains
-});
-
 const connectors = connectorsForWallets([
   {
     groupName: 'Recommended',
     wallets: [
       safeWallet({ chains }),
       metaMaskWallet({ projectId: 'c7ea561f79adc119587d163a68860570', chains }),
+      coinbaseWallet({ appName: 'Subquery Network', chains }),
       walletConnectWallet({ projectId: 'c7ea561f79adc119587d163a68860570', chains }),
-      talismanWalletConnector,
+      talismanWallet({ chains }),
       rainbowWallet({ projectId: 'c7ea561f79adc119587d163a68860570', chains })
     ]
   }
