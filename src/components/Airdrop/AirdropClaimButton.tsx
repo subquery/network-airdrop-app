@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
 import { useContracts } from 'hooks';
 import { useSign } from 'hooks/useSign';
-import { mapContractError } from 'utils';
+import { convertStrToNumber, mapContractError } from 'utils';
 
 import styles from './Airdrop.module.less';
 
@@ -17,7 +17,8 @@ const SETTLED_AIRDROPS = [0];
 
 export const AirdropClaimButton: React.FC<{
   unlockSeriesIds: string[];
-}> = ({ unlockSeriesIds }) => {
+  unlockedAirdropIds: string[];
+}> = ({ unlockSeriesIds, unlockedAirdropIds }) => {
   const { t } = useTranslation();
   const contracts = useContracts();
   const [hasClaimedIds, setHasClaimedIds] = React.useState<Array<string>>([]);
@@ -28,8 +29,8 @@ export const AirdropClaimButton: React.FC<{
   const canClaim = React.useMemo(() => {
     if (!contracts) return false;
 
-    return unlockSeriesIds.length > 0;
-  }, [unlockSeriesIds, contracts]);
+    return unlockSeriesIds.length > 0 || unlockedAirdropIds.length > 0;
+  }, [unlockSeriesIds, unlockedAirdropIds, contracts]);
   const buttonText = !contracts
     ? t('airdrop.initContract')
     : canClaim
@@ -59,6 +60,27 @@ export const AirdropClaimButton: React.FC<{
             description: `Claim Nft Series ${seriesId} success`,
             duration: 3
           });
+        }
+      }
+
+      if (unlockedAirdropIds.length) {
+        const sortedUnlockedAirdropIds = unlockedAirdropIds
+          .map((id) => convertStrToNumber(id))
+          .filter((id) => !SETTLED_AIRDROPS.includes(id));
+
+        const approvalTx = await contracts.airdropper.batchClaimAirdrop(sortedUnlockedAirdropIds);
+        openNotificationWithIcon({ title: t('notification.txSubmittedTitle') });
+        const approvalTxResult = await approvalTx.wait();
+        if (approvalTxResult.status) {
+          setHasClaimedIds(unlockedAirdropIds);
+
+          openNotificationWithIcon({
+            type: NotificationType.SUCCESS,
+            title: t('airdrop.successClaim'),
+            description: t('notification.changeValidIn15s')
+          });
+        } else {
+          throw new Error();
         }
       }
     } catch (error: any) {
