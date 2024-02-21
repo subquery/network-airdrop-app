@@ -13,8 +13,6 @@ import { convertStrToNumber, mapContractError } from 'utils';
 
 import styles from './Airdrop.module.less';
 
-const SETTLED_AIRDROPS = [0];
-
 export const AirdropClaimButton: React.FC<{
   unlockSeriesIds: string[];
   unlockedAirdropIds: string[];
@@ -64,9 +62,7 @@ export const AirdropClaimButton: React.FC<{
       }
 
       if (unlockedAirdropIds.length) {
-        const sortedUnlockedAirdropIds = unlockedAirdropIds
-          .map((id) => convertStrToNumber(id))
-          .filter((id) => !SETTLED_AIRDROPS.includes(id));
+        const sortedUnlockedAirdropIds = unlockedAirdropIds.map((id) => convertStrToNumber(id));
 
         const approvalTx = await contracts.airdropper.batchClaimAirdrop(sortedUnlockedAirdropIds);
         openNotificationWithIcon({ title: t('notification.txSubmittedTitle') });

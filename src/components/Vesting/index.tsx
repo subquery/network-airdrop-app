@@ -136,8 +136,11 @@ const Vesting: FC<IProps> = () => {
     const vestingContract = await vestingContractFactor(contractAddress);
 
     const fetchData = await Promise.allSettled([
+      // @ts-ignore
       vestingContract?.claimableAmount(account),
+      // @ts-ignore
       vestingContract?.claimed(account),
+      // @ts-ignore
       vestingContract?.allocations(account),
 
       // this can be cache, if necessary.
@@ -188,6 +191,7 @@ const Vesting: FC<IProps> = () => {
     if (!account) return;
     try {
       const vestingContract = await vestingContractFactor(contractAddress);
+      // @ts-ignore
       const approvalTx = await vestingContract?.claim();
       if (!approvalTx) {
         openNotificationWithIcon({ title: 'There have something wrong, please contact developers' });

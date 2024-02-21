@@ -131,6 +131,7 @@ type SortedUserAirdrops = Omit<IAccountAirdrop['airdropUsers']['nodes'][number],
   sortedNextMilestone: string;
   id: ReactNode;
   amountString: ReactNode;
+  key: string;
 };
 
 const AirdropStatusTag: FC<{ status: AirdropRoundStatus }> = ({ status }) => {
@@ -322,7 +323,8 @@ export const Airdrop: FC = () => {
             </Typography>
           ),
           sortedStatus: AirdropRoundStatus.LOCKED,
-          sortedNextMilestone: i18next.t('airdrop.whenUnlock', { date: startTime.format(DATE_FORMAT) })
+          sortedNextMilestone: i18next.t('airdrop.whenUnlock', { date: startTime.format(DATE_FORMAT) }),
+          key: `airdrop${airdrop.id}`
         };
       }
 
@@ -343,7 +345,8 @@ export const Airdrop: FC = () => {
             </Typography>
           ),
           sortedStatus,
-          sortedNextMilestone
+          sortedNextMilestone,
+          key: `airdrop${airdrop.id}`
         };
       }
 
@@ -365,7 +368,8 @@ export const Airdrop: FC = () => {
           </Typography>
         ),
         sortedStatus,
-        sortedNextMilestone
+        sortedNextMilestone,
+        key: `airdrop${airdrop.id}`
       };
     });
 
