@@ -4,11 +4,16 @@ import { Button } from 'antd';
 import { t } from 'i18next';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
 
-export const BlockchainStatus: React.FC = ({ children }) => {
+export const BlockchainStatus: React.FC<{
+  tipsChainIds: {
+    id: number;
+    name: string;
+  };
+}> = ({ children, tipsChainIds }) => {
   const { chain } = useNetwork();
   const { chains, switchNetwork } = useSwitchNetwork();
 
-  if (chain?.unsupported) {
+  if (tipsChainIds.id !== chain?.id) {
     return (
       <div
         style={{
@@ -17,20 +22,21 @@ export const BlockchainStatus: React.FC = ({ children }) => {
           background: 'var(--dark-mode-card)',
           borderRadius: 8,
           padding: 40,
-          gap: 24
+          gap: 24,
+          width: '100%'
         }}
       >
         <Typography variant="h4">{t('unsupportedNetwork.title')}</Typography>
-        <Typography>{t('unsupportedNetwork.subtitle')}</Typography>
+        <Typography>{t('unsupportedNetwork.subtitle', { network: tipsChainIds.name })}</Typography>
         <Button
           onClick={() => {
-            switchNetwork?.(chains[0].id);
+            switchNetwork?.(tipsChainIds.id);
           }}
           type="primary"
           size="large"
           shape="round"
         >
-          {t('unsupportedNetwork.button')}
+          {t('unsupportedNetwork.button', { network: tipsChainIds.name })}
         </Button>
       </div>
     );

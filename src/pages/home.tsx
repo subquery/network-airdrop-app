@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@subql/components';
 import { Tabs } from 'antd';
+import { base, baseSepolia, mainnet, sepolia } from 'viem/chains';
 import { useAccount } from 'wagmi';
 
 import { Airdrop } from 'components';
@@ -15,6 +16,27 @@ import { WalletDetect } from 'components/WalletDetect/WalletDetect';
 import styles from './home.module.less';
 
 const rootUrl = new URL(window.location.href).hostname;
+
+const airdropChain =
+  process.env.REACT_APP_NETWORK === 'testnet'
+    ? {
+        id: baseSepolia.id,
+        name: baseSepolia.name
+      }
+    : {
+        id: base.id,
+        name: base.name
+      };
+const vestingChain =
+  process.env.REACT_APP_NETWORK === 'testnet'
+    ? {
+        id: sepolia.id,
+        name: sepolia.name
+      }
+    : {
+        id: mainnet.id,
+        name: mainnet.name
+      };
 
 export function Home() {
   const { t } = useTranslation();
@@ -70,14 +92,14 @@ export function Home() {
               )}
               {activeKey === 'Airdrop' && (
                 <WalletDetect mode="airdrop">
-                  <BlockchainStatus>
+                  <BlockchainStatus tipsChainIds={airdropChain}>
                     <Airdrop />
                   </BlockchainStatus>
                 </WalletDetect>
               )}
               {activeKey === 'Vesting' && (
                 <WalletDetect mode="airdrop">
-                  <BlockchainStatus>
+                  <BlockchainStatus tipsChainIds={vestingChain}>
                     <Vesting />
                   </BlockchainStatus>
                 </WalletDetect>

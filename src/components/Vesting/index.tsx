@@ -284,7 +284,9 @@ const Vesting: FC<IProps> = () => {
           const lockPeriod = Math.floor(+node.plan.lockPeriod / oneDay);
           const contractAddress = node.planId.split(':')[0];
           const planId = node.planId.split(':')[1];
-          const claimTokenInfo = claimableTokens.find((i) => i.contractAddress === contractAddress);
+          const claimTokenInfo = claimableTokens.find(
+            (i) => i.contractAddress === contractAddress && i.planId === planId
+          );
           const amount = claimTokenInfo?.allocation || BigNumber.from(node.amount);
           const planTotalClaimed = claimTokenInfo?.claimed || BigNumber.from('0');
           const planClaimable = claimTokenInfo?.claimable || BigNumber.from('0');
@@ -311,8 +313,10 @@ const Vesting: FC<IProps> = () => {
                   }}
                   disabled={
                     !!(
-                      claimableTokens.find((i) => i.contractAddress === contractAddress)?.claimable.eq(0) ||
-                      !claimableTokens.find((i) => i.contractAddress === contractAddress)
+                      claimableTokens
+                        .find((i) => i.contractAddress === contractAddress && i.planId === planId)
+                        ?.claimable.eq(0) ||
+                      !claimableTokens.find((i) => i.contractAddress === contractAddress && i.planId === planId)
                     )
                   }
                 >
