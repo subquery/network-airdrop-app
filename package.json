@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "DISABLE_ESLINT_PLUGIN=true GENERATE_SOURCEMAP=false env-cmd -f stage.env craco start",
+    "dev": "env-cmd -f stage.env craco start",
     "prod": "craco start",
     "build:dev": "env-cmd -f stage.env craco build",
     "build": "craco build",

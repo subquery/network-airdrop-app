@@ -227,22 +227,14 @@ const useGetAirdropRecordsOnL1 = () => {
       if (accountAirdropInfo.eq(0)) return;
       const roundInfo = await rootContract.airdropperLite.roundRecord(roundId);
 
-      const unlock =
-        +moment() >=
-        +moment(+`${roundInfo.roundStartTime}000`)
-          .utc(true)
-          .local();
-      const expired =
-        +moment() >=
-        +moment(+`${roundInfo.roundDeadline}000`)
-          .utc(true)
-          .local();
-      const unclaimedTokens = formatSQT(accountAirdropInfo.toString());
-      const unlockDate = moment(+`${roundInfo.roundStartTime}000`)
-        .utc(true)
-        .local()
-        .format('YYYY-MM-DD HH:mm:ss');
+      const roundStartTime = moment.unix(+`${roundInfo.roundStartTime}`);
+      const roundEndTime = moment.unix(+`${roundInfo.roundDeadline}`);
 
+      const unlock = moment().isAfter(roundStartTime);
+      const expired = moment().isAfter(roundEndTime);
+      const unclaimedTokens = formatSQT(accountAirdropInfo.toString());
+      const unlockDate = roundStartTime.local().format('YYYY-MM-DD HH:mm:ss');
+      console.warn(unlockDate);
       setAirdropRecords([
         {
           id: <Typography>{airdropRoundMapping[roundId] || `Airdrop Rounding ${roundId}`}</Typography>,

@@ -181,7 +181,7 @@ export const AirdropClaimButton: React.FC<{
           size="large"
           onClick={shouldChangeToL1 ? switchToL1 : hasSignedTC ? onClaimAirdropL1 : onSignTC}
           className={clsx(styles.button, canClaimL1 && styles.claimButton)}
-          loading={isLoading}
+          loading={isLoadingL1}
           style={{ flex: 1 }}
         >
           {shouldChangeToL1
@@ -203,7 +203,7 @@ export const AirdropClaimButton: React.FC<{
         loading={isLoading}
         style={{ flex: 1 }}
       >
-        {shouldChangeToL2 ? `Switch to ${l1ChainName} to continue Claim` : buttonText}
+        {shouldChangeToL2 ? `Switch to ${l2ChainName} to continue Claim` : buttonText}
       </Button>
     </>
   );
