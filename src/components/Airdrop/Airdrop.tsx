@@ -214,48 +214,55 @@ const useGetAirdropRecordsOnL1 = () => {
     }[]
   >([]);
 
+  const [loading, setLoading] = useState(false);
+
   const getAirdropRecords = async () => {
     if (!rootContract || !account) return;
-    // only round 0 need fetch from L1
-    const roundId = 0;
-    const accountAirdropInfo = await rootContract.airdropperLite.airdropRecord(account, roundId);
-    if (accountAirdropInfo.eq(0)) return;
-    const roundInfo = await rootContract.airdropperLite.roundRecord(roundId);
+    try {
+      setLoading(true);
+      // only round 0 need fetch from L1
+      const roundId = 0;
+      const accountAirdropInfo = await rootContract.airdropperLite.airdropRecord(account, roundId);
+      if (accountAirdropInfo.eq(0)) return;
+      const roundInfo = await rootContract.airdropperLite.roundRecord(roundId);
 
-    const unlock =
-      +moment() >=
-      +moment(+`${roundInfo.roundStartTime}000`)
+      const unlock =
+        +moment() >=
+        +moment(+`${roundInfo.roundStartTime}000`)
+          .utc(true)
+          .local();
+      const expired =
+        +moment() >=
+        +moment(+`${roundInfo.roundDeadline}000`)
+          .utc(true)
+          .local();
+      const unclaimedTokens = formatSQT(accountAirdropInfo.toString());
+      const unlockDate = moment(+`${roundInfo.roundStartTime}000`)
         .utc(true)
-        .local();
-    const expired =
-      +moment() >=
-      +moment(+`${roundInfo.roundDeadline}000`)
-        .utc(true)
-        .local();
-    const unclaimedTokens = formatSQT(accountAirdropInfo.toString());
-    const unlockDate = moment(+`${roundInfo.roundStartTime}000`)
-      .utc(true)
-      .local()
-      .format('YYYY-MM-DD HH:mm:ss');
+        .local()
+        .format('YYYY-MM-DD HH:mm:ss');
 
-    setAirdropRecords([
-      {
-        id: <Typography>{airdropRoundMapping[roundId] || `Airdrop Rounding ${roundId}`}</Typography>,
-        amountString: (
-          <Typography>
-            {unclaimedTokens} {TOKEN}
-          </Typography>
-        ),
-        key: `airdropL1${roundId}`,
-        sortedStatus: expired
-          ? AirdropRoundStatus.EXPIRED
-          : unlock
-          ? AirdropRoundStatus.UNLOCKED
-          : AirdropRoundStatus.LOCKED,
-        sortedNextMilestone: expired ? 'Expired' : unlock ? 'Ready to Claim' : `Unlock Date: ${unlockDate}`,
-        roundId
-      }
-    ]);
+      setAirdropRecords([
+        {
+          id: <Typography>{airdropRoundMapping[roundId] || `Airdrop Rounding ${roundId}`}</Typography>,
+          amountString: (
+            <Typography>
+              {unclaimedTokens} {TOKEN}
+            </Typography>
+          ),
+          key: `airdropL1${roundId}`,
+          sortedStatus: expired
+            ? AirdropRoundStatus.EXPIRED
+            : unlock
+            ? AirdropRoundStatus.UNLOCKED
+            : AirdropRoundStatus.LOCKED,
+          sortedNextMilestone: expired ? 'Expired' : unlock ? 'Ready to Claim' : `Unlock Date: ${unlockDate}`,
+          roundId
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -263,7 +270,14 @@ const useGetAirdropRecordsOnL1 = () => {
     getAirdropRecords();
   }, [account, rootContract]);
 
-  return airdropRecords;
+  return {
+    airdropRecords,
+    loading,
+    refresh: () => {
+      setAirdropRecords([]);
+      getAirdropRecords();
+    }
+  };
 };
 
 export const Airdrop: FC = () => {
@@ -276,7 +290,7 @@ export const Airdrop: FC = () => {
   const [redeemLoading, setRedeemLoading] = useState<boolean>(false);
   const [redeemable, setRedeemable] = useState<boolean>(false);
 
-  const l1AirdropRecords = useGetAirdropRecordsOnL1();
+  const { loading: l1Loading, airdropRecords: l1AirdropRecords, refresh: l1Refresh } = useGetAirdropRecordsOnL1();
 
   const [currentUserPublicSaleResult, setCurrentUserPublicSaleResult] = useState<
     {
@@ -714,6 +728,12 @@ export const Airdrop: FC = () => {
             </div>
           ),
           data: (data) => {
+            if (l1Loading)
+              return (
+                <div style={{ minHeight: 500, display: 'flex', justifyContent: 'center' }}>
+                  <Spinner />
+                </div>
+              );
             if (!data) return null;
             const [unClaimGifts, userNfts, redeemedNfts] = data;
             const redeemNftsTokenIds = redeemedNfts?.userRedeemedNfts.nodes.map((i) => i.tokenId) || [];
@@ -790,6 +810,9 @@ export const Airdrop: FC = () => {
                           .map((i) => i.roundId)}
                         unlockSeriesIds={unlockSeriesIds}
                         unlockedAirdropIds={unlockedAirdropIds}
+                        onSuccessL1={() => {
+                          l1Refresh();
+                        }}
                       />
                     </div>
                   </>

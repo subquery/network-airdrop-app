@@ -25,7 +25,8 @@ export const AirdropClaimButton: React.FC<{
   unlockSeriesIds: string[];
   unlockedAirdropIds: string[];
   l1AirdropIds: number[];
-}> = ({ unlockSeriesIds, unlockedAirdropIds, l1AirdropIds }) => {
+  onSuccessL1: () => void;
+}> = ({ unlockSeriesIds, unlockedAirdropIds, l1AirdropIds, onSuccessL1 }) => {
   const { t } = useTranslation();
   const contracts = useContracts();
   const rootContracts = useRootContracts();
@@ -154,6 +155,8 @@ export const AirdropClaimButton: React.FC<{
           title: `${t('airdrop.successClaim')}`,
           description: 'Please check in your wallet'
         });
+
+        onSuccessL1();
       }
     } catch (error: any) {
       console.error(`Tx Error: ${error}`);
