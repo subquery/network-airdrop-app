@@ -415,8 +415,11 @@ export const Airdrop: FC = () => {
 
   const getPublicSaleResult = async () => {
     if (!account) return;
+
     try {
-      const res = await fetch(`https://sq-airdrop-backend.subquery.network/public-sale/token-claim/${account}`);
+      const res = await fetch(
+        `https://sq-airdrop-backend.subquery.network/public-sale/token-claim/0xc0c157510f443067edac00cc5b5e297e67315d53`
+      );
 
       if (res.status === 200) {
         const json = await res.json();
@@ -643,7 +646,9 @@ export const Airdrop: FC = () => {
               ...currentUserPublicSaleResult.map((i, index) => ({
                 id: <Typography>{i.category}</Typography>,
                 sortedStatus: AirdropRoundStatus.LOCKED,
-                sortedNextMilestone: `Unlock date: ${i.unlock !== '' ? moment(i.unlock).format('YYYY-MM-DD') : '-'}`,
+                sortedNextMilestone: `Unlock date: ${
+                  i.unlock !== '' ? moment(i.unlock).utc(true).local().format('YYYY-MM-DD HH:mm:ss') : '-'
+                }`,
                 amountString: `${i.amount} SQT`,
                 key: `publicSale${index}`
               })),
