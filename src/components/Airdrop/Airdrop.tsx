@@ -211,6 +211,7 @@ const useGetAirdropRecordsOnL1 = () => {
       key: string;
       sortedStatus: AirdropRoundStatus;
       roundId: number;
+      amount: string;
     }[]
   >([]);
 
@@ -257,7 +258,8 @@ const useGetAirdropRecordsOnL1 = () => {
             ? AirdropRoundStatus.UNLOCKED
             : AirdropRoundStatus.LOCKED,
           sortedNextMilestone: expired ? 'Expired' : unlock ? 'Ready to Claim' : `Unlock Date: ${unlockDate}`,
-          roundId
+          roundId,
+          amount: accountAirdropInfo.toString()
         }
       ]);
     } finally {
@@ -735,10 +737,13 @@ export const Airdrop: FC = () => {
                 </div>
               );
             if (!data) return null;
-            const [unClaimGifts, userNfts, redeemedNfts] = data;
+            const [unClaimGifts, userNfts, redeemedNfts, airdropUsers] = data;
             const redeemNftsTokenIds = redeemedNfts?.userRedeemedNfts.nodes.map((i) => i.tokenId) || [];
             const [sortedAirdrops, unlockedAirdropIds, unlockedAirdropAmount, claimedAirdropAmount] = sortUserAirdrops;
-
+            const totalAllocations = airdropUsers?.airdropUsers.nodes.reduce(
+              (cur, add) => cur.add(add.amount),
+              BigNumber.from('0')
+            );
             const renderTable = [
               ...sortGifts(
                 unClaimGifts || { userUnclaimedNfts: { nodes: [] } },
@@ -765,6 +770,11 @@ export const Airdrop: FC = () => {
             const unlockSeriesIds = unClaimGifts?.userUnclaimedNfts.nodes.map((i) => i.seriesId) || [];
             const canRedeemNfts = userNfts?.userNfts.nodes.filter((i) => !redeemNftsTokenIds.includes(i.id)) || [];
 
+            const totalFromL1 = l1AirdropRecords.reduce((cur, add) => cur.add(add.amount), BigNumber.from('0'));
+            const totalUnlockFromL1 = l1AirdropRecords
+              .filter((i) => i.sortedStatus === AirdropRoundStatus.UNLOCKED)
+              .reduce((cur, add) => cur.add(add.amount), BigNumber.from('0'));
+
             return (
               <div className={styles.airdropClaimContainer}>
                 <Typography variant="h6">{t('airdrop.claimTitle', { token: TOKEN })}</Typography>
@@ -773,7 +783,8 @@ export const Airdrop: FC = () => {
                   {t('airdrop.description')}
                 </Typography>
                 <AirdropAmountHeader
-                  unlockedAirdropAmount={unlockedAirdropAmount}
+                  totalAllocatedAirdropAmount={(totalAllocations || BigNumber.from('0')).add(totalFromL1)}
+                  unlockedAirdropAmount={unlockedAirdropAmount.add(totalUnlockFromL1)}
                   claimedAirdropAmount={claimedAirdropAmount}
                 />
 

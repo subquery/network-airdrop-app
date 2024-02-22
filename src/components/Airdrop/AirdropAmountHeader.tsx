@@ -10,17 +10,15 @@ import { formatAmount } from 'utils';
 import styles from './Airdrop.module.less';
 
 export const AirdropAmountHeader: React.FC<{
+  totalAllocatedAirdropAmount: BigNumber;
   unlockedAirdropAmount: BigNumber;
   claimedAirdropAmount: BigNumber;
-}> = ({ unlockedAirdropAmount, claimedAirdropAmount }) => {
+}> = ({ totalAllocatedAirdropAmount, unlockedAirdropAmount, claimedAirdropAmount }) => {
   const { t } = useTranslation();
   const { address: account } = useAccount();
 
-  // @ts-ignore
-  // const totalAirdropAmount = airdropUser?.totalAirdropAmount?.toString() ?? '0';
-  // const totalAirdropAmount = '0';
   const airdropAmounts = [
-    { amount: '0', type: t('airdrop.total') },
+    { amount: totalAllocatedAirdropAmount, type: t('airdrop.total') },
     { amount: unlockedAirdropAmount, type: t('airdrop.unlockedTitle') },
     { amount: claimedAirdropAmount, type: t('airdrop.claimed') }
   ];
