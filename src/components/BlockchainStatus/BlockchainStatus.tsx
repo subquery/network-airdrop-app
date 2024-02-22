@@ -1,19 +1,28 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Typography } from '@subql/components';
 import { Button } from 'antd';
 import { t } from 'i18next';
-import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 
 export const BlockchainStatus: React.FC<{
   tipsChainIds: {
     id: number;
     name: string;
-  };
+  }[];
 }> = ({ children, tipsChainIds }) => {
+  const { isConnected } = useAccount();
   const { chain } = useNetwork();
-  const { chains, switchNetwork } = useSwitchNetwork();
+  const { switchNetwork } = useSwitchNetwork();
 
-  if (tipsChainIds.id !== chain?.id) {
+  const isUnsupportedNetwork = useMemo(() => {
+    if (isConnected && !tipsChainIds.map((i) => i.id).includes(chain?.id as number)) {
+      return true;
+    }
+
+    return false;
+  }, [chain, tipsChainIds, isConnected]);
+
+  if (isUnsupportedNetwork) {
     return (
       <div
         style={{
@@ -27,16 +36,16 @@ export const BlockchainStatus: React.FC<{
         }}
       >
         <Typography variant="h4">{t('unsupportedNetwork.title')}</Typography>
-        <Typography>{t('unsupportedNetwork.subtitle', { network: tipsChainIds.name })}</Typography>
+        <Typography>{t('unsupportedNetwork.subtitle', { network: tipsChainIds[0].name })}</Typography>
         <Button
           onClick={() => {
-            switchNetwork?.(tipsChainIds.id);
+            switchNetwork?.(tipsChainIds[0].id);
           }}
           type="primary"
           size="large"
           shape="round"
         >
-          {t('unsupportedNetwork.button', { network: tipsChainIds.name })}
+          {t('unsupportedNetwork.button', { network: tipsChainIds[0].name })}
         </Button>
       </div>
     );

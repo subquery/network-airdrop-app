@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import { formatEther } from '@ethersproject/units';
 import { openNotification, Spinner, Tag, Typography } from '@subql/components';
+import { RootContractSDK } from '@subql/contract-sdk';
+import { SQNetworks } from '@subql/network-config';
 import { renderAsyncArray } from '@subql/react-hooks';
 import { formatSQT, mergeAsync } from '@subql/react-hooks/dist/utils';
 import { useMount } from 'ahooks';
@@ -13,11 +15,11 @@ import { BigNumber } from 'ethers';
 import i18next from 'i18next';
 import { uniqWith } from 'lodash-es';
 import moment from 'moment';
-import { useAccount } from 'wagmi';
+import { mainnet, sepolia, useAccount, usePublicClient } from 'wagmi';
 
 import { DATE_FORMAT, TOKEN } from 'appConstants';
 import { GIFT } from 'containers';
-import { useContracts } from 'hooks';
+import { publicClientToProvider, useContracts } from 'hooks';
 import { useIpfs } from 'hooks/useIpfs';
 import { mapContractError } from 'utils';
 
@@ -186,6 +188,84 @@ const getColumns = (t: any): TableProps<any>['columns'] => [
  * @returns [sortedAirdropArray for table, unlockedAirdropIds, unlockedAirdropAmount, claimedAirdropAmount]
  */
 
+const useGetAirdropRecordsOnL1 = () => {
+  const { address: account } = useAccount();
+
+  const publicClient = usePublicClient({
+    chainId: process.env.REACT_APP_NETWORK === 'testnet' ? sepolia.id : mainnet.id
+  });
+  const provider = useMemo(() => publicClientToProvider(publicClient), [publicClient]);
+  const rootContract = useMemo(
+    () =>
+      RootContractSDK.create(provider, {
+        network: process.env.REACT_APP_NETWORK as SQNetworks
+      }),
+    [provider]
+  );
+
+  const [airdropRecords, setAirdropRecords] = useState<
+    {
+      id: ReactNode;
+      amountString: ReactNode;
+      sortedNextMilestone: ReactNode;
+      key: string;
+      sortedStatus: AirdropRoundStatus;
+      roundId: number;
+    }[]
+  >([]);
+
+  const getAirdropRecords = async () => {
+    if (!rootContract || !account) return;
+    // only round 0 need fetch from L1
+    const roundId = 0;
+    const accountAirdropInfo = await rootContract.airdropperLite.airdropRecord(account, roundId);
+    if (accountAirdropInfo.eq(0)) return;
+    const roundInfo = await rootContract.airdropperLite.roundRecord(roundId);
+
+    const unlock =
+      +moment() >=
+      +moment(+`${roundInfo.roundStartTime}000`)
+        .utc(true)
+        .local();
+    const expired =
+      +moment() >=
+      +moment(+`${roundInfo.roundDeadline}000`)
+        .utc(true)
+        .local();
+    const unclaimedTokens = formatSQT(accountAirdropInfo.toString());
+    const unlockDate = moment(+`${roundInfo.roundStartTime}000`)
+      .utc(true)
+      .local()
+      .format('YYYY-MM-DD HH:mm:ss');
+
+    setAirdropRecords([
+      {
+        id: <Typography>{airdropRoundMapping[roundId] || `Airdrop Rounding ${roundId}`}</Typography>,
+        amountString: (
+          <Typography>
+            {unclaimedTokens} {TOKEN}
+          </Typography>
+        ),
+        key: `airdropL1${roundId}`,
+        sortedStatus: expired
+          ? AirdropRoundStatus.EXPIRED
+          : unlock
+          ? AirdropRoundStatus.UNLOCKED
+          : AirdropRoundStatus.LOCKED,
+        sortedNextMilestone: expired ? 'Expired' : unlock ? 'Ready to Claim' : `Unlock Date: ${unlockDate}`,
+        roundId
+      }
+    ]);
+  };
+
+  useEffect(() => {
+    setAirdropRecords([]);
+    getAirdropRecords();
+  }, [account, rootContract]);
+
+  return airdropRecords;
+};
+
 export const Airdrop: FC = () => {
   const { t } = useTranslation();
   const { address: account } = useAccount();
@@ -195,6 +275,8 @@ export const Airdrop: FC = () => {
   const [nftSerices, setNftSerices] = useState<NftIpfs>({});
   const [redeemLoading, setRedeemLoading] = useState<boolean>(false);
   const [redeemable, setRedeemable] = useState<boolean>(false);
+
+  const l1AirdropRecords = useGetAirdropRecordsOnL1();
 
   const [currentUserPublicSaleResult, setCurrentUserPublicSaleResult] = useState<
     {
@@ -643,18 +725,20 @@ export const Airdrop: FC = () => {
                 userNfts || { userNfts: { nodes: [], groupedAggregates: [] } },
                 redeemedNfts || { userRedeemedNfts: { nodes: [], groupedAggregates: [] } }
               ),
-              ...currentUserPublicSaleResult.map((i, index) => ({
-                id: <Typography>{i.category}</Typography>,
-                sortedStatus:
-                  +moment() >= +moment(i.unlock).utc(true).local()
-                    ? AirdropRoundStatus.INPROGRESS
-                    : AirdropRoundStatus.LOCKED,
-                sortedNextMilestone: `Unlock date: ${
-                  i.unlock !== '' ? moment(i.unlock).utc(true).local().format('YYYY-MM-DD HH:mm:ss') : '-'
-                }`,
-                amountString: `${i.amount} SQT`,
-                key: `publicSale${index}`
-              })),
+
+              ...l1AirdropRecords,
+              // ...currentUserPublicSaleResult.map((i, index) => ({
+              //   id: <Typography>{i.category}</Typography>,
+              //   sortedStatus:
+              //     +moment() >= +moment(i.unlock).utc(true).local()
+              //       ? AirdropRoundStatus.INPROGRESS
+              //       : AirdropRoundStatus.LOCKED,
+              //   sortedNextMilestone: `Unlock date: ${
+              //     i.unlock !== '' ? moment(i.unlock).utc(true).local().format('YYYY-MM-DD HH:mm:ss') : '-'
+              //   }`,
+              //   amountString: `${i.amount} SQT`,
+              //   key: `publicSale${index}`
+              // })),
               ...sortedAirdrops
             ];
 
@@ -700,7 +784,13 @@ export const Airdrop: FC = () => {
                           Redeem All NFT
                         </Button>
                       )}
-                      <AirdropClaimButton unlockSeriesIds={unlockSeriesIds} unlockedAirdropIds={unlockedAirdropIds} />
+                      <AirdropClaimButton
+                        l1AirdropIds={l1AirdropRecords
+                          .filter((i) => i.sortedStatus === AirdropRoundStatus.UNLOCKED)
+                          .map((i) => i.roundId)}
+                        unlockSeriesIds={unlockSeriesIds}
+                        unlockedAirdropIds={unlockedAirdropIds}
+                      />
                     </div>
                   </>
                 ) : (

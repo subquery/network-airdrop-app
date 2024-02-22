@@ -19,24 +19,40 @@ const rootUrl = new URL(window.location.href).hostname;
 
 const airdropChain =
   process.env.REACT_APP_NETWORK === 'testnet'
-    ? {
-        id: baseSepolia.id,
-        name: baseSepolia.name
-      }
-    : {
-        id: base.id,
-        name: base.name
-      };
+    ? [
+        {
+          id: baseSepolia.id,
+          name: baseSepolia.name
+        },
+        {
+          id: sepolia.id,
+          name: sepolia.name
+        }
+      ]
+    : [
+        {
+          id: base.id,
+          name: base.name
+        },
+        {
+          id: mainnet.id,
+          name: mainnet.name
+        }
+      ];
 const vestingChain =
   process.env.REACT_APP_NETWORK === 'testnet'
-    ? {
-        id: sepolia.id,
-        name: sepolia.name
-      }
-    : {
-        id: mainnet.id,
-        name: mainnet.name
-      };
+    ? [
+        {
+          id: sepolia.id,
+          name: sepolia.name
+        }
+      ]
+    : [
+        {
+          id: mainnet.id,
+          name: mainnet.name
+        }
+      ];
 
 export function Home() {
   const { t } = useTranslation();
