@@ -31,7 +31,8 @@ enum AirdropRoundStatus {
   EXPIRED = 'EXPIRED',
   LOCKED = 'LOCKED',
   UNLOCKED = 'UNLOCKED',
-  REDEEMED = 'REDEEMED'
+  REDEEMED = 'REDEEMED',
+  INPROGRESS = 'INPROGRESS'
 }
 
 export interface tableItem {
@@ -140,7 +141,8 @@ const AirdropStatusTag: FC<{ status: AirdropRoundStatus }> = ({ status }) => {
     [AirdropRoundStatus.UNLOCKED]: { color: 'info', text: i18next.t('airdrop.unlocked') },
     [AirdropRoundStatus.LOCKED]: { color: 'default', text: i18next.t('airdrop.locked') },
     [AirdropRoundStatus.EXPIRED]: { color: 'error', text: i18next.t('airdrop.expired') },
-    [AirdropRoundStatus.REDEEMED]: { color: 'success', text: i18next.t('airdrop.redeemed') }
+    [AirdropRoundStatus.REDEEMED]: { color: 'success', text: i18next.t('airdrop.redeemed') },
+    [AirdropRoundStatus.INPROGRESS]: { color: 'info', text: 'In Progress' }
   };
 
   const { color, text } = statusMapping[status] || { color: 'default', text: 'unknown' };
@@ -643,7 +645,10 @@ export const Airdrop: FC = () => {
               ),
               ...currentUserPublicSaleResult.map((i, index) => ({
                 id: <Typography>{i.category}</Typography>,
-                sortedStatus: AirdropRoundStatus.LOCKED,
+                sortedStatus:
+                  +moment() >= +moment(i.unlock).utc(true).local()
+                    ? AirdropRoundStatus.INPROGRESS
+                    : AirdropRoundStatus.LOCKED,
                 sortedNextMilestone: `Unlock date: ${
                   i.unlock !== '' ? moment(i.unlock).utc(true).local().format('YYYY-MM-DD HH:mm:ss') : '-'
                 }`,
