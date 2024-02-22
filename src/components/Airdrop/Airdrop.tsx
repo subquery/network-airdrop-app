@@ -417,9 +417,7 @@ export const Airdrop: FC = () => {
     if (!account) return;
 
     try {
-      const res = await fetch(
-        `https://sq-airdrop-backend.subquery.network/public-sale/token-claim/0xc0c157510f443067edac00cc5b5e297e67315d53`
-      );
+      const res = await fetch(`https://sq-airdrop-backend.subquery.network/public-sale/token-claim/${account}`);
 
       if (res.status === 200) {
         const json = await res.json();
