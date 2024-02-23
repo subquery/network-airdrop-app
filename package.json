@@ -20,7 +20,7 @@
     "@rainbow-me/rainbowkit": "^1.2.0",
     "@subql/apollo-links": "^1.0.8",
     "@subql/components": "1.0.3-27",
-    "@subql/contract-sdk": "1.0.1-2",
+    "@subql/contract-sdk": "1.0.1",
     "@subql/network-config": "1.1.1",
     "@subql/network-query": "1.1.0",
     "@subql/react-hooks": "^1.1.0",
