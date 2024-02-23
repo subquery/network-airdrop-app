@@ -191,7 +191,7 @@ const Vesting: FC<IProps> = () => {
       claimable: claimable.status === 'fulfilled' ? claimable.value || BigNumber.from('0') : BigNumber.from('0'),
       claimed: claimed.status === 'fulfilled' ? claimed.value || BigNumber.from('0') : BigNumber.from('0'),
       allocation: allocation.status === 'fulfilled' ? allocation.value || BigNumber.from('0') : BigNumber.from('0'),
-      startDate: moment(startDate.status === 'fulfilled' ? +`${startDate.value?.toString()}000` : '').utc(true)
+      startDate: moment.unix(startDate.status === 'fulfilled' ? +`${startDate.value?.toString()}` : 1708675200)
     };
   };
 
