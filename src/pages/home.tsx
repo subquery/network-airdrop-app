@@ -92,7 +92,7 @@ export function Home() {
                   items={[
                     {
                       key: 'Airdrop',
-                      label: 'Airdrops'
+                      label: 'Claims'
                     },
                     {
                       key: 'Vesting',
