@@ -3,7 +3,7 @@
 
 import React from 'react';
 // eslint-disable-next-line camelcase
-import { ContractSDK, Vesting, Vesting__factory } from '@subql/contract-sdk';
+import { ContractSDK, RootContractSDK, Vesting, Vesting__factory } from '@subql/contract-sdk';
 import { SQNetworks } from '@subql/network-config';
 import { providers } from 'ethers';
 import { HttpTransport } from 'viem';
@@ -70,6 +70,33 @@ export function useContracts(): ContractSDK | undefined {
       return;
     }
     const pendingContracts = ContractSDK.create(signerOrProvider, {
+      network: Network as SQNetworks
+    });
+
+    setContracts(pendingContracts);
+  }, [signerOrProvider]);
+
+  React.useEffect(() => {
+    if (!signerOrProvider) return;
+    initSdk();
+  }, [initSdk, signerOrProvider]);
+
+  return contracts;
+}
+
+export function useRootContracts(): RootContractSDK | undefined {
+  const [contracts, setContracts] = React.useState<RootContractSDK | undefined>();
+  const { signer } = useEthersSigner();
+  const provider = useEthersProviderWithPublic();
+
+  const signerOrProvider = React.useMemo(() => signer || provider, [signer, provider]);
+
+  const initSdk = React.useCallback(async () => {
+    if (!signerOrProvider) {
+      setContracts(undefined);
+      return;
+    }
+    const pendingContracts = RootContractSDK.create(signerOrProvider, {
       network: Network as SQNetworks
     });
 

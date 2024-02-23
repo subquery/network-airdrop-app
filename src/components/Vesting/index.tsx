@@ -2,7 +2,8 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { formatEther } from '@ethersproject/units';
 import { Spinner, Typography } from '@subql/components';
-import VestingPlansConf from '@subql/contract-sdk/publish/vesting.json';
+import mainnetJSON from '@subql/contract-sdk/publish/mainnet.json';
+import testnetJSON from '@subql/contract-sdk/publish/testnet.json';
 import { useInterval } from 'ahooks';
 import { Button, ButtonProps } from 'antd';
 import { BigNumber } from 'ethers';
@@ -20,6 +21,9 @@ import { convertCountToTime, formatAmount, renderAsync, roundToSix } from 'utils
 import styles from './index.module.less';
 
 interface IProps {}
+
+const vestingAddress =
+  process.env.REACT_APP_NETWORK === 'testnet' ? testnetJSON.root.Vesting.address : mainnetJSON.root.Vesting.address;
 
 interface VestingAllocationPlanNode {
   amount: string;
@@ -52,12 +56,36 @@ const TransactionButton: FC<ButtonProps> = ({ children, onClick, ...rest }) => {
   );
 };
 
-const vestingPlans = VestingPlansConf[process.env.REACT_APP_NETWORK as 'kepler' | 'testnet' | 'mainnet'].map(
-  (contractAddress, index) => ({
-    contractAddress,
-    name: index === 0 ? 'SERIES A INVESTORS' : 'PRIVATE SALE INVESTORS'
-  })
-);
+const vestingPlans = [
+  {
+    planId: 0,
+    name: 'Seed'
+  },
+  {
+    planId: 1,
+    name: 'Series A'
+  },
+  {
+    planId: 2,
+    name: 'Series B'
+  },
+  {
+    planId: 3,
+    name: 'Strategic Round'
+  },
+  {
+    planId: 4,
+    name: 'Team & Advisers'
+  },
+  {
+    planId: 5,
+    name: 'Foundation & Community'
+  },
+  {
+    planId: 6,
+    name: 'Nansen'
+  }
+];
 
 const Vesting: FC<IProps> = () => {
   const vestingContractFactor = useVestingContracts();
@@ -96,6 +124,7 @@ const Vesting: FC<IProps> = () => {
   const [claimableTokens, setCliamableTokens] = useState<
     {
       contractAddress: string;
+      planId: string;
       claimable: BigNumber;
       claimed: BigNumber;
       allocation: BigNumber;
@@ -124,21 +153,22 @@ const Vesting: FC<IProps> = () => {
     return allAmounts.sub(totalAvailableClaim).sub(totalClaimed);
   }, [accountPlans, totalAvailableClaim, totalClaimed]);
 
-  const getClaimableAmount = async (contractAddress: string) => {
+  const getClaimableAmount = async (contractAddress: string, planId: string) => {
     if (!account)
       return {
         contractAddress,
+        planId,
         claimable: BigNumber.from('0'),
         claimed: BigNumber.from('0'),
         allocation: BigNumber.from('0'),
         startDate: moment()
       };
-    const vestingContract = await vestingContractFactor(contractAddress);
+    const vestingContract = await vestingContractFactor(vestingAddress);
 
     const fetchData = await Promise.allSettled([
-      vestingContract?.claimableAmount(account),
-      vestingContract?.claimed(account),
-      vestingContract?.allocations(account),
+      vestingContract?.claimableAmount(planId, account),
+      vestingContract?.claimed(planId, account),
+      vestingContract?.allocations(planId, account),
 
       // this can be cache, if necessary.
       vestingContract?.vestingStartDate()
@@ -157,6 +187,7 @@ const Vesting: FC<IProps> = () => {
 
     return {
       contractAddress,
+      planId,
       claimable: claimable.status === 'fulfilled' ? claimable.value || BigNumber.from('0') : BigNumber.from('0'),
       claimed: claimed.status === 'fulfilled' ? claimed.value || BigNumber.from('0') : BigNumber.from('0'),
       allocation: allocation.status === 'fulfilled' ? allocation.value || BigNumber.from('0') : BigNumber.from('0'),
@@ -166,12 +197,15 @@ const Vesting: FC<IProps> = () => {
 
   const initClaimableAmount = async () => {
     if (!accountPlans?.data?.vestingAllocations?.nodes) return;
-    const plansContactAddresses: string[] = accountPlans.data.vestingAllocations.nodes.map(
-      (node: VestingAllocationPlanNode) => node.planId.split(':')[0]
+    const plansInfo: { contractAddress: string; planId: string }[] = accountPlans.data.vestingAllocations.nodes.map(
+      (node: VestingAllocationPlanNode) => ({
+        contractAddress: node.planId.split(':')[0],
+        planId: node.planId.split(':')[1]
+      })
     );
 
     try {
-      const res = await Promise.all(plansContactAddresses.map((i) => getClaimableAmount(i)));
+      const res = await Promise.all(plansInfo.map((i) => getClaimableAmount(i.contractAddress, i.planId)));
 
       setCliamableTokens(res);
     } catch (e) {
@@ -184,11 +218,12 @@ const Vesting: FC<IProps> = () => {
     }
   };
 
-  const claimOne = async (contractAddress: string) => {
+  const claimOne = async (contractAddress: string, planId: string) => {
     if (!account) return;
     try {
       const vestingContract = await vestingContractFactor(contractAddress);
-      const approvalTx = await vestingContract?.claim();
+
+      const approvalTx = await vestingContract?.claim(planId);
       if (!approvalTx) {
         openNotificationWithIcon({ title: 'There have something wrong, please contact developers' });
         return;
@@ -271,7 +306,10 @@ const Vesting: FC<IProps> = () => {
           const vestingPeriod = Math.floor(+node.plan.vestingPeriod / oneDay);
           const lockPeriod = Math.floor(+node.plan.lockPeriod / oneDay);
           const contractAddress = node.planId.split(':')[0];
-          const claimTokenInfo = claimableTokens.find((i) => i.contractAddress === contractAddress);
+          const planId = node.planId.split(':')[1];
+          const claimTokenInfo = claimableTokens.find(
+            (i) => i.contractAddress === contractAddress && i.planId === planId
+          );
           const amount = claimTokenInfo?.allocation || BigNumber.from(node.amount);
           const planTotalClaimed = claimTokenInfo?.claimed || BigNumber.from('0');
           const planClaimable = claimTokenInfo?.claimable || BigNumber.from('0');
@@ -280,7 +318,7 @@ const Vesting: FC<IProps> = () => {
               <div className={styles.vestingChunkHeader}>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <Typography variant="small" weight={600} type="secondary">
-                    {vestingPlans.find((i) => i.contractAddress === contractAddress)?.name || ''}
+                    {vestingPlans.find((i) => `${i.planId}` === `${planId}`)?.name || ''}
                   </Typography>
                   <Typography type="secondary" variant="small" style={{ marginTop: 8 }}>
                     Vesting start: {claimTokenInfo?.startDate.format('DD/MM/YYYY hh:mm A')}
@@ -294,12 +332,14 @@ const Vesting: FC<IProps> = () => {
                     if (!hasSignedTC) {
                       await onSignTC();
                     }
-                    await claimOne(contractAddress);
+                    await claimOne(contractAddress, planId);
                   }}
                   disabled={
                     !!(
-                      claimableTokens.find((i) => i.contractAddress === contractAddress)?.claimable.eq(0) ||
-                      !claimableTokens.find((i) => i.contractAddress === contractAddress)
+                      claimableTokens
+                        .find((i) => i.contractAddress === contractAddress && i.planId === planId)
+                        ?.claimable.eq(0) ||
+                      !claimableTokens.find((i) => i.contractAddress === contractAddress && i.planId === planId)
                     )
                   }
                 >

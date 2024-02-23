@@ -3,7 +3,7 @@
   background: var(--dark-mode-card);
   display: flex;
   flex-direction: column;
-
+  width: 100%;
   &Header {
     display: flex;
     justify-content: space-between;
@@ -40,6 +40,14 @@
         display: flex;
         justify-content: space-between;
         margin-top: 24px;
+
+
+        :global {
+          .subql-typography__text {
+            word-break: break-all;
+            font-size: 13px;
+          }
+        }
       }
     }
   }
@@ -49,4 +57,19 @@
       color: #fff;
     }
   }
+}
+
+@media screen and (max-width: 768px) {
+  .vesting {
+    &Header {
+      &Item {
+        :global {
+          .subql-typography {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+  
 }

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@subql/components';
 import { Tabs } from 'antd';
+import { base, baseSepolia, mainnet, sepolia } from 'viem/chains';
+import { useAccount } from 'wagmi';
 
 import { Airdrop } from 'components';
 import { BlockchainStatus } from 'components/BlockchainStatus';
@@ -15,10 +17,48 @@ import styles from './home.module.less';
 
 const rootUrl = new URL(window.location.href).hostname;
 
+const airdropChain =
+  process.env.REACT_APP_NETWORK === 'testnet'
+    ? [
+        {
+          id: baseSepolia.id,
+          name: baseSepolia.name
+        },
+        {
+          id: sepolia.id,
+          name: sepolia.name
+        }
+      ]
+    : [
+        {
+          id: base.id,
+          name: base.name
+        },
+        {
+          id: mainnet.id,
+          name: mainnet.name
+        }
+      ];
+const vestingChain =
+  process.env.REACT_APP_NETWORK === 'testnet'
+    ? [
+        {
+          id: sepolia.id,
+          name: sepolia.name
+        }
+      ]
+    : [
+        {
+          id: mainnet.id,
+          name: mainnet.name
+        }
+      ];
+
 export function Home() {
   const { t } = useTranslation();
 
   const [activeKey, setActiveKey] = useState(rootUrl.includes('seekers') ? 'Challenge' : 'Airdrop');
+  const { address } = useAccount();
 
   return (
     <div>
@@ -41,30 +81,26 @@ export function Home() {
                 </Typography>
                 {activeKey === 'Challenge' ? <PointsCard /> : null}
               </div>
-              <Tabs
-                style={{ display: 'none' }}
-                activeKey={activeKey}
-                onTabClick={(key) => {
-                  setActiveKey(key);
-                }}
-                className={styles.tabs}
-                items={[
-                  {
-                    key: 'Challenge',
-                    label: 'SubQuery Seekers Program'
-                  },
-                  {
-                    key: 'Airdrop',
-                    label: 'Other Airdrops'
-                  }
-                  /*
-                      {
-                        key: 'Vesting',
-                        label: 'Private Sale Vesting'
-                      }
-                      */
-                ]}
-              />
+              {address && (
+                <Tabs
+                  style={{ display: rootUrl.includes('seekers') ? 'none' : 'flex' }}
+                  activeKey={activeKey}
+                  onTabClick={(key) => {
+                    setActiveKey(key);
+                  }}
+                  className={styles.tabs}
+                  items={[
+                    {
+                      key: 'Airdrop',
+                      label: 'Airdrops'
+                    },
+                    {
+                      key: 'Vesting',
+                      label: 'Private Sale Vesting'
+                    }
+                  ]}
+                />
+              )}
               {activeKey === 'Challenge' && (
                 <WalletDetect>
                   <Challenges />
@@ -72,12 +108,18 @@ export function Home() {
               )}
               {activeKey === 'Airdrop' && (
                 <WalletDetect mode="airdrop">
-                  <BlockchainStatus>
+                  <BlockchainStatus tipsChainIds={airdropChain}>
                     <Airdrop />
                   </BlockchainStatus>
                 </WalletDetect>
               )}
-              {activeKey === 'Vesting' && <Vesting />}
+              {activeKey === 'Vesting' && (
+                <WalletDetect mode="airdrop">
+                  <BlockchainStatus tipsChainIds={vestingChain}>
+                    <Vesting />
+                  </BlockchainStatus>
+                </WalletDetect>
+              )}
             </div>
           </div>
         </div>
