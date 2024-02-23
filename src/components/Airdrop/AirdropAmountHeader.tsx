@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Typography } from 'antd';
+import { Typography } from '@subql/components';
 import clsx from 'clsx';
 import { BigNumber } from 'ethers';
 import { useAccount } from 'wagmi';
@@ -27,10 +27,8 @@ export const AirdropAmountHeader: React.FC<{
     <div className={styles.airdropClaimAmount}>
       {airdropAmounts.map((airdropAmount) => (
         <div key={airdropAmount.type} className={styles.amount}>
-          <Typography.Text className={clsx(styles.text, styles.amountTitle)}>{airdropAmount.type}</Typography.Text>
-          <Typography.Text className={clsx(styles.text, styles.amountText)}>
-            {formatAmount(airdropAmount.amount)}
-          </Typography.Text>
+          <Typography className={clsx(styles.text, styles.amountTitle)}>{airdropAmount.type}</Typography>
+          <Typography className={clsx(styles.text, styles.amountText)}>{formatAmount(airdropAmount.amount)}</Typography>
         </div>
       ))}
     </div>

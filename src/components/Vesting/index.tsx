@@ -4,7 +4,6 @@ import { formatEther } from '@ethersproject/units';
 import { Spinner, Typography } from '@subql/components';
 import mainnetJSON from '@subql/contract-sdk/publish/mainnet.json';
 import testnetJSON from '@subql/contract-sdk/publish/testnet.json';
-import VestingPlansConf from '@subql/contract-sdk/publish/vesting.json';
 import { useInterval } from 'ahooks';
 import { Button, ButtonProps } from 'antd';
 import { BigNumber } from 'ethers';
@@ -57,12 +56,36 @@ const TransactionButton: FC<ButtonProps> = ({ children, onClick, ...rest }) => {
   );
 };
 
-const vestingPlans = VestingPlansConf[process.env.REACT_APP_NETWORK as 'kepler' | 'testnet' | 'mainnet'].map(
-  (contractAddress, index) => ({
-    contractAddress,
-    name: index === 0 ? 'SERIES A INVESTORS' : 'PRIVATE SALE INVESTORS'
-  })
-);
+const vestingPlans = [
+  {
+    planId: 0,
+    name: 'Seed'
+  },
+  {
+    planId: 1,
+    name: 'Series A'
+  },
+  {
+    planId: 2,
+    name: 'Series B'
+  },
+  {
+    planId: 3,
+    name: 'Strategic Round'
+  },
+  {
+    planId: 4,
+    name: 'Team & Advisers'
+  },
+  {
+    planId: 5,
+    name: 'Foundation & Community'
+  },
+  {
+    planId: 6,
+    name: 'Nansen'
+  }
+];
 
 const Vesting: FC<IProps> = () => {
   const vestingContractFactor = useVestingContracts();
@@ -295,7 +318,7 @@ const Vesting: FC<IProps> = () => {
               <div className={styles.vestingChunkHeader}>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <Typography variant="small" weight={600} type="secondary">
-                    {vestingPlans.find((i) => i.contractAddress === contractAddress)?.name || ''}
+                    {vestingPlans.find((i) => `${i.planId}` === `${planId}`)?.name || ''}
                   </Typography>
                   <Typography type="secondary" variant="small" style={{ marginTop: 8 }}>
                     Vesting start: {claimTokenInfo?.startDate.format('DD/MM/YYYY hh:mm A')}
