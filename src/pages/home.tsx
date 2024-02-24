@@ -96,7 +96,7 @@ export function Home() {
                     },
                     {
                       key: 'Vesting',
-                      label: 'Private Sale Vesting'
+                      label: 'Vesting Tokens'
                     }
                   ]}
                 />
