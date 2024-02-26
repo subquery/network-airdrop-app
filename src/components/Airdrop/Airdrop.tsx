@@ -8,14 +8,13 @@ import { RootContractSDK } from '@subql/contract-sdk';
 import { SQNetworks } from '@subql/network-config';
 import { renderAsyncArray } from '@subql/react-hooks';
 import { formatSQT, mergeAsync } from '@subql/react-hooks/dist/utils';
-import { useMount } from 'ahooks';
 import { Button, Table, TableProps } from 'antd';
 import { airdropRoundMapping } from 'conf/airdropRoundMapping';
 import { BigNumber } from 'ethers';
 import i18next from 'i18next';
 import { uniqWith } from 'lodash-es';
 import moment from 'moment';
-import { mainnet, sepolia, useAccount, usePublicClient } from 'wagmi';
+import { mainnet, sepolia, useAccount, useNetwork, usePublicClient, useSwitchNetwork } from 'wagmi';
 
 import { DATE_FORMAT, TOKEN } from 'appConstants';
 import { GIFT } from 'containers';
@@ -25,7 +24,7 @@ import { mapContractError } from 'utils';
 
 import styles from './Airdrop.module.less';
 import { AirdropAmountHeader } from './AirdropAmountHeader';
-import { AirdropClaimButton } from './AirdropClaimButton';
+import { AirdropClaimButton, l2Chain, l2ChainName } from './AirdropClaimButton';
 
 enum AirdropRoundStatus {
   CLAIMED = 'CLAIMED',
@@ -283,16 +282,10 @@ export const Airdrop: FC = () => {
   const [nftSerices, setNftSerices] = useState<NftIpfs>({});
   const [redeemLoading, setRedeemLoading] = useState<boolean>(false);
   const [redeemable, setRedeemable] = useState<boolean>(false);
+  const { switchNetwork } = useSwitchNetwork();
+  const { chain } = useNetwork();
 
   const { loading: l1Loading, airdropRecords: l1AirdropRecords, refresh: l1Refresh } = useGetAirdropRecordsOnL1();
-
-  const [currentUserPublicSaleResult, setCurrentUserPublicSaleResult] = useState<
-    {
-      category: string;
-      amount: number;
-      unlock: string;
-    }[]
-  >([]);
 
   const accountUnclaimGifts = useQuery<IUnclaimedGifts>(
     gql`
@@ -505,25 +498,10 @@ export const Airdrop: FC = () => {
     }
   );
 
-  const getPublicSaleResult = async () => {
-    if (!account) return;
-
-    try {
-      const res = await fetch(`https://sq-airdrop-backend.subquery.network/public-sale/token-claim/${account}`);
-
-      if (res.status === 200) {
-        const json = await res.json();
-
-        setCurrentUserPublicSaleResult(json);
-      }
-    } catch (e) {
-      // don't care about this
-    }
-  };
-
   const getRedeemable = async () => {
     try {
       const fetchedRedeemable = await contracts?.sqtRedeem.redeemable();
+
       setRedeemable(fetchedRedeemable || false);
     } catch (e) {
       // don't care about this
@@ -674,6 +652,10 @@ export const Airdrop: FC = () => {
     return [...sortedUnClaimedNfts, ...sortedClaimedNfts, ...sortedRedeemedNfts];
   };
 
+  const switchToL2 = async () => {
+    switchNetwork?.(l2Chain);
+  };
+
   useEffect(() => {
     if (!accountClaimedGifts.loading && !accountUnclaimGifts.loading) {
       getNftSericesNames();
@@ -687,12 +669,8 @@ export const Airdrop: FC = () => {
   }, [redeemable]);
 
   useEffect(() => {
-    getPublicSaleResult();
-  }, [account]);
-
-  useMount(() => {
     getRedeemable();
-  });
+  }, [contracts]);
 
   return (
     <div className={styles.container}>
@@ -744,18 +722,6 @@ export const Airdrop: FC = () => {
               ),
 
               ...l1AirdropRecords,
-              // ...currentUserPublicSaleResult.map((i, index) => ({
-              //   id: <Typography>{i.category}</Typography>,
-              //   sortedStatus:
-              //     +moment() >= +moment(i.unlock).utc(true).local()
-              //       ? AirdropRoundStatus.INPROGRESS
-              //       : AirdropRoundStatus.LOCKED,
-              //   sortedNextMilestone: `Unlock date: ${
-              //     i.unlock !== '' ? moment(i.unlock).utc(true).local().format('YYYY-MM-DD HH:mm:ss') : '-'
-              //   }`,
-              //   amountString: `${i.amount} SQT`,
-              //   key: `publicSale${index}`
-              // })),
               ...sortedAirdrops
             ];
 
@@ -799,12 +765,16 @@ export const Airdrop: FC = () => {
                           style={{ flex: 1 }}
                           disabled={!canRedeemNfts.length}
                           loading={redeemLoading}
-                          onClick={async () => {
-                            await redeemNft(canRedeemNfts);
-                            accountRedeemedGifts.refetch();
-                          }}
+                          onClick={
+                            chain?.id !== l2Chain
+                              ? switchToL2
+                              : async () => {
+                                  await redeemNft(canRedeemNfts);
+                                  accountRedeemedGifts.refetch();
+                                }
+                          }
                         >
-                          Redeem All NFT
+                          {chain?.id !== l2Chain ? `Switch to ${l2ChainName} to Redeem` : 'Redeem All NFT'}
                         </Button>
                       )}
                       <AirdropClaimButton

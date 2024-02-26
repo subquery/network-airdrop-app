@@ -18,8 +18,8 @@ import styles from './Airdrop.module.less';
 const l1Chain = process.env.REACT_APP_NETWORK === 'testnet' ? sepolia.id : mainnet.id;
 const l1ChainName = process.env.REACT_APP_NETWORK === 'testnet' ? sepolia.name : mainnet.name;
 
-const l2Chain = process.env.REACT_APP_NETWORK === 'testnet' ? baseSepolia.id : base.id;
-const l2ChainName = process.env.REACT_APP_NETWORK === 'testnet' ? baseSepolia.name : base.name;
+export const l2Chain = process.env.REACT_APP_NETWORK === 'testnet' ? baseSepolia.id : base.id;
+export const l2ChainName = process.env.REACT_APP_NETWORK === 'testnet' ? baseSepolia.name : base.name;
 
 export const AirdropClaimButton: React.FC<{
   unlockSeriesIds: string[];
