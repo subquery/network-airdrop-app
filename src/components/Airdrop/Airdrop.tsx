@@ -277,7 +277,8 @@ const useGetAirdropRecordsOnL1 = () => {
 
 export const Airdrop: FC = () => {
   const { t } = useTranslation();
-  const { address: account } = useAccount();
+  // const { address: account } = useAccount();
+  const account = '0xA266cdb0117849CcE98D2B20F01E6cc82251466C';
   const { catSingle } = useIpfs();
   const contracts = useContracts();
 
@@ -527,7 +528,8 @@ export const Airdrop: FC = () => {
 
         if (redeemAmount) {
           const approved = await contracts.sqtGift.getApproved(nft.id);
-          if (!approved) {
+
+          if (approved !== contracts.sqtRedeem.address) {
             openNotification({
               type: 'info',
               description: `Before you redeem NFT ${nftName}, you need to approve the contract to spend your NFT`
