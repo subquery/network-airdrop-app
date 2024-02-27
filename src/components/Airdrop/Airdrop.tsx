@@ -520,6 +520,16 @@ export const Airdrop: FC = () => {
           ? `${nftSerices[nft.series.tokenURI]?.name}-${nft.id}`
           : nft.id;
 
+        const redeemAmount = await contracts.sqtRedeem.redeemableAmount(contracts.sqtGift.address, nft.id);
+        if (redeemAmount.isZero()) {
+          openNotification({
+            type: 'info',
+            description: `NFT ${nftName} is not redeemable, skip this NFT`
+          });
+          // eslint-disable-next-line no-continue
+          continue;
+        }
+
         const approved = await contracts.sqtGift.getApproved(nft.id);
         if (!approved) {
           openNotification({
