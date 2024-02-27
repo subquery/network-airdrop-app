@@ -275,8 +275,7 @@ const useGetAirdropRecordsOnL1 = () => {
 
 export const Airdrop: FC = () => {
   const { t } = useTranslation();
-  // const { address: account } = useAccount();
-  const account = '0x90076eEed622aAbC533b88eCaa9375a282e9Bdb4';
+  const { address: account } = useAccount();
   const { catSingle } = useIpfs();
   const contracts = useContracts();
 
