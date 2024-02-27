@@ -527,7 +527,8 @@ export const Airdrop: FC = () => {
 
         if (redeemAmount) {
           const approved = await contracts.sqtGift.getApproved(nft.id);
-          if (!approved) {
+
+          if (approved.toLowerCase() !== contracts.sqtRedeem.address.toLowerCase()) {
             openNotification({
               type: 'info',
               description: `Before you redeem NFT ${nftName}, you need to approve the contract to spend your NFT`
