@@ -275,7 +275,8 @@ const useGetAirdropRecordsOnL1 = () => {
 
 export const Airdrop: FC = () => {
   const { t } = useTranslation();
-  const { address: account } = useAccount();
+  // const { address: account } = useAccount();
+  const account = '0x90076eEed622aAbC533b88eCaa9375a282e9Bdb4';
   const { catSingle } = useIpfs();
   const contracts = useContracts();
 
@@ -520,7 +521,8 @@ export const Airdrop: FC = () => {
           ? `${nftSerices[nft.series.tokenURI]?.name}-${nft.id}`
           : nft.id;
 
-        const redeemAmount = await contracts.sqtRedeem.redeemableAmount(contracts.sqtGift.address, nft.id);
+        const redeemAmount = await contracts.sqtRedeem.redeemableAmount(contracts.sqtGift.address, nft.seriesId);
+
         if (redeemAmount.isZero()) {
           openNotification({
             type: 'info',
