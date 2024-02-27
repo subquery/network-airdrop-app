@@ -33,6 +33,7 @@ enum AirdropRoundStatus {
   LOCKED = 'LOCKED',
   UNLOCKED = 'UNLOCKED',
   REDEEMED = 'REDEEMED',
+  REDEEMABLE = 'REDEEMABLE',
   INPROGRESS = 'INPROGRESS'
 }
 
@@ -139,6 +140,7 @@ type SortedUserAirdrops = Omit<IAccountAirdrop['airdropUsers']['nodes'][number],
 const AirdropStatusTag: FC<{ status: AirdropRoundStatus }> = ({ status }) => {
   const statusMapping: { [key: string]: { color: 'success' | 'info' | 'default' | 'error'; text: string } } = {
     [AirdropRoundStatus.CLAIMED]: { color: 'success', text: i18next.t('airdrop.claimed') },
+    [AirdropRoundStatus.REDEEMABLE]: { color: 'success', text: 'Redeemable' },
     [AirdropRoundStatus.UNLOCKED]: { color: 'info', text: i18next.t('airdrop.unlocked') },
     [AirdropRoundStatus.LOCKED]: { color: 'default', text: i18next.t('airdrop.locked') },
     [AirdropRoundStatus.EXPIRED]: { color: 'error', text: i18next.t('airdrop.expired') },
@@ -280,6 +282,7 @@ export const Airdrop: FC = () => {
   const contracts = useContracts();
 
   const [nftSerices, setNftSerices] = useState<NftIpfs>({});
+  const [nftSericesRedeemable, setNftSericesRedeemable] = useState<{ [key: string]: boolean }>({});
   const [redeemLoading, setRedeemLoading] = useState<boolean>(false);
   const [redeemable, setRedeemable] = useState<boolean>(false);
   const { switchNetwork } = useSwitchNetwork();
@@ -520,35 +523,28 @@ export const Airdrop: FC = () => {
           ? `${nftSerices[nft.series.tokenURI]?.name}-${nft.id}`
           : nft.id;
 
-        const redeemAmount = await contracts.sqtRedeem.redeemableAmount(contracts.sqtGift.address, nft.seriesId);
+        const redeemAmount = nftSericesRedeemable[nft.seriesId];
 
-        if (redeemAmount.isZero()) {
-          openNotification({
-            type: 'info',
-            description: `NFT ${nftName} is not redeemable, skip this NFT`
-          });
-          // eslint-disable-next-line no-continue
-          continue;
-        }
+        if (redeemAmount) {
+          const approved = await contracts.sqtGift.getApproved(nft.id);
+          if (!approved) {
+            openNotification({
+              type: 'info',
+              description: `Before you redeem NFT ${nftName}, you need to approve the contract to spend your NFT`
+            });
+            const approve = await contracts.sqtGift.approve(contracts.sqtRedeem.address, nft.id);
+            await approve?.wait();
+          }
+          const tx = await contracts?.sqtRedeem.redeem(contracts.sqtGift.address, nft.id);
+          const receipt = await tx?.wait();
 
-        const approved = await contracts.sqtGift.getApproved(nft.id);
-        if (!approved) {
-          openNotification({
-            type: 'info',
-            description: `Before you redeem NFT ${nftName}, you need to approve the contract to spend your NFT`
-          });
-          const approve = await contracts.sqtGift.approve(contracts.sqtRedeem.address, nft.id);
-          await approve?.wait();
-        }
-        const tx = await contracts?.sqtRedeem.redeem(contracts.sqtGift.address, nft.id);
-        const receipt = await tx?.wait();
-
-        if (receipt) {
-          openNotification({
-            type: 'success',
-            description: `Redeem NFT ${nftName} success`,
-            duration: 3
-          });
+          if (receipt) {
+            openNotification({
+              type: 'success',
+              description: `Redeem NFT ${nftName} success`,
+              duration: 3
+            });
+          }
         }
       }
     } catch (e: any) {
@@ -637,7 +633,7 @@ export const Airdrop: FC = () => {
 
         return {
           id: <Typography>{nftSerices[i.series.tokenURI]?.name || `NFT-${index}`}</Typography>,
-          sortedStatus: AirdropRoundStatus.CLAIMED,
+          sortedStatus: nftSericesRedeemable[i.seriesId] ? AirdropRoundStatus.REDEEMABLE : AirdropRoundStatus.CLAIMED,
           sortedNextMilestone: (
             <div style={{ display: 'flex', gap: 8 }}>
               <Typography.Link active href="https://opensea.io/">
@@ -667,6 +663,23 @@ export const Airdrop: FC = () => {
     switchNetwork?.(l2Chain);
   };
 
+  const getNftSericesRedeemable = async (sericesId: string[]) => {
+    if (!contracts) return;
+    const res = await Promise.allSettled(
+      sericesId.map((id) => contracts.sqtRedeem.redeemableAmount(contracts.sqtGift.address, id))
+    );
+    const nftSericesInfos = res.reduce((cur, add, index) => {
+      if (add.status === 'fulfilled') {
+        // eslint-disable-next-line no-param-reassign
+        cur[sericesId[index]] = !add.value.isZero();
+      }
+
+      return cur;
+    }, {} as { [key: string]: boolean });
+
+    setNftSericesRedeemable(nftSericesInfos);
+  };
+
   useEffect(() => {
     if (!accountClaimedGifts.loading && !accountUnclaimGifts.loading) {
       getNftSericesNames();
@@ -682,6 +695,18 @@ export const Airdrop: FC = () => {
   useEffect(() => {
     getRedeemable();
   }, [contracts]);
+
+  useEffect(() => {
+    if (redeemable && contracts) {
+      const redeemNftsTokenIds = accountRedeemedGifts.data?.userRedeemedNfts.nodes.map((i) => i.tokenId) || [];
+      const canRedeemNfts =
+        accountClaimedGifts.data?.userNfts.nodes.filter((i) => !redeemNftsTokenIds.includes(i.id)) || [];
+
+      if (canRedeemNfts) {
+        getNftSericesRedeemable(canRedeemNfts.map((i) => i.seriesId) || []);
+      }
+    }
+  }, [redeemable, accountClaimedGifts.data, contracts, accountRedeemedGifts]);
 
   return (
     <div className={styles.container}>
@@ -737,7 +762,10 @@ export const Airdrop: FC = () => {
             ];
 
             const unlockSeriesIds = unClaimGifts?.userUnclaimedNfts.nodes.map((i) => i.seriesId) || [];
-            const canRedeemNfts = userNfts?.userNfts.nodes.filter((i) => !redeemNftsTokenIds.includes(i.id)) || [];
+            const canRedeemNfts =
+              userNfts?.userNfts.nodes.filter(
+                (i) => !redeemNftsTokenIds.includes(i.id) && nftSericesRedeemable[i.seriesId]
+              ) || [];
 
             const totalFromL1 = l1AirdropRecords.reduce((cur, add) => cur.add(add.amount), BigNumber.from('0'));
             const totalUnlockFromL1 = l1AirdropRecords
