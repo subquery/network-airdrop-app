@@ -364,7 +364,10 @@ const Leaderboard = (props: { userInfo?: IUserInfo }) => {
   if (!userLeaderboard) return <DefaultLoading />;
 
   return (
-    <div className={styles.baseCard} style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div
+      className={styles.baseCard}
+      style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 16, width: '100%' }}
+    >
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h6">The Leaderboard</Typography>
         <Typography variant="large">
@@ -382,7 +385,7 @@ const Leaderboard = (props: { userInfo?: IUserInfo }) => {
           <Typography>Name</Typography>
         </div>
         <div style={{ flex: 1 }}>
-          <Typography>Referral Multiplier</Typography>
+          <Typography>Verified Referral Multiplier</Typography>
         </div>
         <div style={{ flex: 1 }}>
           <Typography>Total Score</Typography>
