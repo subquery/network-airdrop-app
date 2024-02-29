@@ -8,6 +8,7 @@ import App from './App';
 import { QueryApolloProvider } from './containers';
 
 import 'conf/polyfill';
+import 'conf/sentryConf';
 import './index.css';
 
 ReactDOM.render(
