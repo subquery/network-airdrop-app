@@ -237,8 +237,10 @@ const MainChallenges = (props: { userInfo?: IUserInfo }) => {
           reward: 0,
           reward_type: 'FIXED',
           description: `You must complete KYC for your account in order to receive any rewards, click Start KYC and ensure that you complete KYC with the same wallet and email address as you are using for your Seekers account.
-        \nYou must pass KYC with the wallet address that you are using (${props.userInfo?.address}) and your email address (${props.userInfo?.email}).
-        \nPlease note, we sync this challenge every hour so please be patient and your progress will automatically update.`,
+        
+          You must pass KYC with the wallet address that you are using (${props.userInfo?.address}) 
+          and your email address (${props.userInfo?.email}).
+          Please note, we sync this challenge every hour so please be patient and your progress will automatically update.`,
           cta: 'https://in.sumsub.com/idensic/l/#/uni_cJnVIbYwk7jHnjtK', // TODO
           cta_label: 'Start KYC',
           sort_order: 0
