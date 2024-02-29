@@ -236,7 +236,9 @@ const MainChallenges = (props: { userInfo?: IUserInfo }) => {
           success: props.userInfo?.has_kyc || false,
           reward: 0,
           reward_type: 'FIXED',
-          description: `You must complete KYC for your account in order to receive any rewards, click Start KYC and ensure that you complete KYC with the same wallet and email address as you are using for your Seekers account
+          description: `You must complete KYC for your account in order to receive any rewards, click Start KYC and ensure that you complete KYC with the same wallet and email address as you are using for your Seekers account.
+
+           You must pass KYC with the wallet address that you are using (${props.userInfo?.address}) and your email address (${props.userInfo?.email}).
             
           Please note, we sync this challenge every hour so please be patient and your progress will automatically update.`,
           cta: 'https://in.sumsub.com/idensic/l/#/uni_cJnVIbYwk7jHnjtK', // TODO
@@ -480,8 +482,9 @@ export const Challenges: FC<IProps> = (props) => {
     if (userStage === 2 && !userInfo?.has_kyc) {
       closeModal = Modal.info({
         title: 'You have not yet passed KYC',
-        content:
-          'If you want to receive any rewards from the SubQuery Seekers challenge, you must pass KYC before the end of the program on the 10th of April',
+        content: `If you want to receive any rewards from the SubQuery Seekers challenge, you must pass KYC before the end of the program on the 10th of April.
+        
+        You must pass KYC with the wallet address that you are using (${userInfo?.address}) and your email address (${userInfo?.email}).`,
         cancelButtonProps: {
           style: { display: 'none' }
         },

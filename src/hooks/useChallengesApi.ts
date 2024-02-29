@@ -8,6 +8,7 @@ const instance = axios.create({
 
 export interface IUserInfo {
   address: string;
+  email: string; // This is not the full email address
   verified_email: boolean;
   raw_score: number;
   challenge_score: number;
