@@ -133,3 +133,27 @@
     }
   }
 }
+
+.kycModal {
+  top: 50%;
+  transform: translateY(-50%);
+
+  :global {
+    .ant-modal-content {
+      background-color: var(--dark-mode-card);
+      padding: 32px;
+
+      .ant-modal-confirm-title {
+        color: #fff;
+        font-family: var(--sq-font-family);
+      }
+
+      .ant-modal-confirm-content {
+        color: var(--sq-gray400);
+        font-family: var(--sq-font-family);
+
+        margin-bottom: 20px;
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlineMail } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 import { Markdown, openNotification, Spinner, Typography } from '@subql/components';
-import { Button, Collapse, Form, Input } from 'antd';
+import { Button, Collapse, Form, Input, Modal } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import clsx from 'clsx';
 import { useAccount as useAccountWagmi } from 'wagmi';
@@ -178,7 +178,7 @@ const SecondStep = () => {
   );
 };
 
-const MainChallenges = () => {
+const MainChallenges = (props: { userInfo?: IUserInfo }) => {
   const { address: account } = useAccount();
   const { getUserChallenges } = useChallengesApi();
 
@@ -228,7 +228,22 @@ const MainChallenges = () => {
       setLoading(true);
       const res = await getUserChallenges(account);
       if (res.status === 200) {
-        setUserChallenges(res.data || []);
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const challenges: Challenge[] = res.data;
+        challenges.push({
+          id: 0,
+          name: 'Complete KYC for your account',
+          success: props.userInfo?.has_kyc || false,
+          reward: 0,
+          reward_type: 'FIXED',
+          description: `You must complete KYC for your account in order to receive any rewards, click Start KYC and ensure that you complete KYC with the same wallet and email address as you are using for your Seekers account
+            
+          Please note, we sync this challenge every hour so please be patient and your progress will automatically update.`,
+          cta: 'https://in.sumsub.com/idensic/l/#/uni_cJnVIbYwk7jHnjtK', // TODO
+          cta_label: 'Start KYC',
+          sort_order: 0
+        });
+        setUserChallenges(challenges.sort((a, b) => (a.sort_order < b.sort_order ? -1 : 1)) || []);
       }
     } finally {
       setLoading(false);
@@ -256,7 +271,7 @@ const MainChallenges = () => {
 };
 
 const Referral = (props: { userInfo?: IUserInfo }) => {
-  const newReferralMultiple = Math.max(props.userInfo?.referral_count ?? 0, 1) + 1;
+  const newReferralMultiple = Math.max(props.userInfo?.kyc_referral_count ?? 0, 1) + 1;
   return (
     <div
       className={styles.baseCard}
@@ -268,9 +283,10 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
         your score.
       </Typography>
       <Typography type="secondary">
-        You&apos;ve already referred {props.userInfo?.referral_count || 0} new users. After your next referral, your new
-        score multiplier will be {newReferralMultiple}x and your total points will increase to{' '}
-        {((props.userInfo?.raw_score ?? 200) * newReferralMultiple).toLocaleString()}!
+        You&apos;ve already referred {props.userInfo?.referral_count || 0} new users, of these{' '}
+        {props.userInfo?.kyc_referral_count || 0} new users have passed KYC and are counted to your referral multiple.
+        After your next referral, your new score multiplier will be {newReferralMultiple}x and your total points will
+        increase to {((props.userInfo?.raw_score ?? 200) * newReferralMultiple).toLocaleString()}!
       </Typography>
       <Input
         className={styles.darkInput}
@@ -457,6 +473,36 @@ export const Challenges: FC<IProps> = (props) => {
     fetchUserInfo();
   }, [account]);
 
+  useEffect(() => {
+    let closeModal: {
+      destroy: () => void;
+    };
+    if (userStage === 2 && !userInfo?.has_kyc) {
+      closeModal = Modal.info({
+        title: 'You have not yet passed KYC',
+        content:
+          'If you want to receive any rewards from the SubQuery Seekers challenge, you must pass KYC before the end of the program on the 10th of April',
+        cancelButtonProps: {
+          style: { display: 'none' }
+        },
+        okButtonProps: {
+          type: 'primary',
+          shape: 'round',
+          size: 'large'
+        },
+        okText: 'Complete KYC Process',
+        onOk: () => {
+          window.open('https://in.sumsub.com/idensic/l/#/uni_cJnVIbYwk7jHnjtK', '_blank');
+        },
+        className: styles.kycModal
+      });
+    }
+
+    return () => {
+      closeModal?.destroy();
+    };
+  }, [userStage, userInfo]);
+
   if (loading) return <DefaultLoading />;
 
   return (
@@ -464,7 +510,7 @@ export const Challenges: FC<IProps> = (props) => {
       <div className={styles.baseCard}>
         {userStage === 0 && <FirstStep freshFunc={fetchUserInfo} />}
         {userStage === 1 && <SecondStep />}
-        {userStage === 2 && <MainChallenges />}
+        {userStage === 2 && <MainChallenges userInfo={userInfo} />}
       </div>
       {userStage === 2 && (
         <>
