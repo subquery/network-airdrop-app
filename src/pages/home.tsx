@@ -56,8 +56,8 @@ const vestingChain =
 
 export function Home() {
   const { t } = useTranslation();
-  // rootUrl.includes('seekers') ? 'Challenge' : 'Airdrop'
-  const [activeKey, setActiveKey] = useState('Challenge');
+
+  const [activeKey, setActiveKey] = useState(rootUrl.includes('seekers') ? 'Challenge' : 'Airdrop');
   const { address } = useAccount();
 
   return (
