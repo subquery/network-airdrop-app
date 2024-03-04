@@ -111,15 +111,46 @@ export const FAQ: React.VFC = () => {
       question: 'What is SQT?',
       answer: (
         <>
+          <span>The SubQuery Network is powered by the SubQuery Token (SQT).</span>
           <span>
-            The SubQuery Network mainnet will be launched shortly after the SQT Public Sale on 30 January 2024. This
-            network is powered by the SubQuery Token (SQT), which is designed as a utility token that provides an
+            The SubQuery Token (SQT) is designed as a utility token that powers the SubQuery Network, providing an
             incentive for participation, as well as serving as a medium of exchange for transactions within the SubQuery
-            Network.
+            Network. Consumers of data will commit SQT in exchange for RPC queries from RPC Providers or indexed data
+            from Data Indexers and this SQT will be distributed among Node Operators based on the payment method
+            selected.
           </span>
           <span>
             At the time of the mainnet launch, we want to reward our loyal community members and ensure the SQT token is
             well distributed globally - the SubQuery Seekers Challenge will help us achieve this.
+          </span>
+          <span>
+            <a
+              href="https://academy.subquery.network/subquery_network/token/token.html"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Read more about SQT
+            </a>
+          </span>
+        </>
+      )
+    },
+    {
+      question: 'How do I get support?',
+      answer: (
+        <>
+          <span>
+            You should first check the{' '}
+            <a href="https://discord.com/invite/subquery" target="_blank" rel="noreferrer">
+              #seekers-support
+            </a>{' '}
+            channel in our Discord, as others might have the same issue as you.
+          </span>
+          <span>
+            You can submit a support request through our support form at{' '}
+            <a href="https://forms.gle/aXPx1aeatKYXAwcZ8" target="_blank" rel="noreferrer">
+              https://forms.gle/aXPx1aeatKYXAwcZ8
+            </a>
           </span>
         </>
       )

@@ -76,6 +76,6 @@
   }
 }
 
-.discordLink {
-  color: var(--sq-primary-blue);
+a {
+  color: var(--sq-primary-blue) !important;
 }

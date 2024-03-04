@@ -15,8 +15,8 @@ export const ContactUs = () => (
   <div style={{ width: '100%', textAlign: 'center' }}>
     <Typography type="secondary">
       If you have any issues or questions, contact us on the{' '}
-      <Typography.Link active href="https://subquery.network/privacy" variant="medium">
-        #airdrop-support
+      <Typography.Link active href="https://discord.com/invite/subquery" variant="medium">
+        #seekers-support
       </Typography.Link>{' '}
       channel on our Discord
     </Typography>
