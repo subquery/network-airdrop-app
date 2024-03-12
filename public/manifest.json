@@ -1,6 +1,9 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SubQueryNetwork",
+  "name": "SubQueryNetwork Airdrop",
+  "description": "SubQueryNetwork Airdrop",
+  "iconPath": "favicon.ico",
+
   "icons": [
     {
       "src": "favicon.ico",
