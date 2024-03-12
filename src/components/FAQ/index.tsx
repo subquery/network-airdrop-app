@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { Typography } from '@subql/components';
 
-import styles from './FAQ.module.css';
+import styles from './FAQ.module.less';
 
 interface IFAQItem {
   question: string;
