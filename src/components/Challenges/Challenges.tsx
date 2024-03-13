@@ -198,7 +198,10 @@ const MainChallenges = (props: { userInfo?: IUserInfo }) => {
 
             <span style={{ flex: 1 }} />
 
-            {challenge.reward_type === 'FIXED' ? (
+            {challenge.id === 0 ? (
+              // This is the KYC challenge
+              <Typography>{challenge.success ? 'KYC Complete!' : 'KYC Incomplete'}</Typography>
+            ) : challenge.reward_type === 'FIXED' ? (
               <Typography>+{challenge.reward} Points!</Typography>
             ) : (
               <Typography>+{challenge.reward} Points for each challenge finished!</Typography>
