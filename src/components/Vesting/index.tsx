@@ -351,8 +351,7 @@ const Vesting: FC<IProps> = () => {
                   ''
                 ) : (
                   <Typography type="secondary">
-                    {convertCountToTime(lockPeriod)} cliff with linear unlock over the next{' '}
-                    {convertCountToTime(vestingPeriod)}
+                    {convertCountToTime(lockPeriod)} lock-up with {convertCountToTime(vestingPeriod)} vesting{' '}
                   </Typography>
                 )}
 
