@@ -45,13 +45,13 @@ export const FAQ: React.VFC = () => {
         <>
           <span>
             Throughout years of building SubQuery, our thriving community has been at the forefront of everything we do.
-            You’ve been supporting us, sharing our vision with your friends, and helping us reach thousands of web3
-            natives. With your support, we’re not just a company - we’re a movement driving an inclusive and
+            You&apos;ve been supporting us, sharing our vision with your friends, and helping us reach thousands of web3
+            natives. With your support, we&apos;re not just a company - we&apos;re a movement driving an inclusive and
             decentralised web3 era.
           </span>
           <span>
-            We’ve been running Zealy campaigns for some time, but as we get closer to the public sale and TGE, we’re
-            launching the SubQuery Seekers Challenge to reward our most valued community members and to help
+            We&apos;ve been running Zealy campaigns for some time, but as we get closer to the public sale and TGE,
+            we&apos;re launching the SubQuery Seekers Challenge to reward our most valued community members and to help
             decentralise our token and network.
           </span>
           <span>
@@ -77,11 +77,47 @@ export const FAQ: React.VFC = () => {
           </span>
           <span>
             In order to join, you just need to be 18 years or over, and in order to claim any SQT Airdrops you receive,
-            you’ll just need to be able to complete KYC to verify your identity.
+            you&apos;ll just need to be able to complete KYC to verify your identity.
           </span>
           <span>
             Additionally, due to compliance and regulations jurisdictions such as the USA, New Zealand, Philippines,
             Iran, North Korea, Syria, Cuba will not be able to participate.
+          </span>
+        </>
+      )
+    },
+    {
+      question: 'What is the timeline?',
+      answer: (
+        <>
+          <span>
+            Please carefully read the dates below which detail the timeline for the closing of the Seekers Program and
+            when you can expect rewards to be distributed.
+          </span>
+          <ul>
+            <li>- Program End Date: Wednesday 10 April 2024 11:59pm UTC</li>
+            <li>- KYC Deadline: Wednesday 10 April 2024 11:59pm UTC</li>
+            <li>
+              - Processing Window (for any KYC checks still in progress and final issue resolution): Wednesday 10 April
+              2024 - Friday 12 April 2024
+            </li>
+            <li>- Rewards Distribution Date: Tuesday 16 April 2024</li>
+            <li>- Rewards Claim Period: 1 month (must claim before Thursday 16 May 2024 11:59pm UTC).</li>
+          </ul>
+        </>
+      )
+    },
+    {
+      question: 'What are the Eligibility Requirements?',
+      answer: (
+        <>
+          <span>
+            As we&apos;ve always mentioned, the 50 million SQT rewards will be distributed at the end of the program to
+            all valid participants who earn over a certain threshold.
+          </span>
+          <span>
+            You must have an approved KYC check in order to receive your share of the SQT rewards and you must have
+            recieved at least 1,000 points on the Seekers program to earn rewards
           </span>
         </>
       )
@@ -96,28 +132,61 @@ export const FAQ: React.VFC = () => {
             actors, prevents Sybil attacks, and helps keep the seekers safe and secure.
           </span>
           <span>
-            You don’t need to complete KYC to join the program, but you will need to complete KYC at the end to claim
-            any of your SQT rewards.
+            You don&apos;t need to complete KYC to join the program, but you will need to complete KYC by the 10th of
+            April in be awarded any SQT.
           </span>
         </>
       )
     },
     {
       question: 'How will points be converted to SQT?',
-      answer:
-        'Through completing challenges, participants will earn points and battle it out for the top spots on the leaderboard. Once the program concludes on the 10th of April, we will distribute all of the 50 Million SQT tokens to all valid participants that have received a certain threshold on the program. The distribution will be proportional to the points accumulated by each participant. So, keep an eye on the leaderboard and strive to climb your way to the top for a chance to earn more SQT!'
+      answer: (
+        <>
+          <span>
+            Through completing challenges, participants will earn points and battle it out for the top spots on the
+            leaderboard.
+          </span>
+          <span>
+            Once the program concludes on the 10th of April, we then process all points and KYC submissions. By the 16th
+            of April, we will distribute all of the 50 Million SQT tokens to all valid participants that have received a
+            certain threshold (at least 1,000 points) on the program. The distribution will be proportional to the
+            points accumulated by each participant. So, keep an eye on the leaderboard and strive to climb your way to
+            the top for a chance to earn more SQT!
+          </span>
+        </>
+      )
+    },
+    {
+      question: 'How do I claim SQT?',
+      answer: (
+        <>
+          <span>
+            The 50 million SQT rewards pool will be divided and distributed proportionately on Thursday 16th of April
+            2024.
+          </span>
+          <span>
+            The SQT rewards will be on the Base network and you will need to claim them on the{' '}
+            <a href="https://claim.subquery.foundation" target="_blank" rel="noreferrer">
+              SubQuery Claim page (https://claim.subquery.foundation)
+            </a>
+            , the same way you may have claimed SQT airdrops or Public Sale tokens.
+          </span>
+          <span>
+            You will have 1 month to claim your rewards, the deadline for claiming will be Thursday 16th of May 2024.
+          </span>
+        </>
+      )
     },
     {
       question: 'What is SQT?',
       answer: (
         <>
-          <span>The SubQuery Network is powered by the SubQuery Token (SQT).</span>
           <span>
-            The SubQuery Token (SQT) is designed as a utility token that powers the SubQuery Network, providing an
-            incentive for participation, as well as serving as a medium of exchange for transactions within the SubQuery
-            Network. Consumers of data will commit SQT in exchange for RPC queries from RPC Providers or indexed data
-            from Data Indexers and this SQT will be distributed among Node Operators based on the payment method
-            selected.
+            The SubQuery Network is powered by the SubQuery Token (SQT), designed as a utility token that powers the
+            SubQuery Network, providing an incentive for participation, as well as serving as a medium of exchange for
+            transactions within the SubQuery Network. Consumers of data will commit SQT in exchange for RPC queries from
+            RPC Providers or indexed data from Data Indexers and this SQT will be distributed among Node Operators based
+            on the payment method selected.
           </span>
           <span>
             At the time of the mainnet launch, we want to reward our loyal community members and ensure the SQT token is
