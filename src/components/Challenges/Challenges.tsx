@@ -491,18 +491,17 @@ export const Challenges: FC<IProps> = (props) => {
         content: `If you want to receive any rewards from the SubQuery Seekers challenge, you must pass KYC before the end of the program on the 10th of April.
         
         You must pass KYC with the wallet address that you are using (${userInfo?.address}) and your email address (${userInfo?.email}).`,
-        cancelButtonProps: {
-          style: { display: 'none' }
-        },
         okButtonProps: {
           type: 'primary',
           shape: 'round',
           size: 'large'
         },
+        closable: true,
         okText: 'Complete KYC Process',
         onOk: () => {
           window.open('https://in.sumsub.com/idensic/l/#/uni_cJnVIbYwk7jHnjtK', '_blank');
         },
+        maskClosable: true,
         className: styles.kycModal
       });
     }
