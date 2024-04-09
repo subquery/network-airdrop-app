@@ -18,7 +18,39 @@ import { publicProvider } from 'wagmi/providers/public';
 import '@rainbow-me/rainbowkit/styles.css';
 
 // goerli and mainnet just for get data actually not supported
-const supportedChains = process.env.REACT_APP_NETWORK === 'testnet' ? [baseSepolia, sepolia] : [base, mainnet];
+const supportedChains =
+  process.env.REACT_APP_NETWORK === 'testnet'
+    ? [baseSepolia, sepolia]
+    : [
+        {
+          ...base,
+          rpcUrls: {
+            default: {
+              http: [process.env.REACT_APP_SUBQUERY_OFFICIAL_BASE_RPC]
+            },
+            public: {
+              http: [process.env.REACT_APP_SUBQUERY_OFFICIAL_BASE_RPC]
+            },
+            fallback: {
+              http: base.rpcUrls.default.http
+            }
+          }
+        },
+        {
+          ...mainnet,
+          rpcUrls: {
+            default: {
+              http: [process.env.REACT_APP_SUBQUERY_OFFICIAL_ETH_RPC]
+            },
+            public: {
+              http: [process.env.REACT_APP_SUBQUERY_OFFICIAL_ETH_RPC]
+            },
+            fallback: {
+              http: mainnet.rpcUrls.default.http
+            }
+          }
+        }
+      ];
 
 // This should ok. It seems is a bug of Ts.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
