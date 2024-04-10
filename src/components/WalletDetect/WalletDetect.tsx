@@ -38,7 +38,7 @@ export const ConnectWalletCom: React.FC<{ mode?: 'challenge' | 'airdrop' }> = ({
             Simply register for the campaign, and start exploring the challenges. The more challenges you complete, the
             more SQT tokens you can earn!
           </Typography>
-          <Typography type="secondary">The program closes on the 10th of April 2024 so be quick!</Typography>
+          <Typography type="secondary">The program closed on the 10th of April 2024!</Typography>
         </>
       ) : (
         <>

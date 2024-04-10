@@ -1,10 +1,8 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlineMail } from 'react-icons/md';
-import { useLocation } from 'react-router-dom';
 import { Markdown, openNotification, Spinner, Typography } from '@subql/components';
-import { Button, Collapse, Form, Input, Modal } from 'antd';
-import { useForm } from 'antd/es/form/Form';
+import { Button, Collapse, Input, Modal } from 'antd';
 import clsx from 'clsx';
 import { useAccount as useAccountWagmi } from 'wagmi';
 
@@ -40,13 +38,16 @@ const DefaultLoading = () => (
   </div>
 );
 
-const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
-  const { address: account } = useAccount();
+// eslint-disable-next-line
+const FirstStep = () => {
+  /*
   const { search } = useLocation();
+  const { address: account } = useAccount();
   const query = useMemo(() => new URLSearchParams(search), [search]);
   const { signup } = useChallengesApi();
   const [form] = useForm();
   const [loading, setLoading] = useState(false);
+
 
   const signupWithCode = async () => {
     try {
@@ -64,17 +65,19 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
       setLoading(false);
     }
   };
+  */
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge</Typography>
+        <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge has now closed!</Typography>
         <Typography variant="medium" type="secondary">
-          We are giving away 50 Million SQT to our most valued community members in the SubQuery Seekers Program. Simply
-          register for the campaign, and start exploring the challenges. The more challenges you complete, the more SQT
-          tokens you can earn!
+          After an incredible 3 months, the SubQuery Seekers program, came to a close on 10th April 2024. The 50 million
+          SQT reward pool will be divided and distributed proportionately to all eligible participants on Thursday 16th
+          of April 2024.
         </Typography>
       </div>
+      {/*
       {query.get('referral') && (
         <div
           style={{
@@ -134,6 +137,7 @@ const FirstStep = (props: { freshFunc?: () => Promise<void> }) => {
       <Button type="primary" shape="round" size="large" onClick={signupWithCode} loading={loading}>
         Sign Up
       </Button>
+        */}
 
       <ContactUs />
     </div>
@@ -148,8 +152,11 @@ const SecondStep = () => {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
       <MdOutlineMail style={{ fontSize: '100px', color: '#fff' }} />
       <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge</Typography>
+      <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge has now closed!</Typography>
       <Typography variant="medium" type="secondary">
-        We are giving away 50 Million SQT to our most valued community members in our largest airdrop yet!
+        After an incredible 3 months, the SubQuery Seekers program, came to a close on 10th April 2024. The 50 million
+        SQT reward pool will be divided and distributed proportionately to all eligible participants on Thursday 16th of
+        April 2024.
       </Typography>
       <Typography type="secondary" style={{ maxWidth: 806, textAlign: 'center', padding: '0 3em' }}>
         We have sent an onboarding email to your email address, if you didn&apos;t get it, you can{' '}
@@ -211,7 +218,7 @@ const MainChallenges = (props: { userInfo?: IUserInfo }) => {
         children: (
           <div className={styles.markdownWrapper}>
             <Markdown.Preview>{challenge.description}</Markdown.Preview>
-
+            {/*
             {challenge.cta && (
               <a href={challenge.cta} target="_blank" rel="noreferrer">
                 <Button shape="round" size="large" type="primary" style={{ marginTop: 16, width: '100%' }}>
@@ -219,6 +226,7 @@ const MainChallenges = (props: { userInfo?: IUserInfo }) => {
                 </Button>
               </a>
             )}
+          */}
           </div>
         )
       })),
@@ -264,10 +272,11 @@ const MainChallenges = (props: { userInfo?: IUserInfo }) => {
   return (
     <div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
-        <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge</Typography>
+        <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge has now closed!</Typography>
         <Typography variant="medium" type="secondary">
-          We are giving away 50 Million SQT to our most valued community members in the SubQuery Seekers Program. Simply
-          complete the challenges below - the more challenges you complete, the more SQT tokens you can earn!
+          After an incredible 3 months, the SubQuery Seekers program, came to a close on 10th April 2024. The 50 million
+          SQT reward pool will be divided and distributed proportionately to all eligible participants on Thursday 16th
+          of April 2024.
         </Typography>
       </div>
       <Collapse className={styles.darkCollapse} ghost items={challenges} />
@@ -517,7 +526,7 @@ export const Challenges: FC<IProps> = (props) => {
   return (
     <>
       <div className={styles.baseCard}>
-        {userStage === 0 && <FirstStep freshFunc={fetchUserInfo} />}
+        {userStage === 0 && <FirstStep />}
         {userStage === 1 && <SecondStep />}
         {userStage === 2 && <MainChallenges userInfo={userInfo} />}
       </div>
