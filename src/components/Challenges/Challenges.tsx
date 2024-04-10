@@ -289,9 +289,10 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
       </Typography>
       <Typography type="secondary">
         You&apos;ve already referred {props.userInfo?.referral_count || 0} new users, of these{' '}
-        {props.userInfo?.kyc_referral_count || 0} new users have passed KYC and are counted to your referral multiple.
-        After your next referral, your new score multiplier will be {newReferralMultiple}x and your total points will
-        increase to {((props.userInfo?.raw_score ?? 200) * newReferralMultiple).toLocaleString()}!
+        {props.userInfo?.kyc_referral_count || 0} new users are &quot;eligible participants&quot; (e.g. have passed KYC
+        - check the FAQs below) and are counted to your referral multiple. After your next referral, your new score
+        multiplier will be {newReferralMultiple}x and your total points will increase to{' '}
+        {((props.userInfo?.raw_score ?? 200) * newReferralMultiple).toLocaleString()}!
       </Typography>
       <Input
         className={styles.darkInput}

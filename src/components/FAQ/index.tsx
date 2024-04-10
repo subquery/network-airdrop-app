@@ -108,7 +108,7 @@ export const FAQ: React.VFC = () => {
       )
     },
     {
-      question: 'What are the Eligibility Requirements?',
+      question: 'Who is an eligible participant?',
       answer: (
         <>
           <span>
@@ -116,8 +116,12 @@ export const FAQ: React.VFC = () => {
             all valid participants who earn over a certain threshold.
           </span>
           <span>
-            You must have an approved KYC check in order to receive your share of the SQT rewards and you must have
-            recieved at least 1,000 points on the Seekers program to earn rewards
+            To be an eligible participant, you must have an approved KYC check, a verified email, and have recieved at
+            least 1,000 points on the Seekers program.
+          </span>
+          <span>
+            Only eligible participant will receive points in Seekers, or count towards referral bonuses of other
+            participants.
           </span>
         </>
       )
@@ -148,10 +152,9 @@ export const FAQ: React.VFC = () => {
           </span>
           <span>
             Once the program concludes on the 10th of April, we then process all points and KYC submissions. By the 16th
-            of April, we will distribute all of the 50 Million SQT tokens to all valid participants that have received a
-            certain threshold (at least 1,000 points) on the program. The distribution will be proportional to the
-            points accumulated by each participant. So, keep an eye on the leaderboard and strive to climb your way to
-            the top for a chance to earn more SQT!
+            of April, we will distribute all of the 50 Million SQT tokens to all eligible participants in the program.
+            The distribution will be proportional to the points accumulated by each participant. So, keep an eye on the
+            leaderboard and strive to climb your way to the top for a chance to earn more SQT!
           </span>
         </>
       )
