@@ -256,6 +256,18 @@ const MainChallenges = (props: { userInfo?: IUserInfo }) => {
           cta_label: 'Start KYC',
           sort_order: 0
         });
+        challenges.push({
+          id: -1,
+          name: 'Sign Up Bonus',
+          success: props.userInfo?.has_kyc || false,
+          reward: 200,
+          reward_type: 'FIXED',
+          description:
+            'All new users for the SubQuery Seekers program that verify their email get 200 points to start!',
+          cta: '', // TODO
+          cta_label: '',
+          sort_order: 1
+        });
         setUserChallenges(challenges.sort((a, b) => (a.sort_order < b.sort_order ? -1 : 1)) || []);
       }
     } finally {
