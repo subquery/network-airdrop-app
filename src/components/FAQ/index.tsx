@@ -102,7 +102,7 @@ export const FAQ: React.VFC = () => {
               2024 - Friday 12 April 2024
             </li>
             <li>- Rewards Distribution Date: Tuesday 16 April 2024</li>
-            <li>- Rewards Claim Period: 1 month (must claim before Thursday 16 May 2024 11:59pm UTC).</li>
+            <li>- Rewards Vesting: 6 months linear</li>
           </ul>
         </>
       )
@@ -164,7 +164,7 @@ export const FAQ: React.VFC = () => {
       answer: (
         <>
           <span>
-            The 50 million SQT rewards pool will be divided and distributed proportionately on Thursday 16th of April
+            The 50 million SQT rewards pool will be divided and distributed proportionately on Tuesday 16th of April
             2024.
           </span>
           <span>
@@ -175,7 +175,7 @@ export const FAQ: React.VFC = () => {
             , the same way you may have claimed SQT airdrops or Public Sale tokens.
           </span>
           <span>
-            You will have 1 month to claim your rewards, the deadline for claiming will be Thursday 16th of May 2024.
+            You will have 1 month to claim your rewards, the deadline for claiming will be Tuesday 16th of May 2024.
           </span>
         </>
       )

@@ -73,7 +73,7 @@ const FirstStep = () => {
         <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge has now closed!</Typography>
         <Typography variant="medium" type="secondary">
           After an incredible 3 months, the SubQuery Seekers program, came to a close on 10th April 2024. The 50 million
-          SQT reward pool will be divided and distributed proportionately to all eligible participants on Thursday 16th
+          SQT reward pool will be divided and distributed proportionately to all eligible participants on Tuesday 16th
           of April 2024.
         </Typography>
       </div>
@@ -155,7 +155,7 @@ const SecondStep = () => {
       <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge has now closed!</Typography>
       <Typography variant="medium" type="secondary">
         After an incredible 3 months, the SubQuery Seekers program, came to a close on 10th April 2024. The 50 million
-        SQT reward pool will be divided and distributed proportionately to all eligible participants on Thursday 16th of
+        SQT reward pool will be divided and distributed proportionately to all eligible participants on Tuesday 16th of
         April 2024.
       </Typography>
       <Typography type="secondary" style={{ maxWidth: 806, textAlign: 'center', padding: '0 3em' }}>
@@ -287,7 +287,7 @@ const MainChallenges = (props: { userInfo?: IUserInfo }) => {
         <Typography variant="h6">SubQuery Seekers 50 Million SQT Challenge has now closed!</Typography>
         <Typography variant="medium" type="secondary">
           After an incredible 3 months, the SubQuery Seekers program, came to a close on 10th April 2024. The 50 million
-          SQT reward pool will be divided and distributed proportionately to all eligible participants on Thursday 16th
+          SQT reward pool will be divided and distributed proportionately to all eligible participants on Tuesday 16th
           of April 2024.
         </Typography>
       </div>
