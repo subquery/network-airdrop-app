@@ -30,6 +30,7 @@ const vestingAddress =
 
 interface VestingAllocationPlanNode {
   planId: string;
+  startDate: moment.Moment;
   plan: {
     id: string;
     lockPeriod: string;
@@ -285,7 +286,7 @@ const L2Vesting: FC<IProps> = () => {
 
       return {
         planId: `${contracts?.l2Vesting.address}:${index}`,
-        startDate: +new Date(),
+        startDate: moment.unix(+new Date()),
         plan: {
           id: `${index}`,
           vestingPeriod: '0',
@@ -376,7 +377,8 @@ const L2Vesting: FC<IProps> = () => {
     const plansInfo: { contractAddress: string; planId: string }[] = accountPlans.data.map(
       (node: VestingAllocationPlanNode) => ({
         contractAddress: node.planId.split(':')[0],
-        planId: node.planId.split(':')[1]
+        planId: node.planId.split(':')[1],
+        startDate: node.startDate
       })
     );
 
@@ -493,7 +495,7 @@ const L2Vesting: FC<IProps> = () => {
                     {vestingPlans.find((i) => `${i.planId}` === `${planId}`)?.name || ''}
                   </Typography>
                   <Typography type="secondary" variant="small" style={{ marginTop: 8 }}>
-                    Vesting start: {claimTokenInfo?.startDate.format('DD/MM/YYYY hh:mm A')}
+                    Vesting start: {node?.startDate.format('DD/MM/YYYY hh:mm A')}
                   </Typography>
                 </div>
 
