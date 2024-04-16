@@ -9,6 +9,7 @@ import { Airdrop } from 'components';
 import { BlockchainStatus } from 'components/BlockchainStatus';
 import Challenges from 'components/Challenges/Challenges';
 import { FAQ } from 'components/FAQ';
+import L2Vesting from 'components/L2Vesting';
 import PointsCard from 'components/PointsCard/PointsCard';
 import Vesting from 'components/Vesting';
 import { WalletDetect } from 'components/WalletDetect/WalletDetect';
@@ -51,6 +52,21 @@ const vestingChain =
         {
           id: mainnet.id,
           name: mainnet.name
+        }
+      ];
+
+const l2VestingChain =
+  process.env.REACT_APP_NETWORK === 'testnet'
+    ? [
+        {
+          id: baseSepolia.id,
+          name: baseSepolia.name
+        }
+      ]
+    : [
+        {
+          id: base.id,
+          name: base.name
         }
       ];
 
@@ -97,6 +113,10 @@ export function Home() {
                     {
                       key: 'Vesting',
                       label: 'Vesting Tokens'
+                    },
+                    {
+                      key: 'l2Vesting',
+                      label: 'Seekers Vesting'
                     }
                   ]}
                 />
@@ -117,6 +137,13 @@ export function Home() {
                 <WalletDetect mode="airdrop">
                   <BlockchainStatus tipsChainIds={vestingChain}>
                     <Vesting />
+                  </BlockchainStatus>
+                </WalletDetect>
+              )}
+              {activeKey === 'l2Vesting' && (
+                <WalletDetect mode="airdrop">
+                  <BlockchainStatus tipsChainIds={l2VestingChain}>
+                    <L2Vesting />
                   </BlockchainStatus>
                 </WalletDetect>
               )}

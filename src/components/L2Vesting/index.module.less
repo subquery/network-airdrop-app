@@ -1,0 +1,75 @@
+.vesting {
+  padding: 24px;
+  background: var(--dark-mode-card);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  &Header {
+    display: flex;
+    justify-content: space-between;
+    background: var(--sq-gradient);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+
+    &Item {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  &Chunk {
+    padding: 16px 24px;
+    border-radius: 8px;
+    background: rgba(67, 136, 221, 0.06);
+    margin-top: 16px;
+
+    &Header {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--sq-gray300);
+    }
+
+    &Content {
+      padding-top: 16px;
+      display: flex;
+      flex-direction: column;
+
+      &Info {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 24px;
+
+
+        :global {
+          .subql-typography__text {
+            word-break: break-all;
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+
+  .transactionBtn {
+    &:disabled {
+      color: #fff;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .vesting {
+    &Header {
+      &Item {
+        :global {
+          .subql-typography {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+  
+}
