@@ -20,8 +20,8 @@ export function publicClientToProvider(publicClient: PublicClient) {
   };
 
   const fetchUrl = {
-    [base.id]: process.env.REACT_APP_SUBQUERY_OFFICIAL_BASE_RPC,
-    [mainnet.id]: process.env.REACT_APP_SUBQUERY_OFFICIAL_ETH_RPC
+    [base.id]: base.rpcUrls.public.http[0] || process.env.REACT_APP_SUBQUERY_OFFICIAL_BASE_RPC,
+    [mainnet.id]: mainnet.rpcUrls.public.http[0] || process.env.REACT_APP_SUBQUERY_OFFICIAL_ETH_RPC
   }[chain.id];
 
   if (transport.type === 'fallback') {
