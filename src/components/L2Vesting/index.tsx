@@ -23,6 +23,7 @@ import { useSign } from 'hooks/useSign';
 import { convertSecondsToTimeString, formatAmount, renderAsync, roundToSix } from 'utils';
 
 import styles from './index.module.less';
+import { captureException } from '@sentry/react';
 
 interface IProps {}
 
@@ -444,7 +445,19 @@ const L2Vesting: FC<IProps> = () => {
         <Spinner />
       </div>
     ),
-    error: (e) => <Typography>No Seekers Vesting available</Typography>,
+    error: (e) => {
+      try {
+        captureException('Seekers Vesting load error', {
+          extra: {
+            account,
+            error: e
+          }
+        });
+      } catch (err) {
+        // capture by sentry
+      }
+      return <Typography>No Seekers Vesting available</Typography>;
+    },
     data: () => (
       <div className={styles.vesting}>
         <Typography variant="h6" weight={500}>
