@@ -3,6 +3,7 @@ import { BsWallet2 } from 'react-icons/bs';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import { TfiArrowTopRight } from 'react-icons/tfi';
 import { formatEther } from '@ethersproject/units';
+import { captureException } from '@sentry/react';
 import { Spinner, SubqlProvider, Typography } from '@subql/components';
 import mainnetJSON from '@subql/contract-sdk/publish/mainnet.json';
 import testnetJSON from '@subql/contract-sdk/publish/testnet.json';
@@ -23,7 +24,6 @@ import { useSign } from 'hooks/useSign';
 import { convertSecondsToTimeString, formatAmount, renderAsync, roundToSix } from 'utils';
 
 import styles from './index.module.less';
-import { captureException } from '@sentry/react';
 
 interface IProps {}
 
