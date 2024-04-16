@@ -19,7 +19,7 @@ import { l2ChainName } from 'components/Airdrop/AirdropClaimButton';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
 import { l2ChainId, useContracts } from 'hooks';
 import { useSign } from 'hooks/useSign';
-import { convertCountToTime, formatAmount, renderAsync, roundToSix } from 'utils';
+import { convertSecondsToTimeString, formatAmount, renderAsync, roundToSix } from 'utils';
 
 import styles from './index.module.less';
 
@@ -38,8 +38,6 @@ interface VestingAllocationPlanNode {
     vestingPeriod: string;
   };
 }
-
-const oneDay = 86400;
 
 const TransactionButton: FC<ButtonProps> = ({ children, onClick, ...rest }) => {
   const [loading, setLoading] = useState(false);
@@ -445,40 +443,19 @@ const L2Vesting: FC<IProps> = () => {
         <Spinner />
       </div>
     ),
-    error: (e) => <Typography>No Vesting available</Typography>,
+    error: (e) => <Typography>No Seekers Vesting available</Typography>,
     data: () => (
       <div className={styles.vesting}>
         <Typography variant="h6" weight={500}>
-          Seekers Vesting SQT
+          Seekers Program - Vested SQT
         </Typography>
         <Typography type="secondary" style={{ marginTop: 8 }}>
-          Here you can see your vested Seekers tokens
+          If you are an eligble user of the SubQuery Seekers campaign, and have been awarded vested SQT from the Seekers
+          Program, you can claim it below campaign, you can
         </Typography>
-
-        <div className={styles.vestingHeader}>
-          <div className={styles.vestingHeaderItem}>
-            <Typography variant="large">Total Locked</Typography>
-            <Typography variant="large" weight={600} tooltip={formatAmount(totalLocked)}>
-              {roundToSix(formatEther(totalLocked))} {TOKEN}
-            </Typography>
-          </div>
-          <div className={styles.vestingHeaderItem}>
-            <Typography variant="large">Total Claimed</Typography>
-            <Typography variant="large" weight={600} tooltip={formatAmount(totalClaimed)}>
-              {roundToSix(formatEther(totalClaimed))} {TOKEN}
-            </Typography>
-          </div>
-          <div className={styles.vestingHeaderItem}>
-            <Typography variant="large">Available to Claim</Typography>
-            <Typography variant="large" weight={600} tooltip={formatAmount(totalAvailableClaim)}>
-              {roundToSix(formatEther(totalAvailableClaim))} {TOKEN}
-            </Typography>
-          </div>
-        </div>
-
         {accountPlans.data?.map((node: VestingAllocationPlanNode, index) => {
-          const vestingPeriod = Math.floor(+node.plan.vestingPeriod / oneDay);
-          const lockPeriod = Math.floor(+node.plan.lockPeriod / oneDay);
+          const vestingPeriod = +node.plan.vestingPeriod;
+          const lockPeriod = +node.plan.lockPeriod;
           const contractAddress = node.planId.split(':')[0];
           const planId = node.planId.split(':')[1];
           const claimTokenInfo = claimableTokens.find(
@@ -529,7 +506,8 @@ const L2Vesting: FC<IProps> = () => {
                   ''
                 ) : (
                   <Typography type="secondary">
-                    {convertCountToTime(lockPeriod)} lock-up with {convertCountToTime(vestingPeriod)} vesting{' '}
+                    {lockPeriod > 0 ? `${convertSecondsToTimeString(lockPeriod)} lock-up with ` : ''}{' '}
+                    {convertSecondsToTimeString(vestingPeriod)} vesting{' '}
                   </Typography>
                 )}
 

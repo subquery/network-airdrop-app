@@ -49,8 +49,8 @@ const en = {
       whenExpired: 'Expired {{date}}',
       whenExpires: 'Expires {{date}}',
       nextMilestone: 'Next Milestone',
-      claimTitle: 'Claim {{token}} and other NFT',
-      description: 'If you are eligible to claim any SQT or NFTs, you can see and claim them below.',
+      claimTitle: 'Claim {{token}} Airdrops and other NFTs',
+      description: 'If you are eligible to claim any airdrops for SQT or other NFTs, you can see and claim them below.',
       claim: 'Claim Unlocked',
       successClaim: 'You have claimed tokens successfully',
       nonToClaim: 'No Claimable Tokens Available'
