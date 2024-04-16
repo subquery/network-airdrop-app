@@ -11,11 +11,12 @@ import { Button, ButtonProps, Modal } from 'antd';
 import { BigNumber } from 'ethers';
 import { t } from 'i18next';
 import moment from 'moment';
-import { useAccount, useWalletClient } from 'wagmi';
+import { useAccount, useNetwork, useSwitchNetwork, useWalletClient } from 'wagmi';
 
 import { TOKEN } from 'appConstants';
+import { l2ChainName } from 'components/Airdrop/AirdropClaimButton';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
-import { useContracts } from 'hooks';
+import { l2ChainId, useContracts } from 'hooks';
 import { useSign } from 'hooks/useSign';
 import { convertCountToTime, formatAmount, renderAsync, roundToSix } from 'utils';
 
@@ -256,6 +257,8 @@ const L2Vesting: FC<IProps> = () => {
   const { address: account } = useAccount();
   const { toastModal } = useModalSuccess();
   const { hasSignedTC, onSignTC } = useSign();
+  const { switchNetwork } = useSwitchNetwork();
+  const { chain } = useNetwork();
 
   const accountPlans = useAsyncMemo(async () => {
     const allPlans = await contracts?.l2Vesting.plansLength();
@@ -427,7 +430,7 @@ const L2Vesting: FC<IProps> = () => {
   useEffect(() => {
     if (!account) return;
     initClaimableAmount();
-  }, [accountPlans, account]);
+  }, [accountPlans.data, account]);
 
   useInterval(() => {
     initClaimableAmount();
@@ -444,10 +447,10 @@ const L2Vesting: FC<IProps> = () => {
     data: () => (
       <div className={styles.vesting}>
         <Typography variant="h6" weight={500}>
-          Vesting
+          Seekers Vesting SQT
         </Typography>
         <Typography type="secondary" style={{ marginTop: 8 }}>
-          Here you can see your vested token
+          Here you can see your vested Seekers tokens
         </Typography>
 
         <div className={styles.vestingHeader}>
@@ -498,6 +501,10 @@ const L2Vesting: FC<IProps> = () => {
                   shape="round"
                   type="primary"
                   onClick={async () => {
+                    if (chain?.id !== l2ChainId) {
+                      switchNetwork?.(l2ChainId);
+                      return;
+                    }
                     if (!hasSignedTC) {
                       await onSignTC();
                     }
@@ -512,7 +519,7 @@ const L2Vesting: FC<IProps> = () => {
                     )
                   }
                 >
-                  Claim Token
+                  {chain?.id !== l2ChainId ? `Switch to ${l2ChainName}` : 'Claim Tokens'}
                 </TransactionButton>
               </div>
               <div className={styles.vestingChunkContent}>

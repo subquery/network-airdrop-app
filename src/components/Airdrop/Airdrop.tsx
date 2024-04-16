@@ -14,7 +14,7 @@ import { BigNumber } from 'ethers';
 import i18next from 'i18next';
 import { uniqWith } from 'lodash-es';
 import moment from 'moment';
-import { mainnet, sepolia, useAccount, useNetwork, usePublicClient, useSwitchNetwork } from 'wagmi';
+import { useAccount, useNetwork, usePublicClient, useSwitchNetwork } from 'wagmi';
 
 import { DATE_FORMAT, TOKEN } from 'appConstants';
 import { GIFT } from 'containers';
@@ -24,7 +24,7 @@ import { mapContractError } from 'utils';
 
 import styles from './Airdrop.module.less';
 import { AirdropAmountHeader } from './AirdropAmountHeader';
-import { AirdropClaimButton, l2Chain, l2ChainName } from './AirdropClaimButton';
+import { AirdropClaimButton, l1Chain, l2Chain, l2ChainName } from './AirdropClaimButton';
 
 enum AirdropRoundStatus {
   CLAIMED = 'CLAIMED',
@@ -193,7 +193,7 @@ const useGetAirdropRecordsOnL1 = () => {
   const { address: account } = useAccount();
 
   const publicClient = usePublicClient({
-    chainId: process.env.REACT_APP_NETWORK === 'testnet' ? sepolia.id : mainnet.id
+    chainId: l1Chain
   });
   const provider = useMemo(() => publicClientToProvider(publicClient), [publicClient]);
   const rootContract = useMemo(

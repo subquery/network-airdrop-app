@@ -9,12 +9,13 @@ import { Button, ButtonProps } from 'antd';
 import { BigNumber } from 'ethers';
 import { t } from 'i18next';
 import moment from 'moment';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 
 import { TOKEN } from 'appConstants';
+import { l1ChainName } from 'components/Airdrop/AirdropClaimButton';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
 import { VESTING } from 'containers';
-import { useVestingContracts } from 'hooks';
+import { l1ChainId, useVestingContracts } from 'hooks';
 import { useSign } from 'hooks/useSign';
 import { convertCountToTime, formatAmount, renderAsync, roundToSix } from 'utils';
 
@@ -90,7 +91,8 @@ const vestingPlans = [
 const Vesting: FC<IProps> = () => {
   const vestingContractFactor = useVestingContracts();
   const { address: account } = useAccount();
-
+  const { switchNetwork } = useSwitchNetwork();
+  const { chain } = useNetwork();
   const { hasSignedTC, onSignTC } = useSign();
   const accountPlans = useQuery(
     gql`
@@ -184,7 +186,7 @@ const Vesting: FC<IProps> = () => {
     }
 
     const [claimable, claimed, allocation, startDate] = fetchData;
-
+    console.warn(fetchData);
     return {
       contractAddress,
       planId,
@@ -258,7 +260,7 @@ const Vesting: FC<IProps> = () => {
   useEffect(() => {
     if (!account) return;
     initClaimableAmount();
-  }, [accountPlans, account]);
+  }, [accountPlans, account, vestingContractFactor]);
 
   useInterval(() => {
     initClaimableAmount();
@@ -329,6 +331,10 @@ const Vesting: FC<IProps> = () => {
                   shape="round"
                   type="primary"
                   onClick={async () => {
+                    if (chain?.id !== l1ChainId) {
+                      switchNetwork?.(l1ChainId);
+                      return;
+                    }
                     if (!hasSignedTC) {
                       await onSignTC();
                     }
@@ -343,7 +349,7 @@ const Vesting: FC<IProps> = () => {
                     )
                   }
                 >
-                  Claim Token
+                  {chain?.id !== l1ChainId ? `Switch to ${l1ChainName}` : 'Claim Tokens'}
                 </TransactionButton>
               </div>
               <div className={styles.vestingChunkContent}>

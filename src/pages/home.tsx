@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@subql/components';
-import { Tabs } from 'antd';
 import { base, baseSepolia, mainnet, sepolia } from 'viem/chains';
 import { useAccount } from 'wagmi';
 
@@ -55,21 +54,6 @@ const vestingChain =
         }
       ];
 
-const l2VestingChain =
-  process.env.REACT_APP_NETWORK === 'testnet'
-    ? [
-        {
-          id: baseSepolia.id,
-          name: baseSepolia.name
-        }
-      ]
-    : [
-        {
-          id: base.id,
-          name: base.name
-        }
-      ];
-
 export function Home() {
   const { t } = useTranslation();
 
@@ -97,7 +81,7 @@ export function Home() {
                 </Typography>
                 {activeKey === 'Challenge' ? <PointsCard /> : null}
               </div>
-              {address && (
+              {/* {address && (
                 <Tabs
                   style={{ display: rootUrl.includes('seekers') ? 'none' : 'flex' }}
                   activeKey={activeKey}
@@ -120,7 +104,7 @@ export function Home() {
                     }
                   ]}
                 />
-              )}
+              )} */}
               {activeKey === 'Challenge' && (
                 <WalletDetect>
                   <Challenges />
@@ -128,23 +112,19 @@ export function Home() {
               )}
               {activeKey === 'Airdrop' && (
                 <WalletDetect mode="airdrop">
-                  <BlockchainStatus tipsChainIds={airdropChain}>
-                    <Airdrop />
-                  </BlockchainStatus>
-                </WalletDetect>
-              )}
-              {activeKey === 'Vesting' && (
-                <WalletDetect mode="airdrop">
-                  <BlockchainStatus tipsChainIds={vestingChain}>
-                    <Vesting />
-                  </BlockchainStatus>
-                </WalletDetect>
-              )}
-              {activeKey === 'l2Vesting' && (
-                <WalletDetect mode="airdrop">
-                  <BlockchainStatus tipsChainIds={l2VestingChain}>
-                    <L2Vesting />
-                  </BlockchainStatus>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 64, width: '100%' }}>
+                    <BlockchainStatus tipsChainIds={airdropChain}>
+                      <Airdrop />
+                    </BlockchainStatus>
+
+                    <BlockchainStatus tipsChainIds={airdropChain}>
+                      <L2Vesting />
+                    </BlockchainStatus>
+
+                    <BlockchainStatus tipsChainIds={airdropChain}>
+                      <Vesting />
+                    </BlockchainStatus>
+                  </div>
                 </WalletDetect>
               )}
             </div>
