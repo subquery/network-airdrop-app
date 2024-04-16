@@ -3,6 +3,7 @@ import { BsWallet2 } from 'react-icons/bs';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import { TfiArrowTopRight } from 'react-icons/tfi';
 import { formatEther } from '@ethersproject/units';
+import { captureException } from '@sentry/react';
 import { Spinner, SubqlProvider, Typography } from '@subql/components';
 import mainnetJSON from '@subql/contract-sdk/publish/mainnet.json';
 import testnetJSON from '@subql/contract-sdk/publish/testnet.json';
@@ -444,7 +445,24 @@ const L2Vesting: FC<IProps> = () => {
         <Spinner />
       </div>
     ),
-    error: (e) => <Typography>No Seekers Vesting available</Typography>,
+    error: (e) => {
+      try {
+        captureException('Seekers Vesting load error', {
+          extra: {
+            account,
+            error: e
+          }
+        });
+        openNotificationWithIcon({
+          type: NotificationType.ERROR,
+          title: 'An error occurred getting your seekers tokens',
+          description: 'An error occurred getting your seekers tokens'
+        });
+      } catch (err) {
+        // capture by sentry
+      }
+      return <Typography>An error occurred getting your seekers tokens</Typography>;
+    },
     data: () => (
       <div className={styles.vesting}>
         <Typography variant="h6" weight={500}>
