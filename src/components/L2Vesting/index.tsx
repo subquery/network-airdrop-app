@@ -1,15 +1,17 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
+import { BsWallet2 } from 'react-icons/bs';
+import { FaRegCheckCircle } from 'react-icons/fa';
 import { formatEther } from '@ethersproject/units';
-import { Spinner, Typography } from '@subql/components';
+import { Spinner, SubqlProvider, Typography } from '@subql/components';
 import mainnetJSON from '@subql/contract-sdk/publish/mainnet.json';
 import testnetJSON from '@subql/contract-sdk/publish/testnet.json';
 import { useAsyncMemo } from '@subql/react-hooks';
 import { useInterval } from 'ahooks';
-import { Button, ButtonProps } from 'antd';
+import { Button, ButtonProps, Modal } from 'antd';
 import { BigNumber } from 'ethers';
 import { t } from 'i18next';
 import moment from 'moment';
-import { useAccount } from 'wagmi';
+import { useAccount, useWalletClient } from 'wagmi';
 
 import { TOKEN } from 'appConstants';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
@@ -60,10 +62,199 @@ const vestingPlans = [
   }
 ];
 
+export const useModalSuccess = () => {
+  const { data: walletClient } = useWalletClient();
+  const contracts = useContracts();
+
+  return {
+    toastModal: (successTokenValue?: string) => {
+      Modal.success({
+        getContainer: () => document.querySelector('.appBody') || document.body,
+        width: 800,
+        className: styles.successModal,
+        title: (
+          <SubqlProvider theme="dark">
+            <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+              <FaRegCheckCircle style={{ fontSize: 22, color: 'var(--sq-success)' }} />
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <Typography variant="h6">You’ve claimed {successTokenValue || ''} SQT!</Typography>
+                <Typography type="secondary">
+                  Congratulations, you’ve claimed your SQT. You can view the claim transaction{' '}
+                  <Typography.Link active href="/">
+                    here
+                  </Typography.Link>
+                </Typography>
+              </div>
+            </div>
+          </SubqlProvider>
+        ),
+        content: (
+          <SubqlProvider theme="dark">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+              <div className={styles.successModalBaseLayout}>
+                <div className={styles.successModalBaseLayoutLeft}>
+                  <Typography className={styles.successModalBaseLayoutLeftTitle}>
+                    <BsWallet2 style={{ fontSize: 20, color: 'var(--sq-blue600)' }} />
+                    Add the SQT token to your wallet
+                  </Typography>
+                  <Typography type="secondary">Add your tokens to your wallet here so you can see them</Typography>
+                </div>
+
+                <Button
+                  type="primary"
+                  shape="round"
+                  size="large"
+                  onClick={() => {
+                    walletClient?.request({
+                      method: 'wallet_watchAsset',
+                      // @ts-ignore
+                      params: {
+                        type: 'ERC20',
+                        options: {
+                          address: contracts?.sqToken.address,
+                          symbol: TOKEN,
+                          decimals: 18
+                        }
+                      }
+                    });
+                  }}
+                >
+                  Add Tokens to Wallet
+                </Button>
+              </div>
+
+              <Typography>Now, what can you do with your SQT?</Typography>
+
+              <div className={styles.successModalBaseLayout}>
+                <div className={styles.successModalBaseLayoutLeft}>
+                  <Typography className={styles.successModalBaseLayoutLeftTitle}>
+                    <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M0.833252 13.2592C0.833252 12.5689 1.3929 12.0092 2.08325 12.0092H4.87172C5.56207 12.0092 6.12171 12.5689 6.12171 13.2592V17.1054C6.12171 17.7957 5.56207 18.3554 4.87171 18.3554H2.08325C1.39289 18.3554 0.833252 17.7957 0.833252 17.1054V13.2592Z"
+                        fill="#4388DD"
+                      />
+                      <path
+                        d="M7.53198 7.97076C7.53198 7.28041 8.09163 6.72076 8.78198 6.72076H11.5704C12.2608 6.72076 12.8204 7.28041 12.8204 7.97076V17.1054C12.8204 17.7957 12.2608 18.3554 11.5704 18.3554H8.78198C8.09163 18.3554 7.53198 17.7957 7.53198 17.1054V7.97076Z"
+                        fill="#C2D7F0"
+                      />
+                      <path
+                        d="M14.2307 1.27203C14.2307 0.581679 14.7904 0.0220337 15.4807 0.0220337H18.2692C18.9595 0.0220337 19.5192 0.581678 19.5192 1.27203V17.1054C19.5192 17.7957 18.9595 18.3554 18.2692 18.3554H15.4807C14.7904 18.3554 14.2307 17.7957 14.2307 17.1054V1.27203Z"
+                        fill="#C2D7F0"
+                      />
+                    </svg>
+                    Delegate your SQT
+                  </Typography>
+                  <Typography type="secondary">
+                    Delegating SQT is an easy way to stake your SQT and earn up to 7% APR. It only takes a few minutes
+                  </Typography>
+                  <Typography type="secondary" variant="medium">
+                    <em>Takes only a few minutes, and can provide solid APR</em>
+                  </Typography>
+                </div>
+                <a
+                  href="https://academy.subquery.network/subquery_network/delegators/delegating.html "
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Button type="primary" shape="round" size="large">
+                    Follow the steps to Delegate
+                  </Button>
+                </a>
+              </div>
+
+              <div className={styles.successModalBaseLayout}>
+                <div className={styles.successModalBaseLayoutLeft}>
+                  <Typography className={styles.successModalBaseLayoutLeftTitle}>
+                    <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M0.833252 13.2592C0.833252 12.5689 1.3929 12.0092 2.08325 12.0092H4.87172C5.56207 12.0092 6.12171 12.5689 6.12171 13.2592V17.1054C6.12171 17.7957 5.56207 18.3554 4.87171 18.3554H2.08325C1.39289 18.3554 0.833252 17.7957 0.833252 17.1054V13.2592Z"
+                        fill="#4388DD"
+                      />
+                      <path
+                        d="M7.53198 7.97076C7.53198 7.28041 8.09163 6.72076 8.78198 6.72076H11.5704C12.2608 6.72076 12.8204 7.28041 12.8204 7.97076V17.1054C12.8204 17.7957 12.2608 18.3554 11.5704 18.3554H8.78198C8.09163 18.3554 7.53198 17.7957 7.53198 17.1054V7.97076Z"
+                        fill="#4388DD"
+                      />
+                      <path
+                        d="M14.2307 1.27203C14.2307 0.581679 14.7904 0.0220337 15.4807 0.0220337H18.2692C18.9595 0.0220337 19.5192 0.581678 19.5192 1.27203V17.1054C19.5192 17.7957 18.9595 18.3554 18.2692 18.3554H15.4807C14.7904 18.3554 14.2307 17.7957 14.2307 17.1054V1.27203Z"
+                        fill="#C2D7F0"
+                      />
+                    </svg>
+                    Boost your favourite project
+                  </Typography>
+                  <Typography type="secondary">
+                    By boosting projects, you can get free requests to it that you can use in your production
+                    applications
+                  </Typography>
+                  <Typography type="secondary" variant="medium">
+                    <em>Takes only a few minutes, and get free requests to our network</em>
+                  </Typography>
+                </div>
+                <a
+                  href="https://academy.subquery.network/subquery_network/consumers/boosting.html"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Button type="primary" shape="round" size="large">
+                    Learn to Boost
+                  </Button>
+                </a>
+              </div>
+
+              <div className={styles.successModalBaseLayout}>
+                <div className={styles.successModalBaseLayoutLeft}>
+                  <Typography className={styles.successModalBaseLayoutLeftTitle}>
+                    <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M0.833252 13.2592C0.833252 12.5689 1.3929 12.0092 2.08325 12.0092H4.87172C5.56207 12.0092 6.12171 12.5689 6.12171 13.2592V17.1054C6.12171 17.7957 5.56207 18.3554 4.87171 18.3554H2.08325C1.39289 18.3554 0.833252 17.7957 0.833252 17.1054V13.2592Z"
+                        fill="#4388DD"
+                      />
+                      <path
+                        d="M7.53198 7.97076C7.53198 7.28041 8.09163 6.72076 8.78198 6.72076H11.5704C12.2608 6.72076 12.8204 7.28041 12.8204 7.97076V17.1054C12.8204 17.7957 12.2608 18.3554 11.5704 18.3554H8.78198C8.09163 18.3554 7.53198 17.7957 7.53198 17.1054V7.97076Z"
+                        fill="#4388DD"
+                      />
+                      <path
+                        d="M14.2307 1.27203C14.2307 0.581679 14.7904 0.0220337 15.4807 0.0220337H18.2692C18.9595 0.0220337 19.5192 0.581678 19.5192 1.27203V17.1054C19.5192 17.7957 18.9595 18.3554 18.2692 18.3554H15.4807C14.7904 18.3554 14.2307 17.7957 14.2307 17.1054V1.27203Z"
+                        fill="#4388DD"
+                      />
+                    </svg>
+                    Become a Node Operator
+                  </Typography>
+                  <Typography type="secondary">
+                    Node Operators can receive significant rewards (up to 20% APR) for running nodes for the SubQuery
+                    Network
+                  </Typography>
+                  <Typography type="secondary" variant="medium">
+                    <em>Requires some technical expertise, but can mean much higher APR</em>
+                  </Typography>
+                </div>
+                <a
+                  href="https://academy.subquery.network/subquery_network/node_operators/introduction.html "
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Button type="primary" shape="round" size="large">
+                    Become a Node Operator
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </SubqlProvider>
+        ),
+        icon: null,
+        closable: true,
+        okButtonProps: {
+          style: { display: 'none' }
+        }
+      });
+    }
+  };
+};
+
 const L2Vesting: FC<IProps> = () => {
   const contracts = useContracts();
   const { address: account } = useAccount();
-
+  const { toastModal } = useModalSuccess();
   const { hasSignedTC, onSignTC } = useSign();
 
   const accountPlans = useAsyncMemo(async () => {
@@ -154,9 +345,6 @@ const L2Vesting: FC<IProps> = () => {
       vestingContract?.claimableAmount(planId, account),
       vestingContract?.claimed(planId, account),
       vestingContract?.allocations(planId, account)
-
-      // this can be cache, if necessary.
-      // vestingContract?.vestingStartDate()
     ]);
 
     if (fetchData.some((i) => i.status === 'rejected')) {
@@ -203,7 +391,7 @@ const L2Vesting: FC<IProps> = () => {
     }
   };
 
-  const claimOne = async (contractAddress: string, planId: string) => {
+  const claimOne = async (contractAddress: string, planId: string, expectTokens?: string) => {
     if (!account) return;
     try {
       const vestingContract = contracts?.l2Vesting;
@@ -216,11 +404,7 @@ const L2Vesting: FC<IProps> = () => {
       openNotificationWithIcon({ title: t('notification.txSubmittedTitle') });
       const approvalTxResult = await approvalTx.wait();
       if (approvalTxResult.status) {
-        openNotificationWithIcon({
-          type: NotificationType.SUCCESS,
-          title: t('vesting.success'),
-          description: t('notification.changeValidIn15s')
-        });
+        toastModal(expectTokens);
 
         initClaimableAmount();
         accountPlans.refetch();
@@ -317,7 +501,7 @@ const L2Vesting: FC<IProps> = () => {
                     if (!hasSignedTC) {
                       await onSignTC();
                     }
-                    await claimOne(contractAddress, planId);
+                    await claimOne(contractAddress, planId, roundToSix(formatEther(planClaimable.toString())));
                   }}
                   disabled={
                     !!(
