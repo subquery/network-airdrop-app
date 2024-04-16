@@ -1,6 +1,7 @@
 import contractErrorCodes from '@subql/contract-sdk/publish/revertcode.json';
 import { BigNumberish } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
+import * as timeago from 'timeago.js';
 
 import { TOKEN } from 'appConstants';
 
@@ -27,29 +28,12 @@ export const formatAmount = (amount: BigNumberish): string => `${formatEther(amo
 
 export const convertStrToNumber = (str: string): number => Number.parseInt(str, 10);
 
-export function convertCountToTime(count: number): string {
-  let countCopy = count;
-  let result = '';
-  const years = Math.floor(countCopy / 365);
-  countCopy %= 365;
-  const months = Math.floor(countCopy / 30);
-  countCopy %= 30;
-  const days = countCopy;
-
-  if (years > 0) {
-    result += `${years} year${years > 1 ? 's ' : ' '}`;
-  }
-  if (months > 0) {
-    result += `${months} month${months > 1 ? 's ' : ' '}`;
-  }
-
-  if (days > 0) {
-    result += `${days} day${days > 1 ? 's' : ''}`;
-  }
-
-  result = result.trim();
-
-  return result || '0 day';
+export function convertSecondsToTimeString(seconds: number): string {
+  console.log(seconds);
+  const now = new Date();
+  const expiry = new Date(now.getTime() + seconds * 1000);
+  console.log(expiry);
+  return timeago.format(expiry).replace('in ', '');
 }
 
 export const roundToSix = (amount: string | BigNumberish): string => {
@@ -62,12 +46,15 @@ export const roundToSix = (amount: string | BigNumberish): string => {
   return `${left}.${right.slice(0, 6)}`;
 };
 
-
-export const mapContractError = (error: any,) => {
+export const mapContractError = (error: any) => {
   const rawErrorMsg = error?.data?.message ?? error?.message ?? error?.error ?? error ?? '';
 
   const revertCode = Object.keys(contractErrorCodes).find((key) =>
-    rawErrorMsg.toString().match(`reverted: ${key}`),
+    rawErrorMsg.toString().match(`reverted: ${key}`)
   ) as keyof typeof contractErrorCodes;
   return revertCode ? contractErrorCodes[revertCode] : undefined;
 };
+
+export const filterSuccessPromoiseSettledResult = <T>(
+  result: PromiseSettledResult<T>
+): result is PromiseFulfilledResult<T> => result.status === 'fulfilled';

@@ -4417,10 +4417,10 @@
     string-width "4.2.3"
     use-screen "^1.1.3"
 
-"@subql/contract-sdk@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/@subql/contract-sdk/-/contract-sdk-1.0.1.tgz#d4f29ee74b45ce4b8903e6c365f537ddf5cea519"
-  integrity sha512-+ZcZLgvZ7UDg57r2AYHsZV4DnxVMwlXPp1KGMncyC/c8ZpFdc5wam0uPGn7Hb5mmGSGQZ/aIUWuJHqIg7lhANw==
+"@subql/contract-sdk@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/@subql/contract-sdk/-/contract-sdk-1.1.0.tgz#b04e85e96ba8f7fab48a3e78740460e9b09ef73d"
+  integrity sha512-EnP6n1TrksH3zoRn02U7wdihOdbZ6T4G5l4kCrLn6ZJNkSa/QZwTSknJIIoXpxzDR6tNSNV30hhSxJrfEBHU/w==
 
 "@subql/network-config@1.1.1":
   version "1.1.1"
@@ -15780,15 +15780,15 @@ react-i18next@^11.15.3:
     "@babel/runtime" "^7.14.5"
     html-parse-stringify "^3.0.1"
 
-react-icons@^4.3.1:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.4.0.tgz#a13a8a20c254854e1ec9aecef28a95cdf24ef703"
-  integrity sha512-fSbvHeVYo/B5/L4VhB7sBA1i2tS8MkT0Hb9t2H1AVPkwGfVHLJCqyr2Py9dKMxsyM63Eng1GkdZfbWj+Fmv8Rg==
-
 react-icons@^4.8.0:
   version "4.11.0"
   resolved "https://registry.npmjs.org/react-icons/-/react-icons-4.11.0.tgz#4b0e31c9bfc919608095cc429c4f1846f4d66c65"
   integrity sha512-V+4khzYcE5EBk/BvcuYRq6V/osf11ODUM2J8hg2FDSswRrGvqiYUYPRy4OdrWaQOBj4NcpJfmHZLNaD+VH0TyA==
+
+react-icons@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.npmjs.org/react-icons/-/react-icons-5.1.0.tgz#9e7533cc256571a610c2a1ec8a7a143fb1222943"
+  integrity sha512-D3zug1270S4hbSlIRJ0CUS97QE1yNNKDjzQe3HqY0aefp2CBn9VgzgES27sRR2gOvFK+0CNx/BW0ggOESp6fqQ==
 
 react-is@^16.12.0, react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
@@ -17600,6 +17600,11 @@ thunky@^1.0.2:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/thunky/-/thunky-1.1.0.tgz#5abaf714a9405db0504732bbccd2cedd9ef9537d"
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
+
+timeago.js@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/timeago.js/-/timeago.js-4.0.2.tgz#724e8c8833e3490676c7bb0a75f5daf20e558028"
+  integrity sha512-a7wPxPdVlQL7lqvitHGGRsofhdwtkoSXPGATFuSOA2i1ZNQEPLrGnj68vOp2sOJTCFAQVXPeNMX/GctBaO9L2w==
 
 timeout-abort-controller@^3.0.0:
   version "3.0.0"

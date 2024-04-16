@@ -9,14 +9,15 @@ import { Button, ButtonProps } from 'antd';
 import { BigNumber } from 'ethers';
 import { t } from 'i18next';
 import moment from 'moment';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 
 import { TOKEN } from 'appConstants';
+import { l1ChainName } from 'components/Airdrop/AirdropClaimButton';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
 import { VESTING } from 'containers';
-import { useVestingContracts } from 'hooks';
+import { l1ChainId, useVestingContracts } from 'hooks';
 import { useSign } from 'hooks/useSign';
-import { convertCountToTime, formatAmount, renderAsync, roundToSix } from 'utils';
+import { convertSecondsToTimeString, formatAmount, renderAsync, roundToSix } from 'utils';
 
 import styles from './index.module.less';
 
@@ -36,8 +37,6 @@ interface VestingAllocationPlanNode {
     vestingPeriod: string;
   };
 }
-
-const oneDay = 86400;
 
 const TransactionButton: FC<ButtonProps> = ({ children, onClick, ...rest }) => {
   const [loading, setLoading] = useState(false);
@@ -90,7 +89,8 @@ const vestingPlans = [
 const Vesting: FC<IProps> = () => {
   const vestingContractFactor = useVestingContracts();
   const { address: account } = useAccount();
-
+  const { switchNetwork } = useSwitchNetwork();
+  const { chain } = useNetwork();
   const { hasSignedTC, onSignTC } = useSign();
   const accountPlans = useQuery(
     gql`
@@ -184,7 +184,7 @@ const Vesting: FC<IProps> = () => {
     }
 
     const [claimable, claimed, allocation, startDate] = fetchData;
-
+    console.warn(fetchData);
     return {
       contractAddress,
       planId,
@@ -258,7 +258,7 @@ const Vesting: FC<IProps> = () => {
   useEffect(() => {
     if (!account) return;
     initClaimableAmount();
-  }, [accountPlans, account]);
+  }, [accountPlans, account, vestingContractFactor]);
 
   useInterval(() => {
     initClaimableAmount();
@@ -271,14 +271,14 @@ const Vesting: FC<IProps> = () => {
         <Spinner />
       </div>
     ),
-    error: (e) => <Typography>No Vesting available</Typography>,
+    error: (e) => <Typography>No private sale vesting available</Typography>,
     data: () => (
       <div className={styles.vesting}>
         <Typography variant="h6" weight={500}>
-          Vesting
+          Private Sale Vesting
         </Typography>
         <Typography type="secondary" style={{ marginTop: 8 }}>
-          Here you can see your vested token
+          Here you can see any other vested private sale or investor tokens
         </Typography>
 
         <div className={styles.vestingHeader}>
@@ -303,8 +303,8 @@ const Vesting: FC<IProps> = () => {
         </div>
 
         {accountPlans.data.vestingAllocations.nodes.map((node: VestingAllocationPlanNode) => {
-          const vestingPeriod = Math.floor(+node.plan.vestingPeriod / oneDay);
-          const lockPeriod = Math.floor(+node.plan.lockPeriod / oneDay);
+          const vestingPeriod = +node.plan.vestingPeriod;
+          const lockPeriod = +node.plan.lockPeriod;
           const contractAddress = node.planId.split(':')[0];
           const planId = node.planId.split(':')[1];
           const claimTokenInfo = claimableTokens.find(
@@ -329,6 +329,10 @@ const Vesting: FC<IProps> = () => {
                   shape="round"
                   type="primary"
                   onClick={async () => {
+                    if (chain?.id !== l1ChainId) {
+                      switchNetwork?.(l1ChainId);
+                      return;
+                    }
                     if (!hasSignedTC) {
                       await onSignTC();
                     }
@@ -343,7 +347,7 @@ const Vesting: FC<IProps> = () => {
                     )
                   }
                 >
-                  Claim Token
+                  {chain?.id !== l1ChainId ? `Switch to ${l1ChainName}` : 'Claim Tokens'}
                 </TransactionButton>
               </div>
               <div className={styles.vestingChunkContent}>
@@ -351,7 +355,8 @@ const Vesting: FC<IProps> = () => {
                   ''
                 ) : (
                   <Typography type="secondary">
-                    {convertCountToTime(lockPeriod)} lock-up with {convertCountToTime(vestingPeriod)} vesting{' '}
+                    {lockPeriod > 0 ? `${convertSecondsToTimeString(lockPeriod)} lock-up with ` : ''}{' '}
+                    {convertSecondsToTimeString(vestingPeriod)} vesting{' '}
                   </Typography>
                 )}
 

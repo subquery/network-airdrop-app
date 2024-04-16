@@ -2,6 +2,7 @@
 import React, { useContext, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import useSWR from 'swr';
+import { clsx } from 'clsx';
 
 // @ts-ignore
 import '@subql/components/dist/subquery-components.css';
@@ -36,7 +37,7 @@ function App() {
     <div className={styles.app}>
       <SubqlProvider theme="dark">
         <Header />
-        <div className={styles.appBody}>
+        <div className={clsx(styles.appBody, 'appBody')}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/onboard/:id" element={<Onboard />} />

@@ -1,0 +1,116 @@
+.vesting {
+  padding: 24px;
+  background: var(--dark-mode-card);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  &Header {
+    display: flex;
+    justify-content: space-between;
+    background: var(--sq-gradient);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+
+    &Item {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  &Chunk {
+    padding: 16px 24px;
+    border-radius: 8px;
+    background: rgba(67, 136, 221, 0.06);
+    margin-top: 16px;
+
+    &Header {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--sq-gray300);
+    }
+
+    &Content {
+      padding-top: 16px;
+      display: flex;
+      flex-direction: column;
+
+      &Info {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 24px;
+
+
+        :global {
+          .subql-typography__text {
+            word-break: break-all;
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+
+  .transactionBtn {
+    &:disabled {
+      color: #fff;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .vesting {
+    &Header {
+      &Item {
+        :global {
+          .subql-typography {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  } 
+}
+
+.successModal {
+  :global {
+    .ant-modal-content {
+      background: var(--dark-mode-background);
+      padding: 32px;
+
+      .ant-modal-close {
+        color: var(--sq-gray500);
+      }
+    }
+  }
+
+  .successModalBaseLayout {
+    background: var(--dark-mode-card);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-radius: 8px;
+
+    &Left {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 450px;
+
+      &Title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+
+    .guideBtn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+  }
+}

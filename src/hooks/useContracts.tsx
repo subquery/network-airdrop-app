@@ -1,14 +1,14 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react';
+import React, { useCallback } from 'react';
 // eslint-disable-next-line camelcase
 import { ContractSDK, RootContractSDK, Vesting, Vesting__factory } from '@subql/contract-sdk';
 import { SQNetworks } from '@subql/network-config';
 import { providers } from 'ethers';
 import { HttpTransport } from 'viem';
-import { base, mainnet } from 'viem/chains';
-import { PublicClient, usePublicClient, useWalletClient, WalletClient } from 'wagmi';
+import { base, baseSepolia, mainnet, sepolia } from 'viem/chains';
+import { PublicClient, useNetwork, usePublicClient, useWalletClient, WalletClient } from 'wagmi';
 
 export function publicClientToProvider(publicClient: PublicClient) {
   const { chain, transport } = publicClient;
@@ -104,12 +104,23 @@ function useEthersSigner({ chainId }: { chainId?: number } = {}) {
 
 const Network = process.env.REACT_APP_NETWORK;
 
+export const l1ChainId = Network === 'testnet' ? sepolia.id : mainnet.id;
+export const l2ChainId = Network === 'testnet' ? baseSepolia.id : base.id;
+
 export function useContracts(): ContractSDK | undefined {
   const [contracts, setContracts] = React.useState<ContractSDK | undefined>();
+  const { chain } = useNetwork();
   const { signer } = useEthersSigner();
-  const provider = useEthersProviderWithPublic();
+  const provider = useEthersProviderWithPublic({
+    chainId: l2ChainId
+  });
 
-  const signerOrProvider = React.useMemo(() => signer || provider, [signer, provider]);
+  const signerOrProvider = React.useMemo(() => {
+    if (chain?.id !== l2ChainId) {
+      return provider;
+    }
+    return signer;
+  }, [signer, provider, chain]);
 
   const initSdk = React.useCallback(async () => {
     if (!signerOrProvider) {
@@ -133,10 +144,19 @@ export function useContracts(): ContractSDK | undefined {
 
 export function useRootContracts(): RootContractSDK | undefined {
   const [contracts, setContracts] = React.useState<RootContractSDK | undefined>();
-  const { signer } = useEthersSigner();
-  const provider = useEthersProviderWithPublic();
+  const { chain } = useNetwork();
 
-  const signerOrProvider = React.useMemo(() => signer || provider, [signer, provider]);
+  const { signer } = useEthersSigner();
+  const provider = useEthersProviderWithPublic({
+    chainId: l1ChainId
+  });
+
+  const signerOrProvider = React.useMemo(() => {
+    if (chain?.id !== l1ChainId) {
+      return provider;
+    }
+    return signer;
+  }, [signer, provider, chain]);
 
   const initSdk = React.useCallback(async () => {
     if (!signerOrProvider) {
@@ -159,20 +179,32 @@ export function useRootContracts(): RootContractSDK | undefined {
 }
 
 export function useVestingContracts(): (contract: string) => Promise<Vesting | undefined> {
+  const { chain } = useNetwork();
+
   const { signer } = useEthersSigner();
-  const provider = useEthersProviderWithPublic();
+  const provider = useEthersProviderWithPublic({
+    chainId: l1ChainId
+  });
 
-  const signerOrProvider = React.useMemo(() => signer || provider, [signer, provider]);
-
-  const initContract = async (vestingContractAddress: string) => {
-    if (!signerOrProvider) {
-      return;
+  const signerOrProvider = React.useMemo(() => {
+    if (chain?.id !== l1ChainId) {
+      return provider;
     }
+    return signer;
+  }, [signer, provider, chain]);
 
-    // eslint-disable-next-line camelcase
-    const vestingContract = await Vesting__factory.connect(vestingContractAddress, signerOrProvider);
-    return vestingContract;
-  };
+  const initContract = useCallback(
+    async (vestingContractAddress: string) => {
+      if (!signerOrProvider) {
+        return;
+      }
+
+      // eslint-disable-next-line camelcase
+      const vestingContract = await Vesting__factory.connect(vestingContractAddress, signerOrProvider);
+      return vestingContract;
+    },
+    [signerOrProvider]
+  );
 
   return initContract;
 }
