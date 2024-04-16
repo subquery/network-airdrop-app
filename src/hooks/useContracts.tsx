@@ -10,6 +10,11 @@ import { HttpTransport } from 'viem';
 import { base, baseSepolia, mainnet, sepolia } from 'viem/chains';
 import { PublicClient, useNetwork, usePublicClient, useWalletClient, WalletClient } from 'wagmi';
 
+const fetchUrls: { [key in number]: string } = {
+  [base.id]: base.rpcUrls.public.http[0] || process.env.REACT_APP_SUBQUERY_OFFICIAL_BASE_RPC,
+  [mainnet.id]: mainnet.rpcUrls.public.http[0] || process.env.REACT_APP_SUBQUERY_OFFICIAL_ETH_RPC
+};
+
 export function publicClientToProvider(publicClient: PublicClient) {
   const { chain, transport } = publicClient;
 
@@ -19,10 +24,7 @@ export function publicClientToProvider(publicClient: PublicClient) {
     ensAddress: chain.contracts?.ensRegistry?.address
   };
 
-  const fetchUrl = {
-    [base.id]: base.rpcUrls.public.http[0] || process.env.REACT_APP_SUBQUERY_OFFICIAL_BASE_RPC,
-    [mainnet.id]: mainnet.rpcUrls.public.http[0] || process.env.REACT_APP_SUBQUERY_OFFICIAL_ETH_RPC
-  }[chain.id];
+  const fetchUrl = fetchUrls[chain.id];
 
   if (transport.type === 'fallback') {
     return new providers.FallbackProvider(
@@ -53,10 +55,7 @@ export function walletClientToSignerAndProvider(walletClient: WalletClient) {
       ...transport,
       async request(request, ...rest) {
         try {
-          const fetchUrl = {
-            [base.id]: base.rpcUrls.public.http[0] || process.env.REACT_APP_SUBQUERY_OFFICIAL_BASE_RPC,
-            [mainnet.id]: mainnet.rpcUrls.public.http[0] || process.env.REACT_APP_SUBQUERY_OFFICIAL_ETH_RPC
-          }[chain.id];
+          const fetchUrl = fetchUrls[chain.id];
 
           if (fetchUrl) {
             requestId += 1;
