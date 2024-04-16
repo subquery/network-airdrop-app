@@ -453,10 +453,15 @@ const L2Vesting: FC<IProps> = () => {
             error: e
           }
         });
+        openNotificationWithIcon({
+          type: NotificationType.ERROR,
+          title: 'An error occurred getting your seekers tokens',
+          description: 'An error occurred getting your seekers tokens'
+        });
       } catch (err) {
         // capture by sentry
       }
-      return <Typography>No Seekers Vesting available</Typography>;
+      return <Typography>An error occurred getting your seekers tokens</Typography>;
     },
     data: () => (
       <div className={styles.vesting}>
