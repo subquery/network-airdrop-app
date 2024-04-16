@@ -26,10 +26,10 @@ const supportedChains =
           ...base,
           rpcUrls: {
             default: {
-              http: [process.env.REACT_APP_SUBQUERY_OFFICIAL_BASE_RPC]
+              http: [base.rpcUrls.default.http]
             },
             public: {
-              http: [process.env.REACT_APP_SUBQUERY_OFFICIAL_BASE_RPC]
+              http: [base.rpcUrls.default.http]
             },
             fallback: {
               http: base.rpcUrls.default.http
@@ -40,10 +40,10 @@ const supportedChains =
           ...mainnet,
           rpcUrls: {
             default: {
-              http: [process.env.REACT_APP_SUBQUERY_OFFICIAL_ETH_RPC]
+              http: [mainnet.rpcUrls.default.http]
             },
             public: {
-              http: [process.env.REACT_APP_SUBQUERY_OFFICIAL_ETH_RPC]
+              http: [mainnet.rpcUrls.default.http]
             },
             fallback: {
               http: mainnet.rpcUrls.default.http
