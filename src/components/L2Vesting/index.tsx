@@ -11,6 +11,7 @@ import { useInterval } from 'ahooks';
 import { Button, ButtonProps, Modal } from 'antd';
 import { BigNumber } from 'ethers';
 import { t } from 'i18next';
+import { isString } from 'lodash-es';
 import moment from 'moment';
 import { useAccount, useNetwork, useSwitchNetwork, useWalletClient } from 'wagmi';
 
@@ -30,7 +31,7 @@ const vestingAddress =
 
 interface VestingAllocationPlanNode {
   planId: string;
-  startDate: moment.Moment;
+  startDate: moment.Moment | string;
   plan: {
     id: string;
     lockPeriod: string;
@@ -272,7 +273,7 @@ const L2Vesting: FC<IProps> = () => {
         const startDate = result.value?.startDate;
         return {
           planId: `${contracts?.l2Vesting.address}:${index}`,
-          startDate: moment.unix(startDate?.toNumber() || +new Date()),
+          startDate: startDate?.toNumber() ? moment.unix(startDate?.toNumber()) : '-',
           plan: {
             id: `${index}`,
             vestingPeriod: result.value?.vestingPeriod.toString() || '0',
@@ -472,7 +473,8 @@ const L2Vesting: FC<IProps> = () => {
                     {vestingPlans.find((i) => `${i.planId}` === `${planId}`)?.name || ''}
                   </Typography>
                   <Typography type="secondary" variant="small" style={{ marginTop: 8 }}>
-                    Vesting start: {node?.startDate.format('DD/MM/YYYY hh:mm A')}
+                    Vesting start:{' '}
+                    {isString(node?.startDate) ? node?.startDate : node?.startDate.format('DD/MM/YYYY hh:mm A')}
                   </Typography>
                 </div>
 
