@@ -80,12 +80,7 @@ export const useModalSuccess = () => {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <Typography variant="h6">You’ve claimed {successTokenValue || ''} SQT!</Typography>
-                <Typography type="secondary">
-                  Congratulations, you’ve claimed your SQT. You can view the claim transaction{' '}
-                  <Typography.Link active href="/">
-                    here
-                  </Typography.Link>
-                </Typography>
+                <Typography type="secondary">Congratulations, you’ve claimed your SQT.</Typography>
               </div>
             </div>
           </SubqlProvider>
