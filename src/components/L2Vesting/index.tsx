@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { BsWallet2 } from 'react-icons/bs';
 import { FaRegCheckCircle } from 'react-icons/fa';
+import { TfiArrowTopRight } from 'react-icons/tfi';
 import { formatEther } from '@ethersproject/units';
 import { Spinner, SubqlProvider, Typography } from '@subql/components';
 import mainnetJSON from '@subql/contract-sdk/publish/mainnet.json';
@@ -98,6 +99,7 @@ export const useModalSuccess = () => {
                 </div>
 
                 <Button
+                  className={styles.guideBtn}
                   type="primary"
                   shape="round"
                   size="large"
@@ -141,7 +143,7 @@ export const useModalSuccess = () => {
                     </svg>
                     Delegate your SQT
                   </Typography>
-                  <Typography type="secondary">
+                  <Typography type="secondary" variant="medium">
                     Delegating SQT is an easy way to stake your SQT and earn up to 7% APR. It only takes a few minutes
                   </Typography>
                   <Typography type="secondary" variant="medium">
@@ -153,8 +155,9 @@ export const useModalSuccess = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <Button type="primary" shape="round" size="large">
+                  <Button className={styles.guideBtn} type="primary" shape="round" size="large">
                     Follow the steps to Delegate
+                    <TfiArrowTopRight />
                   </Button>
                 </a>
               </div>
@@ -178,7 +181,7 @@ export const useModalSuccess = () => {
                     </svg>
                     Boost your favourite project
                   </Typography>
-                  <Typography type="secondary">
+                  <Typography type="secondary" variant="medium">
                     By boosting projects, you can get free requests to it that you can use in your production
                     applications
                   </Typography>
@@ -191,8 +194,9 @@ export const useModalSuccess = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <Button type="primary" shape="round" size="large">
+                  <Button className={styles.guideBtn} type="primary" shape="round" size="large">
                     Learn to Boost
+                    <TfiArrowTopRight />
                   </Button>
                 </a>
               </div>
@@ -216,7 +220,7 @@ export const useModalSuccess = () => {
                     </svg>
                     Become a Node Operator
                   </Typography>
-                  <Typography type="secondary">
+                  <Typography type="secondary" variant="medium">
                     Node Operators can receive significant rewards (up to 20% APR) for running nodes for the SubQuery
                     Network
                   </Typography>
@@ -229,8 +233,9 @@ export const useModalSuccess = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <Button type="primary" shape="round" size="large">
+                  <Button className={styles.guideBtn} type="primary" shape="round" size="large">
                     Become a Node Operator
+                    <TfiArrowTopRight />
                   </Button>
                 </a>
               </div>
