@@ -451,7 +451,7 @@ const L2Vesting: FC<IProps> = () => {
         </Typography>
         <Typography type="secondary" style={{ marginTop: 8 }}>
           If you are an eligble user of the SubQuery Seekers campaign, and have been awarded vested SQT from the Seekers
-          Program, you can claim it below campaign, you can
+          Program, you can claim it below.
         </Typography>
         {accountPlans.data?.map((node: VestingAllocationPlanNode, index) => {
           const vestingPeriod = +node.plan.vestingPeriod;
