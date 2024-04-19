@@ -11,8 +11,8 @@ import { base, baseSepolia, mainnet, sepolia } from 'viem/chains';
 import { PublicClient, useNetwork, usePublicClient, useWalletClient, WalletClient } from 'wagmi';
 
 const fetchUrls: { [key in number]: string } = {
-  [base.id]: process.env.REACT_APP_SUBQUERY_OFFICIAL_BASE_RPC as string,
-  [mainnet.id]: process.env.REACT_APP_SUBQUERY_OFFICIAL_ETH_RPC as string
+  [base.id]: base.rpcUrls.public.http[0] || process.env.REACT_APP_SUBQUERY_OFFICIAL_BASE_RPC,
+  [mainnet.id]: mainnet.rpcUrls.public.http[0] || process.env.REACT_APP_SUBQUERY_OFFICIAL_ETH_RPC
 };
 
 export function publicClientToProvider(publicClient: PublicClient) {
