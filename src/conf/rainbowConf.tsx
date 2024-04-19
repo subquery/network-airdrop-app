@@ -17,45 +17,48 @@ import { publicProvider } from 'wagmi/providers/public';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
-// goerli and mainnet just for get data actually not supported
-const supportedChains =
-  process.env.REACT_APP_NETWORK === 'testnet'
-    ? [baseSepolia, sepolia]
-    : [
-        {
-          ...base,
-          rpcUrls: {
-            default: {
-              http: [base.rpcUrls.default.http]
-            },
-            public: {
-              http: [base.rpcUrls.default.http]
-            },
-            fallback: {
-              http: base.rpcUrls.default.http
-            }
-          }
-        },
-        {
-          ...mainnet,
-          rpcUrls: {
-            default: {
-              http: [mainnet.rpcUrls.default.http]
-            },
-            public: {
-              http: [mainnet.rpcUrls.default.http]
-            },
-            fallback: {
-              http: mainnet.rpcUrls.default.http
-            }
-          }
-        }
-      ];
+const testnetSupportedChains = [baseSepolia, sepolia];
+const prodSupportedChains = [
+  {
+    ...base,
+    rpcUrls: {
+      default: {
+        http: [...base.rpcUrls.default.http]
+      },
+      public: {
+        http: [...base.rpcUrls.default.http]
+      },
+      fallback: {
+        http: base.rpcUrls.default.http
+      }
+    }
+  },
+  {
+    ...mainnet,
+    rpcUrls: {
+      default: {
+        http: [...mainnet.rpcUrls.default.http]
+      },
+      public: {
+        http: [...mainnet.rpcUrls.default.http]
+      },
+      fallback: {
+        http: mainnet.rpcUrls.default.http
+      }
+    }
+  }
+];
+
+const supportedChains = process.env.REACT_APP_NETWORK === 'testnet' ? testnetSupportedChains : prodSupportedChains;
 
 // This should ok. It seems is a bug of Ts.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const { chains, publicClient } = configureChains(supportedChains, [publicProvider()]);
+
+// add two check, these two only be used for ts check, not elegant, but works
+configureChains(testnetSupportedChains, [publicProvider()]);
+configureChains(prodSupportedChains, [publicProvider()]);
 
 const connectors = connectorsForWallets([
   {
