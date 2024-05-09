@@ -124,6 +124,7 @@
     "*.{css,md}": "prettier --write"
   },
   "resolutions": {
-    "graphql": "16.8.0"
+    "graphql": "16.8.0",
+    "@walletconnect/ethereum-provider": "2.11.1"
   }
 }

@@ -172,7 +172,7 @@ export const AirdropClaimButton: React.FC<{
 
   return (
     <>
-      {l1AirdropIds.length && (
+      {l1AirdropIds.length ? (
         <Button
           type="primary"
           ghost
@@ -190,6 +190,8 @@ export const AirdropClaimButton: React.FC<{
             ? 'Claim On Ethereum'
             : t('termsAndConditions.sign')}
         </Button>
+      ) : (
+        ''
       )}
 
       <Button
