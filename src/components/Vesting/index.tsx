@@ -6,6 +6,7 @@ import mainnetJSON from '@subql/contract-sdk/publish/mainnet.json';
 import testnetJSON from '@subql/contract-sdk/publish/testnet.json';
 import { useInterval } from 'ahooks';
 import { Button, ButtonProps } from 'antd';
+import { blackList } from 'conf/blacklist';
 import { BigNumber } from 'ethers';
 import { t } from 'i18next';
 import moment from 'moment';
@@ -112,7 +113,7 @@ const Vesting: FC<IProps> = () => {
     `,
     {
       variables: {
-        account
+        account: blackList.has(account || '') ? 'blackaccount' : account
       },
       fetchPolicy: 'no-cache',
       context: {
@@ -154,7 +155,7 @@ const Vesting: FC<IProps> = () => {
   }, [accountPlans, totalAvailableClaim, totalClaimed]);
 
   const getClaimableAmount = async (contractAddress: string, planId: string) => {
-    if (!account)
+    if (!account || blackList.has(account))
       return {
         contractAddress,
         planId,
@@ -184,7 +185,7 @@ const Vesting: FC<IProps> = () => {
     }
 
     const [claimable, claimed, allocation, startDate] = fetchData;
-    console.warn(fetchData);
+
     return {
       contractAddress,
       planId,
@@ -196,6 +197,8 @@ const Vesting: FC<IProps> = () => {
   };
 
   const initClaimableAmount = async () => {
+    if (blackList.has(account || '')) return;
+
     if (!accountPlans?.data?.vestingAllocations?.nodes) return;
     const plansInfo: { contractAddress: string; planId: string }[] = accountPlans.data.vestingAllocations.nodes.map(
       (node: VestingAllocationPlanNode) => ({
@@ -220,6 +223,7 @@ const Vesting: FC<IProps> = () => {
 
   const claimOne = async (contractAddress: string, planId: string) => {
     if (!account) return;
+    if (blackList.has(account || '')) return;
     try {
       const vestingContract = await vestingContractFactor(contractAddress);
 
