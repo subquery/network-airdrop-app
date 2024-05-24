@@ -89,8 +89,7 @@ const vestingPlans = [
 
 const Vesting: FC<IProps> = () => {
   const vestingContractFactor = useVestingContracts();
-  const { address } = useAccount();
-  const account = '0xfA06A073B7E114C53885Fed16617bfC2839F2814';
+  const { address: account } = useAccount();
   const { switchNetwork } = useSwitchNetwork();
   const { chain } = useNetwork();
   const { hasSignedTC, onSignTC } = useSign();
