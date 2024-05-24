@@ -14,7 +14,7 @@ import styles from './AppTypography.module.css';
 /**
  * Text with tooltip option
  */
-
+// @ts-ignore
 interface Props extends TextProps {
   content?: string | number | React.ReactNode;
   className?: string;

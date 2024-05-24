@@ -1,7 +1,7 @@
 import contractErrorCodes from '@subql/contract-sdk/publish/revertcode.json';
 import { BigNumberish } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
-import * as timeago from 'timeago.js';
+import moment from 'moment';
 
 import { TOKEN } from 'appConstants';
 
@@ -29,11 +29,9 @@ export const formatAmount = (amount: BigNumberish): string => `${formatEther(amo
 export const convertStrToNumber = (str: string): number => Number.parseInt(str, 10);
 
 export function convertSecondsToTimeString(seconds: number): string {
-  console.log(seconds);
-  const now = new Date();
-  const expiry = new Date(now.getTime() + seconds * 1000);
-  console.log(expiry);
-  return timeago.format(expiry).replace('in ', '');
+  const days = moment.duration(seconds * 1000).asDays();
+
+  return `${days.toFixed(0)} days`;
 }
 
 export const roundToSix = (amount: string | BigNumberish): string => {
