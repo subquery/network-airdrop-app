@@ -29,13 +29,9 @@ export const formatAmount = (amount: BigNumberish): string => `${formatEther(amo
 export const convertStrToNumber = (str: string): number => Number.parseInt(str, 10);
 
 export function convertSecondsToTimeString(seconds: number): string {
-  const months = Math.ceil(moment.duration(seconds * 1000).asMonths());
+  const days = moment.duration(seconds * 1000).asDays();
 
-  if (months > 1) {
-    return `${months} months`;
-  }
-
-  return `${months} month`;
+  return `${days.toFixed(0)} days`;
 }
 
 export const roundToSix = (amount: string | BigNumberish): string => {
