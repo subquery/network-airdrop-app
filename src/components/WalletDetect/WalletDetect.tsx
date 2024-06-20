@@ -11,24 +11,33 @@ import { useAccount } from 'wagmi';
 
 import styles from './WalletDetect.module.css';
 
-export const ContactUs = () => (
+type Mode = 'challenge' | 'airdrop' | 'delegationCampaign';
+
+export const ContactUs: React.FC<{ mode?: Mode }> = ({ mode }) => (
   <div style={{ width: '100%', textAlign: 'center' }}>
     <Typography type="secondary">
-      If you have any issues or questions, contact us on the{' '}
-      <Typography.Link active href="https://discord.com/invite/subquery" variant="medium">
-        #seekers-support
-      </Typography.Link>{' '}
+      If you have any questions, contact us on the{' '}
+      {mode === 'challenge' && (
+        <Typography.Link type="info" href="https://discord.com/invite/subquery" variant="medium">
+          #seekers-support
+        </Typography.Link>
+      )}
+      {mode === 'delegationCampaign' && (
+        <Typography.Link type="info" href="https://discord.com/invite/subquery">
+          #delegation-campaign
+        </Typography.Link>
+      )}{' '}
       channel on our Discord
     </Typography>
   </div>
 );
 
-export const ConnectWalletCom: React.FC<{ mode?: 'challenge' | 'airdrop' }> = ({ mode }) => {
+export const ConnectWalletCom: React.FC<{ mode?: Mode }> = ({ mode }) => {
   const { t } = useTranslation();
 
   return (
     <div className={clsx(styles.container)}>
-      {mode === 'challenge' ? (
+      {mode === 'challenge' && (
         <>
           <Typography variant="h4" weight={600} style={{ textAlign: 'center' }}>
             Join SubQuery Seekers 50 Million SQT Challenge
@@ -40,13 +49,29 @@ export const ConnectWalletCom: React.FC<{ mode?: 'challenge' | 'airdrop' }> = ({
           </Typography>
           <Typography type="secondary">The program closed on the 10th of April 2024!</Typography>
         </>
-      ) : (
+      )}
+      {mode === 'airdrop' && (
         <>
           <Typography>
             To use the claim application, you need to connect your Ethereum wallet. If you don&apos;t have an Ethereum
             wallet, you can create one using Metamask, Talisman, RainbowWallet, or any other WalletConnect compatible
             wallet.
           </Typography>
+        </>
+      )}
+
+      {mode === 'delegationCampaign' && (
+        <>
+          <Typography variant="h3" style={{ textAlign: 'center' }}>
+            SubQuery Summer Delegation Frenzy
+          </Typography>
+          <Typography type="secondary" style={{ textAlign: 'center' }}>
+            Welcome to the Summer Delegation Frenzy where we will be rewarding all Delegators on the SubQuery Network.
+          </Typography>
+          <Typography type="secondary" style={{ textAlign: 'center' }}>
+            Whether your a seasoned pro, or brand new to the network, there’s points up for grabs and SQT to be earned!
+          </Typography>
+          <Typography type="secondary">Simply register for the campaign and start completing challenges.</Typography>
         </>
       )}
 
@@ -65,14 +90,14 @@ export const ConnectWalletCom: React.FC<{ mode?: 'challenge' | 'airdrop' }> = ({
         )}
       </ConnectButton.Custom>
 
-      <ContactUs />
+      <ContactUs mode={mode}></ContactUs>
     </div>
   );
 };
 
 interface IWalletDetect {
   containerClassName?: string;
-  mode?: 'challenge' | 'airdrop';
+  mode?: Mode;
 }
 export const WalletDetect: React.FC<IWalletDetect> = ({ children, containerClassName, mode = 'challenge' }) => {
   const { address: account } = useAccount();

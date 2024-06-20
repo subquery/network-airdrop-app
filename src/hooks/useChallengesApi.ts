@@ -51,11 +51,10 @@ export interface UserSignupRequest {
   referral_code?: string;
 }
 
-export const useChallengesApi = (props: { alert?: boolean } = {}) => {
+export const useAlertResDecorator = (props: { alert?: boolean }) => {
   const { alert = true } = props;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const alertResDecorator =
-    <T extends (...args: any[]) => any>(func: T): ((...args: Parameters<T>) => Promise<ReturnType<T>>) =>
+
+  return <T extends (...args: any[]) => any>(func: T): ((...args: Parameters<T>) => Promise<ReturnType<T>>) =>
     async (...args: Parameters<T>): Promise<ReturnType<T>> => {
       try {
         const res = await func(...args);
@@ -77,6 +76,11 @@ export const useChallengesApi = (props: { alert?: boolean } = {}) => {
         throw new Error(e);
       }
     };
+};
+
+export const useChallengesApi = (props: { alert?: boolean } = {}) => {
+  const { alert = true } = props;
+  const alertResDecorator = useAlertResDecorator({ alert });
 
   const signup = useCallback(async (params: UserSignupRequest) => {
     const res = await instance.post('/signup', params);

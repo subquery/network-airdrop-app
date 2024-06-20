@@ -31,7 +31,7 @@
 
 .walletActionContainer {
   border-radius: 8px;
-  background: var(--dark-mode-card);
+  background: #1B2545E5;
   display: flex;
   flex-direction: column;
   width: 600px;

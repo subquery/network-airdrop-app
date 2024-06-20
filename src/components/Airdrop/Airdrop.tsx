@@ -840,3 +840,5 @@ export const Airdrop: FC = () => {
     </div>
   );
 };
+
+export default Airdrop;

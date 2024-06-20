@@ -16,6 +16,7 @@
   "plugins": ["react", "@typescript-eslint", "simple-import-sort", "unused-imports"],
   "ignorePatterns": ["**/__generated__"],
   "rules": {
+    "react/self-closing-comp": "off",
     "react/react-in-jsx-scope": "off",
     "import/prefer-default-export": "off",
     "react/function-component-definition": "off",
