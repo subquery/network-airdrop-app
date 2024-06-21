@@ -78,6 +78,134 @@
   }
 }
 
+.tableItem {
+  display: flex;
+  gap: 16px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  background-color: transparent;
+  &:hover {
+    background-color: var(--sq-blue600);
+  }
+}
+
+.mine.tableItem {
+  background-color: var(--sq-blue600);
+}
+
+
+.challenges {
+  display: flex;
+  gap: 16px;
+  margin: 40px auto 0 auto;
+  width: 100%;
+  max-width: var(--main-pc-width);
+
+  .naviLine {
+    position: relative;
+    &::before {
+      position: absolute;
+      content: '';
+      height: 100%;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 2px; 
+      background-repeat: repeat-y;
+      background-image: linear-gradient(0deg, rgba(175,70,70,0) 50%, var(--sq-blue600) 50%);
+      background-size: 100% 8px; 
+    }
+  }
+
+  .darkCollapse {
+    :global {
+      .ant-collapse-item {
+        .ant-collapse-header {
+          padding: 16px 24px;
+          color: #fff;
+          background: var(--dark-mode-card);
+
+          flex-direction: row-reverse;
+          border-radius: 8px;
+  
+          .ant-collapse-expand-icon {
+            color: var(--sq-blue600);
+            transform: rotate(-90deg);
+            padding-inline-end: 0;
+            height: 36px;
+            background: #4388DD0D;
+            width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+          }
+        }
+  
+        &-active {
+          .ant-collapse-header {
+            border-radius: 8px 8px 0 0 !important;
+            .ant-collapse-expand-icon {
+              transform: rotate(0);
+
+            }
+          }
+        }
+  
+        &:last-child {
+          .ant-collapse-header {
+            border-radius: 8px;
+          }
+        }
+  
+        & + .ant-collapse-item {
+          margin-top: 16px;
+        }
+  
+        .ant-collapse-content {
+          color: #fff;
+          background: var(--dark-mode-card);
+          border-radius: 0 0 8px 8px;
+          .ant-collapse-content-box {
+            padding: 16px 24px;
+            position: relative;
+            &::before {
+              content: ' ';
+              position: absolute;
+              top: 0;
+              left: 50%;
+              width: calc(100% - 48px);
+              height: 1px;
+              transform: translateX(-50%);
+              background: var(--dark-mode-border);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .check {
+    color: #fff;
+    width: 27px;
+    height: 27px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    margin-right: 10px;
+  
+    &Active {
+      background: linear-gradient(315deg, #ff1e66 16.18%, #1980ff 85.01%);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+
 .delegationCampaign {
   display: flex;
   flex-direction: column;
