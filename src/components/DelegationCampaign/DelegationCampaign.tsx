@@ -1,10 +1,12 @@
 import React, { FC, useMemo, useState } from 'react';
-import { MdOutlineMail } from 'react-icons/md';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
+// import { MdOutlineMail } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 import { Typography } from '@subql/components';
 import { useAsyncMemo } from '@subql/react-hooks';
 import { Button, Form, Input } from 'antd';
 import { useForm } from 'antd/es/form/Form';
+import clsx from 'clsx';
 import { useAccount } from 'wagmi';
 
 import { ContactUs, WalletDetect } from 'components/WalletDetect/WalletDetect';
@@ -94,6 +96,8 @@ const FirstStep = () => {
           </Button>
         </>
 
+        {/* second step */}
+        {/* 
         <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 16 }}>
           <MdOutlineMail style={{ fontSize: '47px', color: '#fff' }} />
           <Typography variant="h5">Email Verification</Typography>
@@ -122,9 +126,219 @@ const FirstStep = () => {
               </Typography.Link>
             </Typography>
           </div>
-        </div>
+        </div> */}
 
         <ContactUs mode="delegationCampaign" />
+      </div>
+    </div>
+  );
+};
+
+const SecondStep = () => {
+  const { address: account } = useAccount();
+
+  return (
+    <div className={styles.mainInner}>
+      <div className={styles.mainTitle}>
+        <Typography variant="h1" style={{ textAlign: 'center' }}>
+          SubQuery Summer Delegation Frenzy
+        </Typography>
+        <Typography variant="h5" style={{ textAlign: 'center' }}>
+          The more points you earn, the more winnings you’ll receive from the SQT prize pool!
+        </Typography>
+      </div>
+
+      <div className={styles.baseCard} style={{ marginTop: 220 }}>
+        <Typography>Your Achievements</Typography>
+
+        <div style={{ display: 'flex', gap: 16 }}>
+          <div className={styles.baseLineBorder}>
+            <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
+              <Typography>Your Total Rank</Typography>
+              <Typography variant="h4" weight={600}>
+                # 23
+              </Typography>
+            </div>
+          </div>
+
+          <div className={styles.baseLineBorder}>
+            <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
+              <Typography>Programme APY</Typography>
+              <Typography variant="h4" weight={600}>
+                17.3%
+              </Typography>
+            </div>
+          </div>
+
+          <div className={styles.baseLineBorder}>
+            <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
+              <Typography>Your Total Points</Typography>
+              <Typography variant="h4" weight={600}>
+                25,231 Points
+              </Typography>
+            </div>
+          </div>
+
+          <div className={styles.baseLineBorder}>
+            <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
+              <Typography>Total Delegation Rewards</Typography>
+              <Typography variant="h4" weight={600}>
+                3.20M SQT
+              </Typography>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className={clsx(styles.eraInfo, styles.baseCard)}>
+        <div className={styles.eraInfoOperator}>
+          <div className={styles.eraInfoOperatorArrow}>
+            <FaChevronLeft style={{ color: '#fff' }}></FaChevronLeft>
+          </div>
+          <div className={styles.eraInfoOperatorArrow}>
+            <FaChevronRight style={{ color: '#fff' }}></FaChevronRight>
+          </div>
+        </div>
+
+        <div className={styles.eraInfoCardLayout}>
+          <div className={clsx(styles.baseLineBorder, styles.selectedCard)}>
+            <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.eraInfoCard)}>
+              <Typography variant="medium" type="secondary">
+                <div style={{ display: 'inline-flex', gap: 8 }}>
+                  <img src="/static/location.svg" alt=""></img>
+                  Era 12
+                </div>
+                <br></br>
+                <Typography variant="small" type="secondary">
+                  *Check back after the era ends for your results
+                </Typography>
+              </Typography>
+
+              <div className={styles.split}></div>
+              <div className={styles.eraInfoCardLines}>
+                <div className={styles.eraInfoCardLine}>
+                  <Typography variant="medium" type="secondary">
+                    Points Earned
+                  </Typography>
+                  <Typography variant="medium">800,0 points</Typography>
+                </div>
+                <div className={styles.eraInfoCardLine}>
+                  <Typography variant="medium" type="secondary">
+                    Delegation Rewards
+                  </Typography>
+                  <Typography variant="medium">800,0 SQT</Typography>
+                </div>
+                <div className={styles.eraInfoCardLine}>
+                  <Typography variant="medium" type="secondary">
+                    Delegated Amount
+                  </Typography>
+                  <Typography variant="medium">800,0 points</Typography>
+                </div>
+                <div className={styles.eraInfoCardLine}>
+                  <Typography variant="medium" type="secondary">
+                    APY
+                  </Typography>
+                  <Typography variant="medium">18.33%</Typography>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {new Array(10).fill(9).map((i) => (
+            <div key={i} className={clsx(styles.baseLineBorder, styles.plainCard)}>
+              <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.eraInfoCard)}>
+                <div className={styles.previousEraTitle}>
+                  <Typography variant="medium" type="secondary">
+                    Era 11
+                  </Typography>
+                  <div className={styles.colorfulButtonBorder}>
+                    <Button type="primary" shape="round" size="small">
+                      Ranked #23232323
+                    </Button>
+                  </div>
+                </div>
+
+                <div className={styles.split}></div>
+                <div className={styles.eraInfoCardLines}>
+                  <div className={styles.eraInfoCardLine}>
+                    <Typography variant="medium" type="secondary">
+                      Points Earned
+                    </Typography>
+                    <Typography variant="medium">800,0 points</Typography>
+                  </div>
+                  <div className={styles.eraInfoCardLine}>
+                    <Typography variant="medium" type="secondary">
+                      Delegation Rewards
+                    </Typography>
+                    <Typography variant="medium">800,0 SQT</Typography>
+                  </div>
+                  <div className={styles.eraInfoCardLine}>
+                    <Typography variant="medium" type="secondary">
+                      Delegated Amount
+                    </Typography>
+                    <Typography variant="medium">800,0 points</Typography>
+                  </div>
+                  <div className={styles.eraInfoCardLine}>
+                    <Typography variant="medium" type="secondary">
+                      APY
+                    </Typography>
+                    <Typography variant="medium">18.33%</Typography>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <Typography variant="large" weight={600}>
+          Era 12 (15th June to 21st June)
+        </Typography>
+
+        <div className={styles.eraEarnedInfo}>
+          <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
+            <Typography variant="large">Points for Each Delegated SQT</Typography>
+            <div className={styles.split}></div>
+            <Typography>For every 10 SQT your delegate for the complete Era, you get 1 point!</Typography>
+          </div>
+          <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
+            <Typography variant="large">Points for SQT Rewards</Typography>
+            <div className={styles.split}></div>
+            <Typography>For every 2 SQT your claim as rewards for the Era, you get 1 point!</Typography>
+          </div>
+
+          <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
+            <Typography variant="large">Best Performing Delegators</Typography>
+            <div className={styles.split}></div>
+            <Typography>Rank as a top performing delegator in this Era to earn bonus points</Typography>
+            <Typography>
+              1st: 15,000 points
+              <br />
+              2nd: 10,000 points
+              <br />
+              3rd: 5,000 points
+              <br />
+              top 10: 2,000 points
+              <br />
+              top 20: 1,000 points
+              <br />
+              top 100: 500 points
+            </Typography>
+          </div>
+
+          <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="large">Random Weekly Lootboxes!</Typography>
+
+              <div className={styles.colorfulButtonBorder}>
+                <Button type="primary" shape="round" size="small">
+                  +999,999 points
+                </Button>
+              </div>
+            </div>
+            <div className={styles.split}></div>
+            <Typography>You have received 3 lootboxes from Era 12!</Typography>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -150,13 +364,20 @@ const DelegationCampaign: FC<IProps> = (props) => {
 
   return (
     <div className={styles.delegationCampaign}>
-      <picture className={styles.delegationCampaignBg}>
-        {/* <source srcSet="/static/delegationCampaign.webp" type="image/webp" /> */}
-        <img src="/static/delegationCampaign.png" alt="Delegation Campaign" />
+      <picture
+        className={styles.delegationCampaignBg}
+        style={{
+          height: '798px' // '934px'
+        }}
+      >
+        <source srcSet="/static/currentEraBg.webp" type="image/webp" />
+        <img src="/static/currentEraBg.png" alt="" />
+        {/* <img src="/static/delegationCampaign.png" alt="Delegation Campaign" /> */}
       </picture>
       <div className={styles.delegationCampaignMain}>
         <WalletDetect mode="delegationCampaign">
-          <FirstStep></FirstStep>
+          {/* <FirstStep></FirstStep> */}
+          <SecondStep></SecondStep>
         </WalletDetect>
       </div>
     </div>

@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 12px;
+}
+
+
 :root {
   --sq-primary-pink: #ff4581;
   --sq-primary-blue: #4388dd;
@@ -50,6 +55,8 @@
 
   --sq-font-body: 16px;
   --sq-line-body: 24px;
+
+  --main-pc-width: 1280px;
 }
 
 body {

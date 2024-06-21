@@ -5,6 +5,7 @@ import { base, baseSepolia, mainnet, sepolia } from 'viem/chains';
 
 import { FAQ } from 'components';
 import { BlockchainStatus } from 'components/BlockchainStatus';
+import { Loading } from 'components/Loading/Loading';
 import { WalletDetect } from 'components/WalletDetect/WalletDetect';
 
 import styles from './home.module.less';
@@ -69,7 +70,7 @@ export function Home() {
         )}
 
         {activeKey === ActiveEnum.DelegatorCampaign ? (
-          <React.Suspense fallback={<div />}>
+          <React.Suspense fallback={<Loading></Loading>}>
             <DelegationCampaign />
           </React.Suspense>
         ) : (
@@ -91,14 +92,14 @@ export function Home() {
                     {activeKey === 'Challenge' ? 'SubQuery Seekers Program' : 'SubQuery Token Claim'}
                   </Typography>
                   {activeKey === 'Challenge' ? (
-                    <React.Suspense fallback={<div />}>
+                    <React.Suspense fallback={<Loading></Loading>}>
                       <SeekersPointsCard />
                     </React.Suspense>
                   ) : null}
                 </div>
                 {activeKey === 'Challenge' && (
                   <WalletDetect>
-                    <React.Suspense fallback={<div />}>
+                    <React.Suspense fallback={<Loading></Loading>}>
                       <Seekers />
                     </React.Suspense>
                   </WalletDetect>
@@ -107,19 +108,19 @@ export function Home() {
                   <WalletDetect mode="airdrop">
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 64, width: '100%' }}>
                       <BlockchainStatus tipsChainIds={airdropChain}>
-                        <React.Suspense fallback={<div />}>
+                        <React.Suspense fallback={<Loading></Loading>}>
                           <AirdropCom />
                         </React.Suspense>
                       </BlockchainStatus>
 
                       <BlockchainStatus tipsChainIds={airdropChain}>
-                        <React.Suspense fallback={<div />}>
+                        <React.Suspense fallback={<Loading></Loading>}>
                           <L2Vesting />
                         </React.Suspense>
                       </BlockchainStatus>
 
                       <BlockchainStatus tipsChainIds={airdropChain}>
-                        <React.Suspense fallback={<div />}>
+                        <React.Suspense fallback={<Loading></Loading>}>
                           <Vesting />
                         </React.Suspense>
                       </BlockchainStatus>
