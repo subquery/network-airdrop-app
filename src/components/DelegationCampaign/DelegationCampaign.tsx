@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { IoMdCheckmark } from 'react-icons/io';
@@ -5,7 +6,7 @@ import { MdOutlineMail } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 import { Markdown, openNotification, Typography } from '@subql/components';
 import { useAsyncMemo } from '@subql/react-hooks';
-import { Button, Collapse, Form, Input } from 'antd';
+import { Button, Collapse, Form, Input, Modal } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import clsx from 'clsx';
 import { useAccount } from 'wagmi';
@@ -13,6 +14,7 @@ import { useAccount } from 'wagmi';
 import { ContactUs, WalletDetect } from 'components/WalletDetect/WalletDetect';
 import { useDelegationCampaignApi } from 'hooks/useDelegationCampaignApi';
 
+import LootboxAnimation from './lootboxAnimation/LootboxAnimation';
 import styles from './DelegationCampaign.module.less';
 
 interface IProps {}
@@ -133,6 +135,84 @@ const FirstStep = () => {
 
         <ContactUs mode="delegationCampaign" />
       </div>
+    </div>
+  );
+};
+
+const LootboxItem = () => {
+  const p = 1;
+  const [isOpen, setIsOpen] = useState(false);
+  const [animationOff, setAnimationOff] = useState(false);
+
+  return (
+    <div className={styles.lootboxItem}>
+      <Typography variant="medium">Lootbox 1</Typography>
+      <Button
+        size="small"
+        shape="round"
+        type="primary"
+        onClick={() => {
+          setIsOpen(true);
+        }}
+      >
+        Open Lootbox
+      </Button>
+      <Modal
+        open={isOpen}
+        onCancel={() => {
+          setIsOpen(false);
+        }}
+        okButtonProps={{
+          style: { display: 'none' }
+        }}
+        cancelButtonProps={{ style: { display: 'none' } }}
+        closeIcon={<></>}
+        destroyOnClose
+        className={styles.lootboxModal}
+        afterOpenChange={(val) => {
+          setAnimationOff(val);
+        }}
+        width={600}
+      >
+        {animationOff && (
+          <div
+            className={styles.baseCard}
+            onClick={() => {
+              setIsOpen(false);
+            }}
+            role="button"
+            tabIndex={0}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16,
+              alignItems: 'center',
+              width: 600
+            }}
+          >
+            <div style={{ height: 300, marginTop: 120, transform: 'translateY(45px)' }}>
+              <LootboxAnimation></LootboxAnimation>
+            </div>
+
+            <Typography variant="h4">Lootbox for Era 11</Typography>
+
+            <Typography variant="medium" type="secondary" style={{ textAlign: 'center' }}>
+              By staking more SQT, you get more opportunities to win with lootboxes. Check back at the end of each Era
+              for new lootboxes that you can open and win.
+            </Typography>
+
+            <Button
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              shape="round"
+              type="primary"
+            >
+              Collect the Points!
+            </Button>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
@@ -340,6 +420,12 @@ const SecondStep = () => {
             </div>
             <div className={styles.split}></div>
             <Typography>You have received 3 lootboxes from Era 12!</Typography>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <LootboxItem></LootboxItem>
+              <LootboxItem></LootboxItem>
+              <LootboxItem></LootboxItem>
+            </div>
           </div>
         </div>
       </div>

@@ -2,13 +2,13 @@
 // see plainCard hover css
 @property --myColor1 {
   syntax: '<color>';
-  initial-value: #34414B;
+  initial-value: #34414b;
   inherits: false;
 }
 
 @property --myColor2 {
   syntax: '<color>';
-  initial-value: #34414B;
+  initial-value: #34414b;
   inherits: false;
 }
 
@@ -24,11 +24,11 @@
   border: 1px solid var(--dark-mode-border);
 
   &.nestedBaseCard {
-    background: #4388DD0F;
+    background: #4388dd0f;
   }
 }
 .baseLineBorder {
-  position: relative;  
+  position: relative;
   padding: 1px;
   &::before {
     content: '';
@@ -37,7 +37,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(315.02deg, #FF1E66 16.18%, #1980FF 85.01%); 
+    background: linear-gradient(315.02deg, #ff1e66 16.18%, #1980ff 85.01%);
     border-radius: 8px;
   }
 }
@@ -52,7 +52,7 @@
 }
 
 .colorfulButtonBorder {
-  position: relative;  
+  position: relative;
   padding: 1px;
   display: flex;
   align-items: center;
@@ -65,7 +65,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(315.02deg, rgb(255, 30, 102) 16.18%, #1980FF 85.01%); 
+    background: linear-gradient(315.02deg, rgb(255, 30, 102) 16.18%, #1980ff 85.01%);
     border-radius: 24px;
   }
 
@@ -94,7 +94,6 @@
   background-color: var(--sq-blue600);
 }
 
-
 .challenges {
   display: flex;
   gap: 16px;
@@ -111,10 +110,10 @@
       left: 50%;
       top: 0;
       transform: translateX(-50%);
-      width: 2px; 
+      width: 2px;
       background-repeat: repeat-y;
-      background-image: linear-gradient(0deg, rgba(175,70,70,0) 50%, var(--sq-blue600) 50%);
-      background-size: 100% 8px; 
+      background-image: linear-gradient(0deg, rgba(175, 70, 70, 0) 50%, var(--sq-blue600) 50%);
+      background-size: 100% 8px;
     }
   }
 
@@ -128,13 +127,13 @@
 
           flex-direction: row-reverse;
           border-radius: 8px;
-  
+
           .ant-collapse-expand-icon {
             color: var(--sq-blue600);
             transform: rotate(-90deg);
             padding-inline-end: 0;
             height: 36px;
-            background: #4388DD0D;
+            background: #4388dd0d;
             width: 36px;
             display: flex;
             align-items: center;
@@ -142,27 +141,26 @@
             border-radius: 8px;
           }
         }
-  
+
         &-active {
           .ant-collapse-header {
             border-radius: 8px 8px 0 0 !important;
             .ant-collapse-expand-icon {
               transform: rotate(0);
-
             }
           }
         }
-  
+
         &:last-child {
           .ant-collapse-header {
             border-radius: 8px;
           }
         }
-  
+
         & + .ant-collapse-item {
           margin-top: 16px;
         }
-  
+
         .ant-collapse-content {
           color: #fff;
           background: var(--dark-mode-card);
@@ -185,7 +183,7 @@
       }
     }
   }
-  
+
   .check {
     color: #fff;
     width: 27px;
@@ -194,7 +192,7 @@
     border-radius: 50%;
     border: 1px solid #fff;
     margin-right: 10px;
-  
+
     &Active {
       background: linear-gradient(315deg, #ff1e66 16.18%, #1980ff 85.01%);
       border: none;
@@ -205,6 +203,23 @@
   }
 }
 
+.lootboxItem {
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--dark-mode-background);
+  display: flex;
+  justify-content: space-between;
+}
+
+.lootboxModal {
+  width: 100vw;
+  height: 100vh;
+  :global {
+    .ant-modal-content {
+      background-color: unset;
+    }
+  }
+}
 
 .delegationCampaign {
   display: flex;
@@ -226,10 +241,10 @@
 
   &Main {
     position: relative;
-    
+
     .actionModal {
       border-radius: 8px;
-      background: #1B2545E5;
+      background: #1b2545e5;
       display: flex;
       flex-direction: column;
       width: 600px;
@@ -251,7 +266,6 @@
         margin-top: 208px;
       }
 
-
       .eraInfo {
         display: flex;
         flex-direction: column;
@@ -261,7 +275,7 @@
           display: flex;
           justify-content: flex-end;
           gap: 8px;
-  
+
           &Arrow {
             display: flex;
             align-items: center;
@@ -288,7 +302,7 @@
           }
 
           .baseLineBorder {
-            filter: drop-shadow(0px 2px 8px #D5E4F04D);
+            filter: drop-shadow(0px 2px 8px #d5e4f04d);
           }
 
           .plainCard {
@@ -300,10 +314,10 @@
             }
 
             &:hover {
-              filter: drop-shadow(0px 2px 8px #D5E4F04D);
+              filter: drop-shadow(0px 2px 8px #d5e4f04d);
               &::before {
-                --myColor1: #FF1E66;
-                --myColor2: #1980FF;
+                --myColor1: #ff1e66;
+                --myColor2: #1980ff;
               }
             }
           }
@@ -323,7 +337,6 @@
               display: flex;
               justify-content: space-between;
               width: 100%;
-            
             }
           }
         }
