@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { IoMdCheckmark } from 'react-icons/io';
-// import { MdOutlineMail } from 'react-icons/md';
+import { MdOutlineMail } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 import { Markdown, openNotification, Typography } from '@subql/components';
 import { useAsyncMemo } from '@subql/react-hooks';
@@ -45,12 +45,12 @@ const FirstStep = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 48 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 48, marginTop: 80 }}>
       <Typography variant="h3" style={{ width: 600, textAlign: 'center' }}>
         SubQuery Summer Delegation Frenzy
       </Typography>
       <div className={styles.actionModal}>
-        <>
+        {/* <>
           <div
             style={{
               display: 'flex',
@@ -97,10 +97,10 @@ const FirstStep = () => {
           <Button type="primary" shape="round" size="large" onClick={signupWithCode} loading={loading}>
             Submit
           </Button>
-        </>
+        </> */}
 
         {/* second step */}
-        {/* 
+
         <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 16 }}>
           <MdOutlineMail style={{ fontSize: '47px', color: '#fff' }} />
           <Typography variant="h5">Email Verification</Typography>
@@ -129,7 +129,7 @@ const FirstStep = () => {
               </Typography.Link>
             </Typography>
           </div>
-        </div> */}
+        </div>
 
         <ContactUs mode="delegationCampaign" />
       </div>
@@ -151,7 +151,7 @@ const SecondStep = () => {
         </Typography>
       </div>
 
-      <div className={styles.baseCard} style={{ marginTop: 220 }}>
+      <div className={styles.baseCard} style={{ marginTop: 280 }}>
         <Typography>Your Achievements</Typography>
 
         <div style={{ display: 'flex', gap: 16 }}>
@@ -519,7 +519,7 @@ const Leaderboard = () => {
   return (
     <div
       className={styles.baseCard}
-      style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%', margin: '32px auto 0 auto' }}
+      style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%', margin: '32px auto 140px auto' }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="large">Compete to get the highest score, you can do it!</Typography>
@@ -605,7 +605,7 @@ const Leaderboard = () => {
 };
 
 const DelegationCampaign: FC<IProps> = (props) => {
-  const { address: account } = useAccount();
+  const { address: account, isConnected } = useAccount();
 
   const { getUserInfo } = useDelegationCampaignApi({
     alert: true
@@ -622,25 +622,40 @@ const DelegationCampaign: FC<IProps> = (props) => {
     return 2;
   }, [userInfo]);
 
+  const height = useMemo(() => {
+    if (!isConnected || userStage === 0 || userStage === 1) {
+      return 991;
+    }
+
+    return 774;
+  }, [userStage, isConnected]);
+
   return (
     <div className={styles.delegationCampaign}>
       <picture
         className={styles.delegationCampaignBg}
         style={{
-          height: '798px' // '934px'
+          height,
+          minHeight: height
         }}
       >
         <source srcSet="/static/currentEraBg.webp" type="image/webp" />
         <img src="/static/currentEraBg.png" alt="" />
-        {/* <img src="/static/delegationCampaign.png" alt="Delegation Campaign" /> */}
       </picture>
-      <div className={styles.delegationCampaignMain}>
-        <WalletDetect mode="delegationCampaign">
-          {/* <FirstStep></FirstStep> */}
-          <SecondStep></SecondStep>
+      <div
+        className={styles.delegationCampaignMain}
+        style={{
+          minHeight: height
+        }}
+      >
+        <WalletDetect mode="delegationCampaign" style={{ marginTop: 144 }}>
+          <>
+            {/* <FirstStep></FirstStep> */}
+            <SecondStep></SecondStep>
+            <MainChallenges></MainChallenges>
+            <Leaderboard></Leaderboard>
+          </>
         </WalletDetect>
-        <MainChallenges></MainChallenges>
-        <Leaderboard></Leaderboard>
       </div>
     </div>
   );

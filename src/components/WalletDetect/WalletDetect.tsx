@@ -98,14 +98,15 @@ export const ConnectWalletCom: React.FC<{ mode?: Mode }> = ({ mode }) => {
 interface IWalletDetect {
   containerClassName?: string;
   mode?: Mode;
+  style?: React.CSSProperties;
 }
-export const WalletDetect: React.FC<IWalletDetect> = ({ children, containerClassName, mode = 'challenge' }) => {
+export const WalletDetect: React.FC<IWalletDetect> = ({ children, style, containerClassName, mode = 'challenge' }) => {
   const { address: account } = useAccount();
   const { t } = useTranslation();
 
   if (!account) {
     return (
-      <div className={clsx(styles.container, containerClassName)}>
+      <div className={clsx(styles.container, containerClassName)} style={style}>
         <div className={styles.walletActionContainer}>
           <ConnectWalletCom mode={mode} />
         </div>

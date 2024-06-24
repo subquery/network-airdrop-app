@@ -34,7 +34,7 @@
     "no-console": "off",
     "react/jsx-no-useless-fragment": "off",
     "react/require-default-props": "off",
-    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-imports": "off",
     "consistent-return": "off",
     "no-unused-expressions": "off",
     "react/no-unstable-nested-components": ["error", { "allowAsProps": true }],

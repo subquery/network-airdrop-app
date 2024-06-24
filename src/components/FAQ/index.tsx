@@ -264,6 +264,10 @@ export const FAQ: React.FC<{
               </span>
             </>
           )
+        },
+        {
+          question: 'Q1 Delegation',
+          answer: '1231'
         }
       ];
     }
@@ -284,6 +288,8 @@ export const FAQ: React.FC<{
             <FAQItem question={faq.question} answer={faq.answer} idx={idx} />
           </div>
         ))}
+
+        <div style={{ height: '1px', width: '854px', background: 'var(--dark-mode-border)' }}></div>
       </div>
     </div>
   );
