@@ -209,6 +209,14 @@
   background: var(--dark-mode-background);
   display: flex;
   justify-content: space-between;
+
+  :global {
+    .ant-btn-primary:disabled {
+      background: var(--dark-mode-card);
+      border: 1px solid transparent;
+      color:var(--sq-gray700);
+    }
+  }
 }
 
 .lootboxModal {
@@ -305,6 +313,7 @@
           gap: 16px;
           max-width: var(--main-pc-width);
           overflow: hidden;
+          scroll-behavior: smooth;
 
           .previousEraTitle {
             display: flex;

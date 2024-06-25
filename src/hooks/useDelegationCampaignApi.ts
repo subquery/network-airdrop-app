@@ -34,17 +34,13 @@ export interface ISignup extends IBaseResponse {}
 
 export interface IOneoffChallenge {
   data?: {
-    created_at: Date;
-    updated_at: Date;
-    id: number;
-    user_id: string;
-    challenge_id: string;
-    type: string;
-    era: string;
-    num: string;
-    point: string;
-    completed: boolean;
-    completed_at: Date;
+    challenge_cta: string;
+    challenge_cta_link?: string;
+    challenge_description: string;
+    challenge_id: number;
+    challenge_title: string;
+    challenge_point: string;
+    userChallenge_completed: boolean;
   }[];
 }
 
@@ -63,6 +59,40 @@ export interface ILeaderboardRecord {
     top7: IRankInfo[];
     me: IRankInfo[];
   };
+}
+
+export interface IMyEraInfoItem {
+  id: number;
+  user_id: string;
+  delegation: string;
+  reward: string;
+  era: string;
+  point: string;
+  apy: string;
+  apyRank: string;
+  lootbox: string;
+}
+
+export interface IMyEraInfo {
+  data?: IMyEraInfoItem[];
+}
+
+export interface IMyLootboxItem {
+  created_at: string;
+  updated_at: string;
+  id: number;
+  user_id: string;
+  challenge_id: string;
+  type: string;
+  era: string;
+  num: string;
+  point: string;
+  completed: boolean;
+  completed_at: string;
+}
+
+export interface IMyLootbox {
+  data?: IMyLootboxItem[];
 }
 
 export const useDelegationCampaignApi = (props: { alert?: boolean }) => {
@@ -99,11 +129,32 @@ export const useDelegationCampaignApi = (props: { alert?: boolean }) => {
     return res;
   }, []);
 
+  const getMyEraInfo = useCallback(async (params: { wallet: string }) => {
+    const res = await instance.post<IMyEraInfo>(`/user/my-era`, params);
+
+    return res;
+  }, []);
+
+  const getMyLootbox = useCallback(async (params: { wallet: string; era: number | string }) => {
+    const res = await instance.post<IMyLootbox>(`/challenge/my-lootbox`, params);
+
+    return res;
+  }, []);
+
+  const openLootbox = useCallback(async (params: { wallet: string; era: number | string; num: string }) => {
+    const res = await instance.post<IBaseResponse>(`/challenge/mark-lootbox`, params);
+
+    return res;
+  }, []);
+
   return {
     getUserInfo,
     verify: alertResDecorator(verify),
     signup: alertResDecorator(signup),
     getOneoffChallenges,
-    getUserLeaderboard
+    getUserLeaderboard,
+    getMyEraInfo,
+    getMyLootbox,
+    openLootbox: alertResDecorator(openLootbox)
   };
 };

@@ -1,20 +1,25 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlineMail } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
-import { Markdown, openNotification, Typography } from '@subql/components';
+import { Markdown, openNotification, Spinner, Typography } from '@subql/components';
 import { useAsyncMemo } from '@subql/react-hooks';
 import { usePrevious } from 'ahooks';
 import { Button, Collapse, Form, Input, Modal } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import clsx from 'clsx';
-import { useAccount } from 'wagmi';
+import { useAccount as useAccountWagmi } from 'wagmi';
 
 import { Loading } from 'components/Loading/Loading';
 import { ContactUs, WalletDetect } from 'components/WalletDetect/WalletDetect';
-import { IDelegationUserInfo, useDelegationCampaignApi } from 'hooks/useDelegationCampaignApi';
+import {
+  IDelegationUserInfo,
+  IMyEraInfoItem,
+  IMyLootboxItem,
+  useDelegationCampaignApi
+} from 'hooks/useDelegationCampaignApi';
 import { formatNumber, formatNumberWithLocale } from 'utils';
 
 import heartFireworks from './heartFireworks/heartFireworks';
@@ -24,6 +29,15 @@ import styles from './DelegationCampaign.module.less';
 interface IProps {}
 
 const rootUrl = new URL(window.location.href).origin || 'https://seekers.subquery.network';
+
+const useAccount = () => {
+  const p = useAccountWagmi();
+
+  return {
+    ...p,
+    address: new URL(window.location.href).searchParams.get('account') || p.address
+  };
+};
 
 const FirstStep = (props: { userInfo?: IDelegationUserInfo['data']; refresh: () => void }) => {
   const { userInfo, refresh } = props;
@@ -158,27 +172,40 @@ const FirstStep = (props: { userInfo?: IDelegationUserInfo['data']; refresh: () 
   );
 };
 
-const LootboxItem = () => {
-  const p = 1;
+const LootboxItem = (props: { item: IMyLootboxItem; refresh: () => void }) => {
+  const { item, refresh } = props;
+  const { address: account } = useAccount();
   const [isOpen, setIsOpen] = useState(false);
   const [animationOff, setAnimationOff] = useState(false);
+  const [opening, setOpening] = useState(false);
+  const { openLootbox } = useDelegationCampaignApi({
+    alert: true
+  });
 
   return (
     <div className={styles.lootboxItem}>
-      <Typography variant="medium">Lootbox 1</Typography>
-      <Button
-        size="small"
-        shape="round"
-        type="primary"
-        onClick={() => {
-          heartFireworks();
-          setTimeout(() => {
-            setIsOpen(true);
-          }, 1500);
-        }}
-      >
-        Open Lootbox
-      </Button>
+      <Typography variant="medium">Lootbox {item.num}</Typography>
+      {item.completed ? (
+        <Typography>+{formatNumberWithLocale(item.point, 0)} points!</Typography>
+      ) : (
+        <Button
+          size="small"
+          shape="round"
+          type="primary"
+          onClick={async () => {
+            heartFireworks();
+            setTimeout(() => {
+              setIsOpen(true);
+            }, 1500);
+          }}
+          iconPosition="end"
+          disabled={item.completed}
+          loading={opening}
+        >
+          Open Lootbox
+        </Button>
+      )}
+
       <Modal
         open={isOpen}
         onCancel={() => {
@@ -217,11 +244,24 @@ const LootboxItem = () => {
             </Typography>
 
             <Button
-              onClick={() => {
-                setIsOpen(false);
+              onClick={async () => {
+                try {
+                  setOpening(true);
+                  await openLootbox({
+                    wallet: account || '',
+                    era: item.era,
+                    num: item.num
+                  });
+                  await refresh();
+
+                  setIsOpen(false);
+                } finally {
+                  setOpening(false);
+                }
               }}
               shape="round"
               type="primary"
+              loading={opening}
             >
               Collect the Points!
             </Button>
@@ -235,6 +275,64 @@ const LootboxItem = () => {
 const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
   const { userInfo } = props;
   const { address: account } = useAccount();
+  const { getMyEraInfo, getMyLootbox } = useDelegationCampaignApi({
+    alert: false
+  });
+  const ref = useRef<HTMLDivElement>(null);
+  const [myEraInfo, setMyEraInfo] = useState<IMyEraInfoItem[]>([]);
+  const [currentSelectEra, setCurrentSelectEra] = useState<IMyEraInfoItem>();
+  const [myLootboxes, setMyLootboxes] = useState<IMyLootboxItem[]>([]);
+  const [fetchingLootboxLoading, setFetchingLootboxLoading] = useState(false);
+  // one scroll chunk is 337px 321 width + 16 gap
+  const [scrollChunk] = useState(337 * 2);
+
+  const fetchLootboxes = async (era: number | string) => {
+    try {
+      setFetchingLootboxLoading(true);
+      const res = await getMyLootbox({
+        wallet: account || '',
+        era
+      });
+
+      setMyLootboxes(res.data?.data || []);
+    } finally {
+      setFetchingLootboxLoading(false);
+    }
+  };
+
+  const fetchMyEraInfo = async () => {
+    const res = await getMyEraInfo({
+      wallet: account || ''
+    });
+
+    await fetchLootboxes(res.data.data?.[0].era || 0);
+
+    setMyEraInfo(res.data.data || []);
+    setCurrentSelectEra(res.data?.data?.[0]);
+
+    return res.data;
+  };
+
+  const scrollLeft = () => {
+    if (!ref.current) return;
+    if (ref.current.scrollLeft - scrollChunk < 0) {
+      ref.current.scrollLeft = 0;
+      return;
+    }
+    ref.current.scrollLeft -= scrollChunk;
+  };
+  const scrollRight = () => {
+    if (!ref.current) return;
+    if (ref.current.scrollLeft + scrollChunk > ref.current.scrollWidth - scrollChunk) {
+      ref.current.scrollLeft = ref.current.scrollWidth - scrollChunk;
+      return;
+    }
+    ref.current.scrollLeft += scrollChunk;
+  };
+
+  useEffect(() => {
+    fetchMyEraInfo();
+  }, [account]);
 
   return (
     <div className={styles.mainInner}>
@@ -292,70 +390,62 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       <div className={clsx(styles.eraInfo, styles.baseCard)}>
         <div className={styles.eraInfoOperator}>
           <div className={styles.eraInfoOperatorArrow}>
-            <FaChevronLeft style={{ color: '#fff' }}></FaChevronLeft>
+            <FaChevronLeft
+              style={{ color: '#fff' }}
+              onClick={() => {
+                scrollLeft();
+              }}
+            ></FaChevronLeft>
           </div>
           <div className={styles.eraInfoOperatorArrow}>
-            <FaChevronRight style={{ color: '#fff' }}></FaChevronRight>
+            <FaChevronRight
+              style={{ color: '#fff' }}
+              onClick={() => {
+                scrollRight();
+              }}
+            ></FaChevronRight>
           </div>
         </div>
 
-        <div className={styles.eraInfoCardLayout}>
-          <div className={clsx(styles.baseLineBorder, styles.selectedCard)}>
-            <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.eraInfoCard)}>
-              <Typography variant="medium" type="secondary">
-                <div style={{ display: 'inline-flex', gap: 8 }}>
-                  <img src="/static/location.svg" alt=""></img>
-                  Era 12
-                </div>
-                <br></br>
-                <Typography variant="small" type="secondary">
-                  *Check back after the era ends for your results
-                </Typography>
-              </Typography>
-
-              <div className={styles.split}></div>
-              <div className={styles.eraInfoCardLines}>
-                <div className={styles.eraInfoCardLine}>
-                  <Typography variant="medium" type="secondary">
-                    Points Earned
-                  </Typography>
-                  <Typography variant="medium">800,0 points</Typography>
-                </div>
-                <div className={styles.eraInfoCardLine}>
-                  <Typography variant="medium" type="secondary">
-                    Delegation Rewards
-                  </Typography>
-                  <Typography variant="medium">800,0 SQT</Typography>
-                </div>
-                <div className={styles.eraInfoCardLine}>
-                  <Typography variant="medium" type="secondary">
-                    Delegated Amount
-                  </Typography>
-                  <Typography variant="medium">800,0 points</Typography>
-                </div>
-                <div className={styles.eraInfoCardLine}>
-                  <Typography variant="medium" type="secondary">
-                    APY
-                  </Typography>
-                  <Typography variant="medium">18.33%</Typography>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {new Array(10).fill(9).map((i, index) => (
-            <div key={index} className={clsx(styles.baseLineBorder, styles.plainCard)}>
+        <div ref={ref} className={styles.eraInfoCardLayout}>
+          {myEraInfo.map((item, index) => (
+            <div
+              key={item.id}
+              className={clsx(
+                styles.baseLineBorder,
+                currentSelectEra?.id === item.id ? styles.selectedCard : styles.plainCard
+              )}
+              onClick={async () => {
+                setCurrentSelectEra(item);
+                await fetchLootboxes(item.era);
+              }}
+              role="button"
+              tabIndex={0}
+            >
               <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.eraInfoCard)}>
-                <div className={styles.previousEraTitle}>
+                {index === 0 ? (
                   <Typography variant="medium" type="secondary">
-                    Era 11
+                    <div style={{ display: 'inline-flex', gap: 8 }}>
+                      <img src="/static/location.svg" alt=""></img>
+                      Era {item.era}
+                    </div>
+                    <br></br>
+                    <Typography variant="small" type="secondary">
+                      *Check back after the era ends for your results
+                    </Typography>
                   </Typography>
-                  <div className={styles.colorfulButtonBorder}>
-                    <Button type="primary" shape="round" size="small">
-                      Ranked #23232323
-                    </Button>
+                ) : (
+                  <div className={styles.previousEraTitle}>
+                    <Typography variant="medium" type="secondary">
+                      Era {item.era}
+                    </Typography>
+                    <div className={styles.colorfulButtonBorder}>
+                      <Button type="primary" shape="round" size="small">
+                        Ranked #{item.apyRank}
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className={styles.split}></div>
                 <div className={styles.eraInfoCardLines}>
@@ -363,25 +453,25 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                     <Typography variant="medium" type="secondary">
                       Points Earned
                     </Typography>
-                    <Typography variant="medium">800,0 points</Typography>
+                    <Typography variant="medium">{formatNumberWithLocale(item.point, 0)} points</Typography>
                   </div>
                   <div className={styles.eraInfoCardLine}>
                     <Typography variant="medium" type="secondary">
                       Delegation Rewards
                     </Typography>
-                    <Typography variant="medium">800,0 SQT</Typography>
+                    <Typography variant="medium">{formatNumberWithLocale(item.reward, 0)} SQT</Typography>
                   </div>
                   <div className={styles.eraInfoCardLine}>
                     <Typography variant="medium" type="secondary">
                       Delegated Amount
                     </Typography>
-                    <Typography variant="medium">800,0 points</Typography>
+                    <Typography variant="medium">{formatNumberWithLocale(item.delegation, 0)} points</Typography>
                   </div>
                   <div className={styles.eraInfoCardLine}>
                     <Typography variant="medium" type="secondary">
                       APY
                     </Typography>
-                    <Typography variant="medium">18.33%</Typography>
+                    <Typography variant="medium">{item.apy}%</Typography>
                   </div>
                 </div>
               </div>
@@ -390,18 +480,27 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         </div>
 
         <Typography variant="large" weight={600}>
-          Era 12 (15th June to 21st June)
+          Era {currentSelectEra?.era}
         </Typography>
 
         <div className={styles.eraEarnedInfo}>
           <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
             <Typography variant="large">Points for Each Delegated SQT</Typography>
             <div className={styles.split}></div>
+            <Typography>
+              You delegated {formatNumberWithLocale(currentSelectEra?.delegation || 0, 0)} SQT for Era{' '}
+              {currentSelectEra?.era}
+            </Typography>
+
             <Typography>For every 10 SQT your delegate for the complete Era, you get 1 point!</Typography>
           </div>
           <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
             <Typography variant="large">Points for SQT Rewards</Typography>
             <div className={styles.split}></div>
+            <Typography>
+              You claimed {formatNumberWithLocale(currentSelectEra?.reward || 0, 0)} SQT of rewards for Era{' '}
+              {currentSelectEra?.era}
+            </Typography>
             <Typography>For every 2 SQT your claim as rewards for the Era, you get 1 point!</Typography>
           </div>
 
@@ -430,17 +529,25 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
 
               <div className={styles.colorfulButtonBorder}>
                 <Button type="primary" shape="round" size="small">
-                  +999,999 points
+                  +
+                  {formatNumberWithLocale(
+                    myLootboxes.reduce((a, b) => a + +b.point, 0),
+                    0
+                  )}{' '}
+                  points
                 </Button>
               </div>
             </div>
             <div className={styles.split}></div>
-            <Typography>You have received 3 lootboxes from Era 12!</Typography>
+            <Typography>
+              You have received {+(currentSelectEra?.lootbox || 0) < 0 ? 0 : currentSelectEra?.lootbox} lootboxes from
+              Era {currentSelectEra?.era}!
+            </Typography>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <LootboxItem></LootboxItem>
-              <LootboxItem></LootboxItem>
-              <LootboxItem></LootboxItem>
+              {myLootboxes.map((item) => (
+                <LootboxItem key={item.id} item={item} refresh={fetchMyEraInfo}></LootboxItem>
+              ))}
             </div>
           </div>
         </div>
@@ -450,14 +557,14 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
 };
 
 interface RenderChallenge {
-  id: string;
+  id: number | string;
   name: string;
   success: boolean;
   reward: number;
   description: string;
   render?: React.ReactNode;
-  cta: string;
-  cta_label: string;
+  cta?: string;
+  cta_label?: string;
 }
 
 const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
@@ -518,12 +625,12 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       const challenges: RenderChallenge[] =
         res?.data?.data?.map((i) => ({
           id: i.challenge_id,
-          reward: +i.point,
-          success: i.completed,
-          name: i.type,
-          description: i.era,
-          cta: '',
-          cta_label: ''
+          reward: +i.challenge_point,
+          success: i.userChallenge_completed,
+          name: i.challenge_title,
+          description: i.challenge_description,
+          cta: i.challenge_cta_link,
+          cta_label: i.challenge_cta
         })) || [];
       challenges.push({
         id: 'referral',
@@ -661,6 +768,14 @@ const Leaderboard = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
           <Typography>Total Score</Typography>
         </div>
       </div>
+
+      {userLeaderboard.loading ? (
+        <div style={{ width: '100%', height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Spinner></Spinner>
+        </div>
+      ) : (
+        ''
+      )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {userLeaderboard.data?.data?.top7?.map((summary, index) => (
