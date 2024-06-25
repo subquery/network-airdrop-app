@@ -156,7 +156,7 @@ const LootboxItem = () => {
           heartFireworks();
           setTimeout(() => {
             setIsOpen(true);
-          }, 2000);
+          }, 1500);
         }}
       >
         Open Lootbox
@@ -180,22 +180,12 @@ const LootboxItem = () => {
       >
         {animationOff && (
           <div
-            className={styles.baseCard}
+            className={clsx(styles.baseCard, styles.lootboxWrapper)}
             onClick={() => {
               setIsOpen(false);
             }}
             role="button"
             tabIndex={0}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 16,
-              alignItems: 'center',
-              width: 600,
-              position: 'fixed',
-              top: '50%',
-              transform: 'translateY(-50%)'
-            }}
           >
             <div style={{ height: 300, marginTop: 120, transform: 'translateY(45px)' }}>
               <LootboxAnimation></LootboxAnimation>

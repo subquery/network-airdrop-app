@@ -1,6 +1,6 @@
 import confetti from 'canvas-confetti';
 
-const count = 800;
+const count = 1000;
 const heart = confetti.shapeFromPath({
   path: 'M167 72c19,-38 37,-56 75,-56 42,0 76,33 76,75 0,76 -76,151 -151,227 -76,-76 -151,-151 -151,-227 0,-42 33,-75 75,-75 38,0 57,18 76,56z',
   // @ts-ignore
@@ -37,28 +37,34 @@ const heartFireworks = () => {
   };
 
   fire(0.25, {
-    spread: 26,
+    spread: 150,
     startVelocity: 55,
+    decay: 0.95,
+
     scalar: scalar()
   });
   fire(0.2, {
-    spread: 60,
+    spread: 160,
+    decay: 0.95,
     scalar: scalar()
   });
   fire(0.35, {
     spread: 100,
-    decay: 0.91,
+    decay: 0.95,
     scalar: scalar()
   });
   fire(0.1, {
     spread: 120,
     startVelocity: 25,
-    decay: 0.92,
+    decay: 0.95,
+
     scalar: scalar()
   });
   fire(0.1, {
     spread: 120,
     startVelocity: 45,
+    decay: 0.95,
+
     scalar: scalar()
   });
 };
