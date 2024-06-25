@@ -1,4 +1,5 @@
 import contractErrorCodes from '@subql/contract-sdk/publish/revertcode.json';
+import BigNumberJs from 'bignumber.js';
 import { BigNumberish } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import moment from 'moment';
@@ -56,3 +57,38 @@ export const mapContractError = (error: any) => {
 export const filterSuccessPromoiseSettledResult = <T>(
   result: PromiseSettledResult<T>
 ): result is PromiseFulfilledResult<T> => result.status === 'fulfilled';
+
+export function formatNumber(num: number | string, precision = 2) {
+  const map = [
+    { suffix: 'T', threshold: 1e12 },
+    { suffix: 'B', threshold: 1e9 },
+    { suffix: 'M', threshold: 1e6 },
+    { suffix: 'K', threshold: 1e3 },
+    { suffix: '', threshold: 1 }
+  ];
+
+  const found = map.find((x) => Math.abs(+num) >= x.threshold);
+  if (found) {
+    const formatted = (+num / found.threshold).toFixed(precision) + found.suffix;
+    return formatted;
+  }
+
+  if (+num < 1) {
+    return (+num).toFixed(precision);
+  }
+
+  return num;
+}
+
+export function formatNumberWithLocale(num: number | string | BigNumberJs | BigNumberJs, digits = 4) {
+  const transform = BigNumberJs(num.toString()).toNumber();
+
+  if (Number.isNaN(transform)) {
+    return '0';
+  }
+
+  return transform.toLocaleString(undefined, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  });
+}

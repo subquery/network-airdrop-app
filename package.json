@@ -43,6 +43,7 @@
     "apollo": "^2.34.0",
     "assert": "^2.0.0",
     "axios": "^1.6.3",
+    "bignumber.js": "^9.1.2",
     "buffer": "^6.0.3",
     "canvas-confetti": "^1.9.3",
     "clsx": "^1.2.1",

@@ -6,13 +6,16 @@ import { MdOutlineMail } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 import { Markdown, openNotification, Typography } from '@subql/components';
 import { useAsyncMemo } from '@subql/react-hooks';
+import { usePrevious } from 'ahooks';
 import { Button, Collapse, Form, Input, Modal } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import clsx from 'clsx';
 import { useAccount } from 'wagmi';
 
+import { Loading } from 'components/Loading/Loading';
 import { ContactUs, WalletDetect } from 'components/WalletDetect/WalletDetect';
-import { useDelegationCampaignApi } from 'hooks/useDelegationCampaignApi';
+import { IDelegationUserInfo, useDelegationCampaignApi } from 'hooks/useDelegationCampaignApi';
+import { formatNumber, formatNumberWithLocale } from 'utils';
 
 import heartFireworks from './heartFireworks/heartFireworks';
 import LootboxAnimation from './lootboxAnimation/LootboxAnimation';
@@ -22,12 +25,22 @@ interface IProps {}
 
 const rootUrl = new URL(window.location.href).origin || 'https://seekers.subquery.network';
 
-const FirstStep = () => {
+const FirstStep = (props: { userInfo?: IDelegationUserInfo['data']; refresh: () => void }) => {
+  const { userInfo, refresh } = props;
+
   const { search } = useLocation();
   const { address: account } = useAccount();
   const query = useMemo(() => new URLSearchParams(search), [search]);
   const [form] = useForm();
   const [loading, setLoading] = useState(false);
+  const { signup } = useDelegationCampaignApi({
+    alert: true
+  });
+
+  const haveSubmitEmial = useMemo(() => {
+    if (!userInfo?.email) return false;
+    return true;
+  }, [userInfo]);
 
   const signupWithCode = async () => {
     try {
@@ -36,12 +49,13 @@ const FirstStep = () => {
       if (!account) return false;
       const referralCode = query.get('referral') || '';
 
-      // const res = await signup({
-      //   address: account,
-      //   referral_code: referralCode,
-      //   email: form.getFieldValue('email')
-      // });
-      // await props.freshFunc?.();
+      const res = await signup({
+        wallet: account,
+        referralCode: referralCode || undefined,
+        email: form.getFieldValue('email')
+      });
+
+      await refresh();
     } finally {
       setLoading(false);
     }
@@ -53,86 +67,90 @@ const FirstStep = () => {
         SubQuery Summer Delegation Frenzy
       </Typography>
       <div className={styles.actionModal}>
-        {/* <>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 16
-            }}
-          >
-            <Typography variant="h5">Email Verification</Typography>
-            <Typography variant="medium" type="secondary">
-              Please verify your email to register for the Summer Delegation Frenzy
-            </Typography>
-          </div>
-
-          <Form form={form}>
-            <Form.Item
-              name="email"
-              rules={[
-                {
-                  async validator(rule, value) {
-                    if (!value) {
-                      return Promise.reject(new Error('Email is required'));
-                    }
-                    if (!/^\S+@\S+\.\S+$/.test(value)) {
-                      return Promise.reject(new Error('Email is invalid'));
-                    }
-
-                    return Promise.resolve();
-                  }
-                }
-              ]}
+        {!haveSubmitEmial && (
+          <>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 16
+              }}
             >
-              <Input className="darkInput" style={{ marginBottom: 0 }} placeholder="Enter your email" />
-            </Form.Item>
-          </Form>
+              <Typography variant="h5">Email Verification</Typography>
+              <Typography variant="medium" type="secondary">
+                Please verify your email to register for the Summer Delegation Frenzy
+              </Typography>
+            </div>
 
-          <Typography variant="medium" type="secondary">
-            By entering your email you have read and agree to our{' '}
-            <Typography.Link active href="https://subquery.network/privacy" target="_blank" variant="medium">
-              privacy policy
-            </Typography.Link>
-          </Typography>
+            <Form form={form}>
+              <Form.Item
+                name="email"
+                rules={[
+                  {
+                    async validator(rule, value) {
+                      if (!value) {
+                        return Promise.reject(new Error('Email is required'));
+                      }
+                      if (!/^\S+@\S+\.\S+$/.test(value)) {
+                        return Promise.reject(new Error('Email is invalid'));
+                      }
 
-          <Button type="primary" shape="round" size="large" onClick={signupWithCode} loading={loading}>
-            Submit
-          </Button>
-        </> */}
+                      return Promise.resolve();
+                    }
+                  }
+                ]}
+              >
+                <Input className="darkInput" style={{ marginBottom: 0 }} placeholder="Enter your email" />
+              </Form.Item>
+            </Form>
+
+            <Typography variant="medium" type="secondary">
+              By entering your email you have read and agree to our{' '}
+              <Typography.Link active href="https://subquery.network/privacy" target="_blank" variant="medium">
+                privacy policy
+              </Typography.Link>
+            </Typography>
+
+            <Button type="primary" shape="round" size="large" onClick={signupWithCode} loading={loading}>
+              Submit
+            </Button>
+          </>
+        )}
 
         {/* second step */}
 
-        <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 16 }}>
-          <MdOutlineMail style={{ fontSize: '47px', color: '#fff' }} />
-          <Typography variant="h5">Email Verification</Typography>
-          <Typography type="secondary" style={{ textAlign: 'center' }}>
-            We’ve just sent an onboarding email to your email address (james.bayly@subquery.network)
-          </Typography>
-          <Typography type="secondary" style={{ textAlign: 'center' }}>
-            Click the link on the email you have received from us, make sure to check for it in your spam!
-          </Typography>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
+        {haveSubmitEmial && (
+          <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 16 }}>
+            <MdOutlineMail style={{ fontSize: '47px', color: '#fff' }} />
+            <Typography variant="h5">Email Verification</Typography>
             <Typography type="secondary" style={{ textAlign: 'center' }}>
-              Didn&apos;t receive an email?{' '}
-              <Typography.Link
-                onClick={async () => {
-                  // await sendEmail(account);
-                  // openNotification({
-                  //   type: 'success',
-                  //   description:
-                  //     'We have sent you a new verification link, please check your email address (including your spam account)',
-                  //   duration: 10
-                  // });
-                }}
-                type="info"
-              >
-                Request another one
-              </Typography.Link>
+              We’ve just sent an onboarding email to your email address ({userInfo?.email})
             </Typography>
+            <Typography type="secondary" style={{ textAlign: 'center' }}>
+              Click the link on the email you have received from us, make sure to check for it in your spam!
+            </Typography>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography type="secondary" style={{ textAlign: 'center' }}>
+                Didn&apos;t receive an email?{' '}
+                <Typography.Link
+                  onClick={async () => {
+                    // await sendEmail(account);
+                    // openNotification({
+                    //   type: 'success',
+                    //   description:
+                    //     'We have sent you a new verification link, please check your email address (including your spam account)',
+                    //   duration: 10
+                    // });
+                  }}
+                  type="info"
+                >
+                  Request another one
+                </Typography.Link>
+              </Typography>
+            </div>
           </div>
-        </div>
+        )}
 
         <ContactUs mode="delegationCampaign" />
       </div>
@@ -214,7 +232,8 @@ const LootboxItem = () => {
   );
 };
 
-const SecondStep = () => {
+const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
+  const { userInfo } = props;
   const { address: account } = useAccount();
 
   return (
@@ -236,7 +255,7 @@ const SecondStep = () => {
             <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
               <Typography>Your Total Rank</Typography>
               <Typography variant="h4" weight={600}>
-                # 23
+                # {userInfo?.rank || userInfo?.id}
               </Typography>
             </div>
           </div>
@@ -245,7 +264,7 @@ const SecondStep = () => {
             <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
               <Typography>Programme APY</Typography>
               <Typography variant="h4" weight={600}>
-                17.3%
+                {userInfo?.apy}%
               </Typography>
             </div>
           </div>
@@ -254,7 +273,7 @@ const SecondStep = () => {
             <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
               <Typography>Your Total Points</Typography>
               <Typography variant="h4" weight={600}>
-                25,231 Points
+                {formatNumberWithLocale(userInfo?.total_score || 0, 0)} Points
               </Typography>
             </div>
           </div>
@@ -263,7 +282,7 @@ const SecondStep = () => {
             <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
               <Typography>Total Delegation Rewards</Typography>
               <Typography variant="h4" weight={600}>
-                3.20M SQT
+                {formatNumber(userInfo?.total_reward || 0)} SQT
               </Typography>
             </div>
           </div>
@@ -430,13 +449,28 @@ const SecondStep = () => {
   );
 };
 
-const MainChallenges = () => {
+interface RenderChallenge {
+  id: string;
+  name: string;
+  success: boolean;
+  reward: number;
+  description: string;
+  render?: React.ReactNode;
+  cta: string;
+  cta_label: string;
+}
+
+const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
+  const { userInfo } = props;
   const { address: account } = useAccount();
 
-  const [userChallenges, setUserChallenges] = useState<any[]>([]);
+  const [userChallenges, setUserChallenges] = useState<RenderChallenge[]>([]);
   const [loading, setLoading] = useState(true);
+  const { getOneoffChallenges } = useDelegationCampaignApi({
+    alert: false
+  });
 
-  const challenges = useMemo(
+  const renderChallenges = useMemo(
     () =>
       userChallenges.map((challenge) => ({
         key: challenge.id,
@@ -449,16 +483,11 @@ const MainChallenges = () => {
 
             <span style={{ flex: 1 }} />
 
-            {challenge.id === 0 ? (
-              // This is the KYC challenge
-              <Typography>{challenge.success ? 'KYC Complete!' : 'KYC Incomplete'}</Typography>
-            ) : (
-              <div className={styles.colorfulButtonBorder}>
-                <Button type="primary" shape="round" size="small">
-                  +{challenge.reward} Points!
-                </Button>
-              </div>
-            )}
+            <div className={styles.colorfulButtonBorder}>
+              <Button type="primary" shape="round" size="small">
+                +{challenge.reward} Points!
+              </Button>
+            </div>
           </div>
         ),
         children: challenge.render || (
@@ -482,25 +511,25 @@ const MainChallenges = () => {
     try {
       if (!account) return;
       setLoading(true);
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      const challenges = [];
-      challenges.push({
-        id: 0,
-        name: 'Complete KYC for your account',
-        success: true,
-        reward: 0,
-        reward_type: 'FIXED',
-        description: `You must complete KYC for your account in order to receive any rewards, click Start KYC and ensure that you complete KYC with the same wallet and email address as you are using for your Seekers account.`,
-        cta: 'https://in.sumsub.com/idensic/l/#/uni_cJnVIbYwk7jHnjtK', // TODO
-        cta_label: 'Start KYC',
-        sort_order: 0
+      const res = await getOneoffChallenges({
+        wallet: account
       });
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const challenges: RenderChallenge[] =
+        res?.data?.data?.map((i) => ({
+          id: i.challenge_id,
+          reward: +i.point,
+          success: i.completed,
+          name: i.type,
+          description: i.era,
+          cta: '',
+          cta_label: ''
+        })) || [];
       challenges.push({
         id: 'referral',
         name: 'Referral Bonus',
         success: false,
         reward: 500,
-        reward_type: 'FIXED',
         render: (
           <div style={{ display: 'flex', flexDirection: 'column', border: 'none', borderRadius: 8, gap: 16 }}>
             <Typography>
@@ -508,7 +537,11 @@ const MainChallenges = () => {
               score.
             </Typography>
 
-            <Input className="darkInput" value={`${rootUrl}/?referral=${2222}`} onChange={() => ({})} />
+            <Input
+              className="darkInput"
+              value={`${rootUrl}/?referral=${userInfo?.referral_code}`}
+              onChange={() => ({})}
+            />
 
             <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 16 }}>
               <Button
@@ -518,7 +551,7 @@ const MainChallenges = () => {
                 size="large"
                 style={{ flex: 1 }}
                 onClick={() => {
-                  navigator.clipboard.writeText(`${rootUrl}/?referral=${'props.userInfo?.referral_code'}`);
+                  navigator.clipboard.writeText(`${rootUrl}/?referral=${userInfo?.referral_code}`);
 
                   openNotification({
                     type: 'success',
@@ -532,7 +565,7 @@ const MainChallenges = () => {
               <a
                 style={{ flex: 1 }}
                 target="_blank"
-                href={`mailto:yourfriend@email.com?subject=Join%20me%20on%20the%20SubQuery%20Seekers%2050%20Million%20SQT%20Challenge%20&body=Hi%20there%2C%0D%0A%0D%0AI%20recently%20joined%20the%20SubQuery%20Seekers%2050%20Million%20SQT%20challenge%20and%20I%20want%20to%20invite%20you%20too!%0D%0A%0D%0ASubQuery%20are%20giving%20away%2050%20Million%20SQT%20to%20their%20most%20valued%20community%20members%20in%20the%20SubQuery%20Seekers%20Program.%20Simply%20register%20for%20the%20campaign%20using%20this%20referral%20link%2C%20and%20start%20exploring%20the%20challenges.%20The%20more%20challenges%20we%20complete%2C%20the%20more%20SQT%20tokens%20we%20can%20earn!%20%F0%9F%A5%B3%0D%0A%0D%0AI%E2%80%99ve%20been%20having%20a%20blast%20so%20far%2C%20learning%20about%20SubQuery%2C%20blockchain%20data%20indexing%20and%20the%20overall%20web3%20infrastructure%20revolution%20they%20have%20planned.%0D%0A%0D%0AHere%E2%80%99s%20my%20invite%20link%20if%20you%20want%20to%20sign%20up%20and%20complete%20onboarding%20to%20instantly%20earn%20200%20points%3A%20https%3A%2F%2Fseekers.subquery.foundation%2F%3Freferral%3D${'props.userInfo?.referral_code'}%0D%0A%0D%0ASee%20you%20there!%20%F0%9F%91%80`}
+                href={`mailto:yourfriend@email.com?subject=Join%20me%20on%20the%20SubQuery%20Seekers%2050%20Million%20SQT%20Challenge%20&body=Hi%20there%2C%0D%0A%0D%0AI%20recently%20joined%20the%20SubQuery%20Seekers%2050%20Million%20SQT%20challenge%20and%20I%20want%20to%20invite%20you%20too!%0D%0A%0D%0ASubQuery%20are%20giving%20away%2050%20Million%20SQT%20to%20their%20most%20valued%20community%20members%20in%20the%20SubQuery%20Seekers%20Program.%20Simply%20register%20for%20the%20campaign%20using%20this%20referral%20link%2C%20and%20start%20exploring%20the%20challenges.%20The%20more%20challenges%20we%20complete%2C%20the%20more%20SQT%20tokens%20we%20can%20earn!%20%F0%9F%A5%B3%0D%0A%0D%0AI%E2%80%99ve%20been%20having%20a%20blast%20so%20far%2C%20learning%20about%20SubQuery%2C%20blockchain%20data%20indexing%20and%20the%20overall%20web3%20infrastructure%20revolution%20they%20have%20planned.%0D%0A%0D%0AHere%E2%80%99s%20my%20invite%20link%20if%20you%20want%20to%20sign%20up%20and%20complete%20onboarding%20to%20instantly%20earn%20200%20points%3A%20https%3A%2F%2Fseekers.subquery.foundation%2F%3Freferral%3D${userInfo?.referral_code}%0D%0A%0D%0ASee%20you%20there!%20%F0%9F%91%80`}
                 rel="noreferrer"
               >
                 <Button shape="round" ghost type="primary" size="large" style={{ width: '100%' }}>
@@ -545,7 +578,7 @@ const MainChallenges = () => {
                 rel="noreferrer"
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`@SubQueryNetwork is running the SubQuery Summer Delegation Frenzy where you can complete fun quests to earn points and receive SQT tokens #SQTSummerDelegationFrenzy
   
-  Join me here to get a bonus: ${rootUrl}/?referral=${'props.userInfo?.referral_code'}`)}`}
+  Join me here to get a bonus: ${rootUrl}/?referral=${userInfo?.referral_code}`)}`}
               >
                 <Button shape="round" ghost type="primary" size="large" style={{ width: '100%' }}>
                   Post on X (Twitter)
@@ -558,8 +591,7 @@ const MainChallenges = () => {
         ),
         description: '',
         cta: '', // TODO
-        cta_label: '',
-        sort_order: 1
+        cta_label: ''
       });
       setUserChallenges(challenges);
     } finally {
@@ -578,26 +610,27 @@ const MainChallenges = () => {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24, width: '100%' }}>
         <Typography variant="h5">One-off Challenges</Typography>
-        <Collapse className={styles.darkCollapse} ghost items={challenges} defaultActiveKey={['referral']} />
+        <Collapse className={styles.darkCollapse} ghost items={renderChallenges} defaultActiveKey={['referral']} />
       </div>
     </div>
   );
 };
 
-const Leaderboard = () => {
+const Leaderboard = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
+  const { userInfo } = props;
   const { address: account } = useAccount();
 
-  const [userLeaderboard, setUserLeaderboard] = useState({
-    summary: [
-      {
-        name: 'sss',
-        apy: '999%',
-        total_rewards: '99999',
-        total_score: 99999,
-        rank: 999
-      }
-    ]
+  const { getUserLeaderboard } = useDelegationCampaignApi({
+    alert: false
   });
+
+  const userLeaderboard = useAsyncMemo(async () => {
+    const res = await getUserLeaderboard({
+      wallet: account || ''
+    });
+
+    return res.data;
+  }, [account]);
 
   return (
     <div
@@ -608,7 +641,7 @@ const Leaderboard = () => {
         <Typography variant="large">Compete to get the highest score, you can do it!</Typography>
       </div>
       <Typography variant="medium" type="secondary">
-        You are ranked 999 of 9999, participants
+        You are ranked {userInfo?.rank || userInfo?.id} of 9999, participants
       </Typography>
 
       <div style={{ display: 'flex', background: 'rgba(0, 0, 0, 0.23)', padding: 8, borderRadius: 8, gap: 16 }}>
@@ -630,58 +663,82 @@ const Leaderboard = () => {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {userLeaderboard?.summary.map((summary, index) => {
-          const item = (
-            <div
-              key={`${summary.name}${index}`}
-              className={clsx(
-                styles.tableItem,
-                summary.name.toLowerCase() === account?.toLowerCase() ? styles.mine : ''
-              )}
-            >
-              <div style={{ flex: 1, maxWidth: 60 }}>
-                <Typography type="secondary">{summary.rank}</Typography>
-              </div>
-              <div style={{ flex: 1 }}>
-                <Typography tooltip={summary.name} type="secondary">
-                  {`${summary.name?.slice(0, 5)}...${summary.name?.slice(
-                    summary.name.length - 5,
-                    summary.name.length
-                  )}`}
-                </Typography>
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <Typography type="secondary">{summary.apy.toLocaleString()}</Typography>
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <Typography type="secondary">{summary.total_rewards.toLocaleString()} points</Typography>
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <Typography type="secondary">{summary.total_score.toLocaleString()} points</Typography>
-              </div>
+        {userLeaderboard.data?.data?.top7?.map((summary, index) => (
+          <div
+            key={`${summary.wallet}${index}`}
+            className={clsx(
+              styles.tableItem,
+              summary.wallet.toLowerCase() === account?.toLowerCase() ? styles.mine : ''
+            )}
+          >
+            <div style={{ flex: 1, maxWidth: 60 }}>
+              <Typography type="secondary">{summary.rank}</Typography>
             </div>
-          );
-          let ellipsis: React.ReactNode = '';
-          if (index >= 1) {
-            const leftParticipants = summary.rank - userLeaderboard.summary[index - 1].rank - 1;
-            if (leftParticipants) {
-              ellipsis = (
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <Typography type="secondary">{leftParticipants.toLocaleString()} other participants</Typography>
-                </div>
-              );
-            }
-          }
-          return (
-            <>
-              {ellipsis}
-              {item}
-            </>
-          );
-        })}
+            <div style={{ flex: 1 }}>
+              <Typography tooltip={summary.wallet} type="secondary">
+                {`${summary.wallet?.slice(0, 5)}...${summary.wallet?.slice(
+                  summary.wallet.length - 5,
+                  summary.wallet.length
+                )}`}
+              </Typography>
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <Typography type="secondary">{summary.apy.toLocaleString()}</Typography>
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <Typography type="secondary">{summary.total_reward.toLocaleString()} points</Typography>
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <Typography type="secondary">{summary.total_score.toLocaleString()} points</Typography>
+            </div>
+          </div>
+        ))}
+        {userLeaderboard.data?.data?.count ? (
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography type="secondary">
+              {userLeaderboard.data?.data?.count.toLocaleString()} other participants
+            </Typography>
+          </div>
+        ) : (
+          ''
+        )}
+
+        {userLeaderboard.data?.data?.me?.map((summary, index) => (
+          <div
+            key={`${summary.wallet}${index}`}
+            className={clsx(
+              styles.tableItem,
+              summary.wallet.toLowerCase() === account?.toLowerCase() ? styles.mine : ''
+            )}
+          >
+            <div style={{ flex: 1, maxWidth: 60 }}>
+              <Typography type="secondary">{summary.rank}</Typography>
+            </div>
+            <div style={{ flex: 1 }}>
+              <Typography tooltip={summary.wallet} type="secondary">
+                {`${summary.wallet?.slice(0, 5)}...${summary.wallet?.slice(
+                  summary.wallet.length - 5,
+                  summary.wallet.length
+                )}`}
+              </Typography>
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <Typography type="secondary">{summary.apy.toLocaleString()}</Typography>
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <Typography type="secondary">{summary.total_reward.toLocaleString()} points</Typography>
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <Typography type="secondary">{summary.total_score.toLocaleString()} points</Typography>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -695,15 +752,21 @@ const DelegationCampaign: FC<IProps> = (props) => {
   });
 
   const userInfo = useAsyncMemo(async () => {
-    const res = await getUserInfo();
-    return res;
+    const res = await getUserInfo({
+      wallet: account || ''
+    });
+
+    return res.data;
   }, [account]);
 
+  const previousUserInfo = usePrevious(userInfo.data);
+
   const userStage = useMemo(() => {
-    if (!userInfo) return 0;
-    if (!userInfo) return 1;
+    if (!userInfo.data?.data) return 0;
+    if (!userInfo.data.data.email_verified) return 1;
+
     return 2;
-  }, [userInfo]);
+  }, [userInfo.data]);
 
   const height = useMemo(() => {
     if (!isConnected || userStage === 0 || userStage === 1) {
@@ -712,6 +775,8 @@ const DelegationCampaign: FC<IProps> = (props) => {
 
     return 774;
   }, [userStage, isConnected]);
+
+  if (!previousUserInfo && userInfo.loading) return <Loading></Loading>;
 
   return (
     <div className={styles.delegationCampaign}>
@@ -733,10 +798,20 @@ const DelegationCampaign: FC<IProps> = (props) => {
       >
         <WalletDetect mode="delegationCampaign" style={{ marginTop: 144 }}>
           <>
-            {/* <FirstStep></FirstStep> */}
-            <SecondStep></SecondStep>
-            <MainChallenges></MainChallenges>
-            <Leaderboard></Leaderboard>
+            {userStage === 0 || userStage === 1 ? (
+              <FirstStep userInfo={userInfo.data?.data} refresh={userInfo.refetch}></FirstStep>
+            ) : (
+              ''
+            )}
+            {userStage === 2 ? (
+              <>
+                <SecondStep userInfo={userInfo.data?.data}></SecondStep>
+                <MainChallenges userInfo={userInfo.data?.data}></MainChallenges>
+                <Leaderboard userInfo={userInfo.data?.data}></Leaderboard>
+              </>
+            ) : (
+              ''
+            )}
           </>
         </WalletDetect>
       </div>
