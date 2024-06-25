@@ -14,6 +14,7 @@ import { useAccount } from 'wagmi';
 import { ContactUs, WalletDetect } from 'components/WalletDetect/WalletDetect';
 import { useDelegationCampaignApi } from 'hooks/useDelegationCampaignApi';
 
+import heartFireworks from './heartFireworks/heartFireworks';
 import LootboxAnimation from './lootboxAnimation/LootboxAnimation';
 import styles from './DelegationCampaign.module.less';
 
@@ -152,7 +153,10 @@ const LootboxItem = () => {
         shape="round"
         type="primary"
         onClick={() => {
-          setIsOpen(true);
+          heartFireworks();
+          setTimeout(() => {
+            setIsOpen(true);
+          }, 2000);
         }}
       >
         Open Lootbox
@@ -187,7 +191,10 @@ const LootboxItem = () => {
               flexDirection: 'column',
               gap: 16,
               alignItems: 'center',
-              width: 600
+              width: 600,
+              position: 'fixed',
+              top: '50%',
+              transform: 'translateY(-50%)'
             }}
           >
             <div style={{ height: 300, marginTop: 120, transform: 'translateY(45px)' }}>
@@ -327,8 +334,8 @@ const SecondStep = () => {
             </div>
           </div>
 
-          {new Array(10).fill(9).map((i) => (
-            <div key={i} className={clsx(styles.baseLineBorder, styles.plainCard)}>
+          {new Array(10).fill(9).map((i, index) => (
+            <div key={index} className={clsx(styles.baseLineBorder, styles.plainCard)}>
               <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.eraInfoCard)}>
                 <div className={styles.previousEraTitle}>
                   <Typography variant="medium" type="secondary">

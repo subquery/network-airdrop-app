@@ -44,6 +44,7 @@
     "assert": "^2.0.0",
     "axios": "^1.6.3",
     "buffer": "^6.0.3",
+    "canvas-confetti": "^1.9.3",
     "clsx": "^1.2.1",
     "craco-less": "^3.0.1",
     "craco-webpack-resolve": "^1.2.1",
@@ -94,6 +95,7 @@
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
+    "@types/canvas-confetti": "^1.6.4",
     "@types/lodash-es": "^4.17.12",
     "@types/marked": "^4.0.3",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
