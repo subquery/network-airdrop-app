@@ -47,7 +47,7 @@ const FirstStep = (props: { userInfo?: IDelegationUserInfo['data']; refresh: () 
   const query = useMemo(() => new URLSearchParams(search), [search]);
   const [form] = useForm();
   const [loading, setLoading] = useState(false);
-  const { signup } = useDelegationCampaignApi({
+  const { signup, sendVerifyEmail } = useDelegationCampaignApi({
     alert: true
   });
 
@@ -149,13 +149,15 @@ const FirstStep = (props: { userInfo?: IDelegationUserInfo['data']; refresh: () 
                 Didn&apos;t receive an email?{' '}
                 <Typography.Link
                   onClick={async () => {
-                    // await sendEmail(account);
-                    // openNotification({
-                    //   type: 'success',
-                    //   description:
-                    //     'We have sent you a new verification link, please check your email address (including your spam account)',
-                    //   duration: 10
-                    // });
+                    const res = await sendVerifyEmail({ wallet: account || '' });
+                    if (res.data.code === 0) {
+                      openNotification({
+                        type: 'success',
+                        description:
+                          'We have sent you a new verification link, please check your email address (including your spam account)',
+                        duration: 10
+                      });
+                    }
                   }}
                   type="info"
                 >

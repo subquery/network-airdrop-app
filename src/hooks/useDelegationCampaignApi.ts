@@ -147,6 +147,12 @@ export const useDelegationCampaignApi = (props: { alert?: boolean }) => {
     return res;
   }, []);
 
+  const sendVerifyEmail = useCallback(async (params: { wallet: string }) => {
+    const res = await instance.post<IBaseResponse>(`/user/send-verify-email`, params);
+
+    return res;
+  }, []);
+
   return {
     getUserInfo,
     verify: alertResDecorator(verify),
@@ -155,6 +161,7 @@ export const useDelegationCampaignApi = (props: { alert?: boolean }) => {
     getUserLeaderboard,
     getMyEraInfo,
     getMyLootbox,
-    openLootbox: alertResDecorator(openLootbox)
+    openLootbox: alertResDecorator(openLootbox),
+    sendVerifyEmail: alertResDecorator(sendVerifyEmail)
   };
 };
