@@ -92,3 +92,20 @@ export function formatNumberWithLocale(num: number | string | BigNumberJs | BigN
     maximumFractionDigits: digits
   });
 }
+
+export const formatWithBlank = (value: string | number, unit: string, position?: 'left' | 'right') => {
+  const transform = BigNumberJs(value.toString());
+  if (Number.isNaN(transform)) {
+    return '-';
+  }
+
+  if (transform.isZero()) return '-';
+
+  return [unit, value, unit]
+    .filter((_, index) => {
+      if (position === 'left' && index === 2) return false;
+      if ((position === 'right' || !position) && index === 0) return false;
+      return true;
+    })
+    .join(' ');
+};

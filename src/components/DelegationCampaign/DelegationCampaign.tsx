@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import { Markdown, openNotification, Spinner, Typography } from '@subql/components';
 import { useAsyncMemo } from '@subql/react-hooks';
 import { usePrevious } from 'ahooks';
-import { Button, Collapse, Form, Input, Modal } from 'antd';
+import { Button, Collapse, Form, Input, Modal, Skeleton } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import clsx from 'clsx';
 import { useAccount as useAccountWagmi } from 'wagmi';
@@ -20,7 +20,7 @@ import {
   IMyLootboxItem,
   useDelegationCampaignApi
 } from 'hooks/useDelegationCampaignApi';
-import { formatNumber, formatNumberWithLocale } from 'utils';
+import { formatNumber, formatNumberWithLocale, formatWithBlank } from 'utils';
 
 import heartFireworks from './heartFireworks/heartFireworks';
 import LootboxAnimation from './lootboxAnimation/LootboxAnimation';
@@ -307,12 +307,39 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       wallet: account || ''
     });
 
-    await fetchLootboxes(res.data.data?.[0].era || 0);
+    const startEra = userInfo?.era_config.find((i) => i.key === 'start_era');
+    const curEra = userInfo?.era_config.find((i) => i.key === 'current_era');
 
-    setMyEraInfo(res.data.data || []);
-    setCurrentSelectEra(res.data?.data?.[0]);
+    const eraInfos = new Array(+(curEra?.value || 0) - +(startEra?.value || 0) + 1)
+      .fill(0)
+      .map((_, index) => {
+        const era = index + +(startEra?.value || 0);
+        const eraInfo = res.data.data?.find((i) => +i.era === era);
 
-    return res.data;
+        return (
+          eraInfo || {
+            id: era,
+            user_id: account || '',
+            era: era.toString(),
+            point: '0',
+            reward: '0',
+            delegation: '0',
+            apy: '0',
+            apyRank: '0',
+            lootbox: '0'
+          }
+        );
+      })
+      .reverse();
+    try {
+      await fetchLootboxes(eraInfos?.[0].era || 0);
+    } catch (e) {
+      //
+    }
+    setMyEraInfo(eraInfos || []);
+    setCurrentSelectEra(eraInfos?.[0]);
+
+    return eraInfos;
   };
 
   const scrollLeft = () => {
@@ -443,7 +470,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                     </Typography>
                     <div className={styles.colorfulButtonBorder}>
                       <Button type="primary" shape="round" size="small">
-                        Ranked #{item.apyRank}
+                        Ranked {formatWithBlank(item.apyRank, '#', 'left')}
                       </Button>
                     </div>
                   </div>
@@ -455,25 +482,31 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                     <Typography variant="medium" type="secondary">
                       Points Earned
                     </Typography>
-                    <Typography variant="medium">{formatNumberWithLocale(item.point, 0)} points</Typography>
+                    <Typography variant="medium">
+                      {formatWithBlank(formatNumberWithLocale(item.point, 0), 'points')}
+                    </Typography>
                   </div>
                   <div className={styles.eraInfoCardLine}>
                     <Typography variant="medium" type="secondary">
                       Delegation Rewards
                     </Typography>
-                    <Typography variant="medium">{formatNumberWithLocale(item.reward, 0)} SQT</Typography>
+                    <Typography variant="medium">
+                      {formatWithBlank(formatNumberWithLocale(item.reward, 0), 'SQT')}
+                    </Typography>
                   </div>
                   <div className={styles.eraInfoCardLine}>
                     <Typography variant="medium" type="secondary">
                       Delegated Amount
                     </Typography>
-                    <Typography variant="medium">{formatNumberWithLocale(item.delegation, 0)} points</Typography>
+                    <Typography variant="medium">
+                      {formatWithBlank(formatNumberWithLocale(item.delegation, 0), 'SQT')}
+                    </Typography>
                   </div>
                   <div className={styles.eraInfoCardLine}>
                     <Typography variant="medium" type="secondary">
                       APY
                     </Typography>
-                    <Typography variant="medium">{item.apy}%</Typography>
+                    <Typography variant="medium">{formatWithBlank(item.apy, '%')}</Typography>
                   </div>
                 </div>
               </div>
@@ -526,31 +559,40 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
           </div>
 
           <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="large">Random Weekly Lootboxes!</Typography>
+            {fetchingLootboxLoading ? (
+              <Skeleton active></Skeleton>
+            ) : (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="large">Random Weekly Lootboxes!</Typography>
 
-              <div className={styles.colorfulButtonBorder}>
-                <Button type="primary" shape="round" size="small">
-                  +
-                  {formatNumberWithLocale(
-                    myLootboxes.reduce((a, b) => a + +b.point, 0),
-                    0
-                  )}{' '}
-                  points
-                </Button>
-              </div>
-            </div>
-            <div className={styles.split}></div>
-            <Typography>
-              You have received {+(currentSelectEra?.lootbox || 0) < 0 ? 0 : currentSelectEra?.lootbox} lootboxes from
-              Era {currentSelectEra?.era}!
-            </Typography>
+                  <div className={styles.colorfulButtonBorder}>
+                    <Button type="primary" shape="round" size="small">
+                      +
+                      {formatNumberWithLocale(
+                        myLootboxes.reduce((a, b) => a + +b.point, 0),
+                        0
+                      )}{' '}
+                      points
+                    </Button>
+                  </div>
+                </div>
+                <div className={styles.split}></div>
+                {+(currentSelectEra?.lootbox || 0) <= 0 ? (
+                  <Typography>Your random weekly loot boxes will appear here, please check out later.</Typography>
+                ) : (
+                  <Typography>
+                    You have received {currentSelectEra?.lootbox} lootboxes from Era {currentSelectEra?.era}!
+                  </Typography>
+                )}
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {myLootboxes.map((item) => (
-                <LootboxItem key={item.id} item={item} refresh={fetchMyEraInfo}></LootboxItem>
-              ))}
-            </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {myLootboxes.map((item) => (
+                    <LootboxItem key={item.id} item={item} refresh={fetchMyEraInfo}></LootboxItem>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

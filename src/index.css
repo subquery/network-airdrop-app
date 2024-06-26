@@ -103,6 +103,11 @@ code {
   line-height: 20px;
 }
 
+.darkInput:hover {
+  background: transparent;
+  border: 1px solid var(--sq-gray600);
+}
+
 
 .ant-form-item.ant-form-item {
   margin-bottom: 0;

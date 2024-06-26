@@ -27,6 +27,10 @@ export interface IDelegationUserInfo extends IBaseResponse {
     total_score: string;
     total_reward: string;
     rank: string;
+    era_config: {
+      key: 'start_era' | 'end_era' | 'current_era';
+      value: string;
+    }[];
   };
 }
 
