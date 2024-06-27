@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import React, { CSSProperties, FC, useEffect, useMemo, useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlineMail } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
+import { animated, AnimatedProps, useSpringRef, useTransition } from '@react-spring/web';
 import { Markdown, openNotification, Spinner, Typography } from '@subql/components';
 import { useAsyncMemo } from '@subql/react-hooks';
 import { Button, Collapse, Form, Input, Modal, Skeleton } from 'antd';
@@ -934,6 +935,24 @@ const Leaderboard = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
   );
 };
 
+const transitionsLoading: ((props: AnimatedProps<{ style: CSSProperties }>) => React.ReactElement)[] = [
+  ({ style }) => (
+    <animated.div
+      style={{
+        ...style,
+        background: 'var(--dark-mode-background)',
+        position: 'fixed',
+        width: '100%',
+        height: '100%',
+        zIndex: 999
+      }}
+    >
+      <Loading></Loading>
+    </animated.div>
+  ),
+  ({ style }) => <></>
+];
+
 const DelegationCampaign: FC<IProps> = (props) => {
   const { address: account, isConnected } = useAccount();
 
@@ -943,6 +962,7 @@ const DelegationCampaign: FC<IProps> = (props) => {
 
   const [fetchLoading, setFetchLoading] = useState(true);
   const [userInfo, setUserInfo] = useState<IDelegationUserInfo['data']>();
+  const [transitionIndex, setTransitionIndex] = useState(0);
 
   const userStage = useMemo(() => {
     if (!userInfo) return 0;
@@ -959,9 +979,22 @@ const DelegationCampaign: FC<IProps> = (props) => {
     return 774;
   }, [userStage, isConnected]);
 
+  const transRef = useSpringRef();
+  const transitions = useTransition(transitionIndex, {
+    ref: transRef,
+    keys: null,
+    from: { opacity: 1, transform: 'scale(1)' },
+    enter: { opacity: 1, transform: 'scale(1)' },
+    leave: { opacity: 0, transform: 'scale(1)' },
+    config: {
+      duration: 600
+    }
+  });
+
   const fetchUserInfo = async (shouldLoading = true) => {
     try {
       if (shouldLoading) {
+        setTransitionIndex(0);
         setFetchLoading(true);
       }
 
@@ -971,6 +1004,7 @@ const DelegationCampaign: FC<IProps> = (props) => {
 
       setUserInfo(res.data.data);
     } finally {
+      setTransitionIndex(1);
       setFetchLoading(false);
     }
   };
@@ -979,50 +1013,62 @@ const DelegationCampaign: FC<IProps> = (props) => {
     fetchUserInfo();
   }, [account]);
 
-  if (fetchLoading) return <Loading></Loading>;
+  useEffect(() => {
+    transRef.start();
+  }, [transitionIndex]);
+
+  // if (fetchLoading) return <Loading></Loading>;
 
   return (
     <div className={styles.delegationCampaign}>
-      <picture
-        className={styles.delegationCampaignBg}
-        style={{
-          height,
-          minHeight: height
-        }}
-      >
-        <source srcSet="/static/currentEraBg.webp" type="image/webp" />
-        <img src="/static/currentEraBg.png" alt="" />
-      </picture>
-      <div
-        className={styles.delegationCampaignMain}
-        style={{
-          minHeight: height
-        }}
-      >
-        <WalletDetect mode="delegationCampaign" style={{ marginTop: 144 }}>
-          <>
-            {userStage === 0 || userStage === 1 ? (
-              <FirstStep
-                userInfo={userInfo}
-                refresh={async () => {
-                  await fetchUserInfo(false);
-                }}
-              ></FirstStep>
-            ) : (
-              ''
-            )}
-            {userStage === 2 ? (
+      {transitions((style, item) => {
+        const Comp = transitionsLoading[item];
+        return <Comp style={style}></Comp>;
+      })}
+      {!fetchLoading && (
+        <>
+          <picture
+            className={styles.delegationCampaignBg}
+            style={{
+              height,
+              minHeight: height
+            }}
+          >
+            <source srcSet="/static/currentEraBg.webp" type="image/webp" />
+            <img src="/static/currentEraBg.png" alt="" />
+          </picture>
+          <div
+            className={styles.delegationCampaignMain}
+            style={{
+              minHeight: height
+            }}
+          >
+            <WalletDetect mode="delegationCampaign" style={{ marginTop: 144 }}>
               <>
-                <SecondStep userInfo={userInfo}></SecondStep>
-                <MainChallenges userInfo={userInfo}></MainChallenges>
-                <Leaderboard userInfo={userInfo}></Leaderboard>
+                {userStage === 0 || userStage === 1 ? (
+                  <FirstStep
+                    userInfo={userInfo}
+                    refresh={async () => {
+                      await fetchUserInfo(false);
+                    }}
+                  ></FirstStep>
+                ) : (
+                  ''
+                )}
+                {userStage === 2 ? (
+                  <>
+                    <SecondStep userInfo={userInfo}></SecondStep>
+                    <MainChallenges userInfo={userInfo}></MainChallenges>
+                    <Leaderboard userInfo={userInfo}></Leaderboard>
+                  </>
+                ) : (
+                  ''
+                )}
               </>
-            ) : (
-              ''
-            )}
-          </>
-        </WalletDetect>
-      </div>
+            </WalletDetect>
+          </div>
+        </>
+      )}
     </div>
   );
 };
