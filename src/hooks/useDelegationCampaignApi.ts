@@ -159,7 +159,7 @@ export const useDelegationCampaignApi = (props: { alert?: boolean }) => {
   }, []);
 
   return {
-    getUserInfo,
+    getUserInfo: alertResDecorator(getUserInfo),
     verify: alertResDecorator(verify),
     signup: alertResDecorator(signup),
     getOneoffChallenges,

@@ -336,12 +336,14 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
           );
         })
         .reverse();
+
       try {
         await fetchLootboxes(eraInfos?.[0].era || 0);
       } catch (e) {
         //
       }
       setMyEraInfo(eraInfos || []);
+
       setCurrentSelectEra(eraInfos?.[0]);
 
       return eraInfos;
@@ -491,7 +493,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                         </Typography>
                         <div className={styles.colorfulButtonBorder}>
                           <Button type="primary" shape="round" size="small">
-                            Ranked {formatWithBlank(item.apyRank, '#', 'left')}
+                            Ranked {formatWithBlank(item.apyRank || '0', '#', 'left')}
                           </Button>
                         </div>
                       </div>
@@ -609,7 +611,13 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                       {myLootboxes.map((item) => (
-                        <LootboxItem key={item.id} item={item} refresh={() => fetchMyEraInfo(false)}></LootboxItem>
+                        <LootboxItem
+                          key={item.id}
+                          item={item}
+                          refresh={() => {
+                            fetchLootboxes(currentSelectEra?.era || 0);
+                          }}
+                        ></LootboxItem>
                       ))}
                     </div>
                   </>
@@ -987,7 +995,7 @@ const DelegationCampaign: FC<IProps> = (props) => {
     enter: { opacity: 1, transform: 'scale(1)' },
     leave: { opacity: 0, transform: 'scale(1)' },
     config: {
-      duration: 600
+      duration: 800
     }
   });
 

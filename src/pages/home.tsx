@@ -53,7 +53,7 @@ export function Home() {
       return ActiveEnum.Challenge;
     }
 
-    if (rootUrl.includes('claim')) {
+    if (rootUrl.includes('claim') || rootUrl.includes('airdrop')) {
       return ActiveEnum.Airdrop;
     }
 
@@ -70,7 +70,7 @@ export function Home() {
         )}
 
         {activeKey === ActiveEnum.DelegatorCampaign ? (
-          <React.Suspense fallback={<Loading></Loading>}>
+          <React.Suspense fallback={<div style={{ width: '100vw', height: '100vh' }}></div>}>
             <DelegationCampaign />
           </React.Suspense>
         ) : (

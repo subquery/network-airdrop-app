@@ -264,10 +264,6 @@ export const FAQ: React.FC<{
               </span>
             </>
           )
-        },
-        {
-          question: 'Q1 Delegation',
-          answer: '1231'
         }
       ];
     }
