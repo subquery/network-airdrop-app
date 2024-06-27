@@ -90,9 +90,8 @@ code {
   padding: 12px 8px 12px 14px;
   border: 1px solid var(--sq-gray600);
   border-radius: 48px;
-  background: transparent;
+  background: transparent!important;
   margin-bottom: 16px;
-  background: transparent;
   color: #fff;
 }
 

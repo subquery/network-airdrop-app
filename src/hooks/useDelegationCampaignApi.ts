@@ -59,6 +59,7 @@ interface IRankInfo {
 
 export interface ILeaderboardRecord {
   data?: {
+    beforeMe: number;
     count: number;
     top7: IRankInfo[];
     me: IRankInfo[];

@@ -6,7 +6,6 @@ import { MdOutlineMail } from 'react-icons/md';
 import { useLocation } from 'react-router-dom';
 import { Markdown, openNotification, Spinner, Typography } from '@subql/components';
 import { useAsyncMemo } from '@subql/react-hooks';
-import { usePrevious } from 'ahooks';
 import { Button, Collapse, Form, Input, Modal, Skeleton } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import clsx from 'clsx';
@@ -284,6 +283,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
   const [myEraInfo, setMyEraInfo] = useState<IMyEraInfoItem[]>([]);
   const [currentSelectEra, setCurrentSelectEra] = useState<IMyEraInfoItem>();
   const [myLootboxes, setMyLootboxes] = useState<IMyLootboxItem[]>([]);
+  const [eraInfoLoading, setEraInfoLoading] = useState(false);
   const [fetchingLootboxLoading, setFetchingLootboxLoading] = useState(false);
   // one scroll chunk is 337px 321 width + 16 gap
   const [scrollChunk] = useState(337 * 2);
@@ -302,44 +302,51 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
     }
   };
 
-  const fetchMyEraInfo = async () => {
-    const res = await getMyEraInfo({
-      wallet: account || ''
-    });
-
-    const startEra = userInfo?.era_config.find((i) => i.key === 'start_era');
-    const curEra = userInfo?.era_config.find((i) => i.key === 'current_era');
-
-    const eraInfos = new Array(+(curEra?.value || 0) - +(startEra?.value || 0) + 1)
-      .fill(0)
-      .map((_, index) => {
-        const era = index + +(startEra?.value || 0);
-        const eraInfo = res.data.data?.find((i) => +i.era === era);
-
-        return (
-          eraInfo || {
-            id: era,
-            user_id: account || '',
-            era: era.toString(),
-            point: '0',
-            reward: '0',
-            delegation: '0',
-            apy: '0',
-            apyRank: '0',
-            lootbox: '0'
-          }
-        );
-      })
-      .reverse();
+  const fetchMyEraInfo = async (shouldLoading = true) => {
     try {
-      await fetchLootboxes(eraInfos?.[0].era || 0);
-    } catch (e) {
-      //
-    }
-    setMyEraInfo(eraInfos || []);
-    setCurrentSelectEra(eraInfos?.[0]);
+      if (shouldLoading) {
+        setEraInfoLoading(true);
+      }
+      const res = await getMyEraInfo({
+        wallet: account || ''
+      });
 
-    return eraInfos;
+      const startEra = userInfo?.era_config.find((i) => i.key === 'start_era');
+      const curEra = userInfo?.era_config.find((i) => i.key === 'current_era');
+
+      const eraInfos = new Array(+(curEra?.value || 0) - +(startEra?.value || 0) + 1)
+        .fill(0)
+        .map((_, index) => {
+          const era = index + +(startEra?.value || 0);
+          const eraInfo = res.data.data?.find((i) => +i.era === era);
+
+          return (
+            eraInfo || {
+              id: era,
+              user_id: account || '',
+              era: era.toString(),
+              point: '0',
+              reward: '0',
+              delegation: '0',
+              apy: '0',
+              apyRank: '0',
+              lootbox: '0'
+            }
+          );
+        })
+        .reverse();
+      try {
+        await fetchLootboxes(eraInfos?.[0].era || 0);
+      } catch (e) {
+        //
+      }
+      setMyEraInfo(eraInfos || []);
+      setCurrentSelectEra(eraInfos?.[0]);
+
+      return eraInfos;
+    } finally {
+      setEraInfoLoading(false);
+    }
   };
 
   const scrollLeft = () => {
@@ -360,7 +367,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
   };
 
   useEffect(() => {
-    fetchMyEraInfo();
+    fetchMyEraInfo(true);
   }, [account]);
 
   return (
@@ -417,184 +424,199 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       </div>
 
       <div className={clsx(styles.eraInfo, styles.baseCard)}>
-        <div className={styles.eraInfoOperator}>
-          <div className={styles.eraInfoOperatorArrow}>
-            <FaChevronLeft
-              style={{ color: '#fff' }}
-              onClick={() => {
-                scrollLeft();
-              }}
-            ></FaChevronLeft>
-          </div>
-          <div className={styles.eraInfoOperatorArrow}>
-            <FaChevronRight
-              style={{ color: '#fff' }}
-              onClick={() => {
-                scrollRight();
-              }}
-            ></FaChevronRight>
-          </div>
-        </div>
-
-        <div ref={ref} className={styles.eraInfoCardLayout}>
-          {myEraInfo.map((item, index) => (
-            <div
-              key={item.id}
-              className={clsx(
-                styles.baseLineBorder,
-                currentSelectEra?.id === item.id ? styles.selectedCard : styles.plainCard
-              )}
-              onClick={async () => {
-                setCurrentSelectEra(item);
-                await fetchLootboxes(item.era);
-              }}
-              role="button"
-              tabIndex={0}
-            >
-              <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.eraInfoCard)}>
-                {index === 0 ? (
-                  <Typography variant="medium" type="secondary">
-                    <div style={{ display: 'inline-flex', gap: 8 }}>
-                      <img src="/static/location.svg" alt=""></img>
-                      Era {item.era}
-                    </div>
-                    <br></br>
-                    <Typography variant="small" type="secondary">
-                      *Check back after the era ends for your results
-                    </Typography>
-                  </Typography>
-                ) : (
-                  <div className={styles.previousEraTitle}>
-                    <Typography variant="medium" type="secondary">
-                      Era {item.era}
-                    </Typography>
-                    <div className={styles.colorfulButtonBorder}>
-                      <Button type="primary" shape="round" size="small">
-                        Ranked {formatWithBlank(item.apyRank, '#', 'left')}
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                <div className={styles.split}></div>
-                <div className={styles.eraInfoCardLines}>
-                  <div className={styles.eraInfoCardLine}>
-                    <Typography variant="medium" type="secondary">
-                      Points Earned
-                    </Typography>
-                    <Typography variant="medium">
-                      {formatWithBlank(formatNumberWithLocale(item.point, 0), 'points')}
-                    </Typography>
-                  </div>
-                  <div className={styles.eraInfoCardLine}>
-                    <Typography variant="medium" type="secondary">
-                      Delegation Rewards
-                    </Typography>
-                    <Typography variant="medium">
-                      {formatWithBlank(formatNumberWithLocale(item.reward, 0), 'SQT')}
-                    </Typography>
-                  </div>
-                  <div className={styles.eraInfoCardLine}>
-                    <Typography variant="medium" type="secondary">
-                      Delegated Amount
-                    </Typography>
-                    <Typography variant="medium">
-                      {formatWithBlank(formatNumberWithLocale(item.delegation, 0), 'SQT')}
-                    </Typography>
-                  </div>
-                  <div className={styles.eraInfoCardLine}>
-                    <Typography variant="medium" type="secondary">
-                      APY
-                    </Typography>
-                    <Typography variant="medium">{formatWithBlank(item.apy, '%')}</Typography>
-                  </div>
-                </div>
+        {eraInfoLoading ? (
+          <Skeleton
+            active
+            avatar
+            round
+            paragraph={{
+              rows: 20
+            }}
+            style={{ height: 898 }}
+          ></Skeleton>
+        ) : (
+          <>
+            <div className={styles.eraInfoOperator}>
+              <div className={styles.eraInfoOperatorArrow}>
+                <FaChevronLeft
+                  style={{ color: '#fff' }}
+                  onClick={() => {
+                    scrollLeft();
+                  }}
+                ></FaChevronLeft>
+              </div>
+              <div className={styles.eraInfoOperatorArrow}>
+                <FaChevronRight
+                  style={{ color: '#fff' }}
+                  onClick={() => {
+                    scrollRight();
+                  }}
+                ></FaChevronRight>
               </div>
             </div>
-          ))}
-        </div>
 
-        <Typography variant="large" weight={600}>
-          Era {currentSelectEra?.era}
-        </Typography>
+            <div ref={ref} className={styles.eraInfoCardLayout}>
+              {myEraInfo.map((item, index) => (
+                <div
+                  key={item.id}
+                  className={clsx(
+                    styles.baseLineBorder,
+                    currentSelectEra?.id === item.id ? styles.selectedCard : styles.plainCard
+                  )}
+                  onClick={async () => {
+                    if (eraInfoLoading || fetchingLootboxLoading) return;
+                    setCurrentSelectEra(item);
+                    await fetchLootboxes(item.era);
+                  }}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.eraInfoCard)}>
+                    {index === 0 ? (
+                      <Typography variant="medium" type="secondary">
+                        <div style={{ display: 'inline-flex', gap: 8 }}>
+                          <img src="/static/location.svg" alt=""></img>
+                          Era {item.era}
+                        </div>
+                        <br></br>
+                        <Typography variant="small" type="secondary">
+                          *Check back after the era ends for your results
+                        </Typography>
+                      </Typography>
+                    ) : (
+                      <div className={styles.previousEraTitle}>
+                        <Typography variant="medium" type="secondary">
+                          Era {item.era}
+                        </Typography>
+                        <div className={styles.colorfulButtonBorder}>
+                          <Button type="primary" shape="round" size="small">
+                            Ranked {formatWithBlank(item.apyRank, '#', 'left')}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
 
-        <div className={styles.eraEarnedInfo}>
-          <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
-            <Typography variant="large">Points for Each Delegated SQT</Typography>
-            <div className={styles.split}></div>
-            <Typography>
-              You delegated {formatNumberWithLocale(currentSelectEra?.delegation || 0, 0)} SQT for Era{' '}
-              {currentSelectEra?.era}
-            </Typography>
-
-            <Typography>For every 10 SQT your delegate for the complete Era, you get 1 point!</Typography>
-          </div>
-          <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
-            <Typography variant="large">Points for SQT Rewards</Typography>
-            <div className={styles.split}></div>
-            <Typography>
-              You claimed {formatNumberWithLocale(currentSelectEra?.reward || 0, 0)} SQT of rewards for Era{' '}
-              {currentSelectEra?.era}
-            </Typography>
-            <Typography>For every 2 SQT your claim as rewards for the Era, you get 1 point!</Typography>
-          </div>
-
-          <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
-            <Typography variant="large">Best Performing Delegators</Typography>
-            <div className={styles.split}></div>
-            <Typography>Rank as a top performing delegator in this Era to earn bonus points</Typography>
-            <Typography>
-              1st: 15,000 points
-              <br />
-              2nd: 10,000 points
-              <br />
-              3rd: 5,000 points
-              <br />
-              top 10: 2,000 points
-              <br />
-              top 20: 1,000 points
-              <br />
-              top 100: 500 points
-            </Typography>
-          </div>
-
-          <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
-            {fetchingLootboxLoading ? (
-              <Skeleton active></Skeleton>
-            ) : (
-              <>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="large">Random Weekly Lootboxes!</Typography>
-
-                  <div className={styles.colorfulButtonBorder}>
-                    <Button type="primary" shape="round" size="small">
-                      +
-                      {formatNumberWithLocale(
-                        myLootboxes.reduce((a, b) => a + +b.point, 0),
-                        0
-                      )}{' '}
-                      points
-                    </Button>
+                    <div className={styles.split}></div>
+                    <div className={styles.eraInfoCardLines}>
+                      <div className={styles.eraInfoCardLine}>
+                        <Typography variant="medium" type="secondary">
+                          Points Earned
+                        </Typography>
+                        <Typography variant="medium">
+                          {formatWithBlank(formatNumberWithLocale(item.point, 0), 'points')}
+                        </Typography>
+                      </div>
+                      <div className={styles.eraInfoCardLine}>
+                        <Typography variant="medium" type="secondary">
+                          Delegation Rewards
+                        </Typography>
+                        <Typography variant="medium">
+                          {formatWithBlank(formatNumberWithLocale(item.reward, 0), 'SQT')}
+                        </Typography>
+                      </div>
+                      <div className={styles.eraInfoCardLine}>
+                        <Typography variant="medium" type="secondary">
+                          Delegated Amount
+                        </Typography>
+                        <Typography variant="medium">
+                          {formatWithBlank(formatNumberWithLocale(item.delegation, 0), 'SQT')}
+                        </Typography>
+                      </div>
+                      <div className={styles.eraInfoCardLine}>
+                        <Typography variant="medium" type="secondary">
+                          APY
+                        </Typography>
+                        <Typography variant="medium">{formatWithBlank(item.apy, '%')}</Typography>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className={styles.split}></div>
-                {+(currentSelectEra?.lootbox || 0) <= 0 ? (
-                  <Typography>Your random weekly loot boxes will appear here, please check out later.</Typography>
-                ) : (
-                  <Typography>
-                    You have received {currentSelectEra?.lootbox} lootboxes from Era {currentSelectEra?.era}!
-                  </Typography>
-                )}
+              ))}
+            </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  {myLootboxes.map((item) => (
-                    <LootboxItem key={item.id} item={item} refresh={fetchMyEraInfo}></LootboxItem>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+            <Typography variant="large" weight={600}>
+              Era {currentSelectEra?.era}
+            </Typography>
+
+            <div className={styles.eraEarnedInfo}>
+              <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
+                <Typography variant="large">Points for Each Delegated SQT</Typography>
+                <div className={styles.split}></div>
+                <Typography>
+                  You delegated {formatNumberWithLocale(currentSelectEra?.delegation || 0, 0)} SQT for Era{' '}
+                  {currentSelectEra?.era}
+                </Typography>
+
+                <Typography>For every 10 SQT your delegate for the complete Era, you get 1 point!</Typography>
+              </div>
+              <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
+                <Typography variant="large">Points for SQT Rewards</Typography>
+                <div className={styles.split}></div>
+                <Typography>
+                  You claimed {formatNumberWithLocale(currentSelectEra?.reward || 0, 0)} SQT of rewards for Era{' '}
+                  {currentSelectEra?.era}
+                </Typography>
+                <Typography>For every 2 SQT your claim as rewards for the Era, you get 1 point!</Typography>
+              </div>
+
+              <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
+                <Typography variant="large">Best Performing Delegators</Typography>
+                <div className={styles.split}></div>
+                <Typography>Rank as a top performing delegator in this Era to earn bonus points</Typography>
+                <Typography>
+                  1st: 15,000 points
+                  <br />
+                  2nd: 10,000 points
+                  <br />
+                  3rd: 5,000 points
+                  <br />
+                  top 10: 2,000 points
+                  <br />
+                  top 20: 1,000 points
+                  <br />
+                  top 100: 500 points
+                </Typography>
+              </div>
+
+              <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
+                {fetchingLootboxLoading ? (
+                  <Skeleton active></Skeleton>
+                ) : (
+                  <>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="large">Random Weekly Lootboxes!</Typography>
+
+                      <div className={styles.colorfulButtonBorder}>
+                        <Button type="primary" shape="round" size="small">
+                          +
+                          {formatNumberWithLocale(
+                            myLootboxes.reduce((a, b) => a + +b.point, 0),
+                            0
+                          )}{' '}
+                          points
+                        </Button>
+                      </div>
+                    </div>
+                    <div className={styles.split}></div>
+                    {+(currentSelectEra?.lootbox || 0) <= 0 ? (
+                      <Typography>Your random weekly loot boxes will appear here, please check out later.</Typography>
+                    ) : (
+                      <Typography>
+                        You have received {currentSelectEra?.lootbox} lootboxes from Era {currentSelectEra?.era}!
+                      </Typography>
+                    )}
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                      {myLootboxes.map((item) => (
+                        <LootboxItem key={item.id} item={item} refresh={() => fetchMyEraInfo(false)}></LootboxItem>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -634,6 +656,13 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
 
             <span style={{ flex: 1 }} />
 
+            <Typography>
+              {+(userInfo?.referral_count || 0) > 1 && challenge.id === 'referral' ? (
+                <Typography>{userInfo?.referral_count}x referral bonus</Typography>
+              ) : (
+                ''
+              )}
+            </Typography>
             <div className={styles.colorfulButtonBorder}>
               <Button type="primary" shape="round" size="small">
                 +{challenge.reward} Points!
@@ -679,8 +708,8 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       challenges.push({
         id: 'referral',
         name: 'Referral Bonus',
-        success: false,
-        reward: 500,
+        success: +(userInfo?.referral_count || 0) > 0,
+        reward: 500 * Math.max(+(userInfo?.referral_count || 0), 1),
         render: (
           <div style={{ display: 'flex', flexDirection: 'column', border: 'none', borderRadius: 8, gap: 16 }}>
             <Typography>
@@ -791,9 +820,11 @@ const Leaderboard = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="large">Compete to get the highest score, you can do it!</Typography>
       </div>
-      <Typography variant="medium" type="secondary">
-        You are ranked {userInfo?.rank || userInfo?.id} of 9999, participants
-      </Typography>
+      {userLeaderboard.loading ? null : (
+        <Typography variant="medium" type="secondary">
+          You are ranked {userInfo?.rank || userInfo?.id} of {userLeaderboard.data?.data?.count}, participants
+        </Typography>
+      )}
 
       <div style={{ display: 'flex', background: 'rgba(0, 0, 0, 0.23)', padding: 8, borderRadius: 8, gap: 16 }}>
         <div style={{ flex: 1, maxWidth: 60 }}>
@@ -831,7 +862,7 @@ const Leaderboard = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
             )}
           >
             <div style={{ flex: 1, maxWidth: 60 }}>
-              <Typography type="secondary">{summary.rank}</Typography>
+              <Typography type="secondary">{summary.rank || summary.id}</Typography>
             </div>
             <div style={{ flex: 1 }}>
               <Typography tooltip={summary.wallet} type="secondary">
@@ -855,10 +886,10 @@ const Leaderboard = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
             </div>
           </div>
         ))}
-        {userLeaderboard.data?.data?.count ? (
+        {userLeaderboard.data?.data?.beforeMe ? (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Typography type="secondary">
-              {userLeaderboard.data?.data?.count.toLocaleString()} other participants
+              {userLeaderboard.data?.data?.beforeMe.toLocaleString()} other participants
             </Typography>
           </div>
         ) : (
@@ -910,22 +941,15 @@ const DelegationCampaign: FC<IProps> = (props) => {
     alert: true
   });
 
-  const userInfo = useAsyncMemo(async () => {
-    const res = await getUserInfo({
-      wallet: account || ''
-    });
-
-    return res.data;
-  }, [account]);
-
-  const previousUserInfo = usePrevious(userInfo.data);
+  const [fetchLoading, setFetchLoading] = useState(true);
+  const [userInfo, setUserInfo] = useState<IDelegationUserInfo['data']>();
 
   const userStage = useMemo(() => {
-    if (!userInfo.data?.data) return 0;
-    if (!userInfo.data.data.email_verified) return 1;
+    if (!userInfo) return 0;
+    if (!userInfo.email_verified) return 1;
 
     return 2;
-  }, [userInfo.data]);
+  }, [userInfo]);
 
   const height = useMemo(() => {
     if (!isConnected || userStage === 0 || userStage === 1) {
@@ -935,7 +959,27 @@ const DelegationCampaign: FC<IProps> = (props) => {
     return 774;
   }, [userStage, isConnected]);
 
-  if (!previousUserInfo && userInfo.loading) return <Loading></Loading>;
+  const fetchUserInfo = async (shouldLoading = true) => {
+    try {
+      if (shouldLoading) {
+        setFetchLoading(true);
+      }
+
+      const res = await getUserInfo({
+        wallet: account || ''
+      });
+
+      setUserInfo(res.data.data);
+    } finally {
+      setFetchLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, [account]);
+
+  if (fetchLoading) return <Loading></Loading>;
 
   return (
     <div className={styles.delegationCampaign}>
@@ -958,15 +1002,20 @@ const DelegationCampaign: FC<IProps> = (props) => {
         <WalletDetect mode="delegationCampaign" style={{ marginTop: 144 }}>
           <>
             {userStage === 0 || userStage === 1 ? (
-              <FirstStep userInfo={userInfo.data?.data} refresh={userInfo.refetch}></FirstStep>
+              <FirstStep
+                userInfo={userInfo}
+                refresh={async () => {
+                  await fetchUserInfo(false);
+                }}
+              ></FirstStep>
             ) : (
               ''
             )}
             {userStage === 2 ? (
               <>
-                <SecondStep userInfo={userInfo.data?.data}></SecondStep>
-                <MainChallenges userInfo={userInfo.data?.data}></MainChallenges>
-                <Leaderboard userInfo={userInfo.data?.data}></Leaderboard>
+                <SecondStep userInfo={userInfo}></SecondStep>
+                <MainChallenges userInfo={userInfo}></MainChallenges>
+                <Leaderboard userInfo={userInfo}></Leaderboard>
               </>
             ) : (
               ''
