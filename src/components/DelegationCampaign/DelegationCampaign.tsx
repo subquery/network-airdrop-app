@@ -28,14 +28,14 @@ import styles from './DelegationCampaign.module.less';
 
 interface IProps {}
 
-const rootUrl = new URL(window.location.href).origin || 'https://seekers.subquery.network';
+const rootUrl = new URL(window.location.href).origin || 'https://frenzy.subquery.foundation';
 
 const useAccount = () => {
   const p = useAccountWagmi();
 
   return {
     ...p,
-    address: new URL(window.location.href).searchParams.get('account') || p.address
+    address: new URL(window.location.href).searchParams.get('customAddress') || p.address
   };
 };
 
@@ -289,9 +289,11 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
   // one scroll chunk is 337px 321 width + 16 gap
   const [scrollChunk] = useState(337 * 2);
 
-  const fetchLootboxes = async (era: number | string) => {
+  const fetchLootboxes = async (era: number | string, shouldLoading = true) => {
     try {
-      setFetchingLootboxLoading(true);
+      if (shouldLoading) {
+        setFetchingLootboxLoading(true);
+      }
       const res = await getMyLootbox({
         wallet: account || '',
         era
@@ -583,7 +585,15 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
 
               <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
                 {fetchingLootboxLoading ? (
-                  <Skeleton active></Skeleton>
+                  <Skeleton
+                    active
+                    style={{
+                      height: 406
+                    }}
+                    paragraph={{
+                      rows: 10
+                    }}
+                  ></Skeleton>
                 ) : (
                   <>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -615,7 +625,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                           key={item.id}
                           item={item}
                           refresh={() => {
-                            fetchLootboxes(currentSelectEra?.era || 0);
+                            fetchLootboxes(currentSelectEra?.era || 0, false);
                           }}
                         ></LootboxItem>
                       ))}
@@ -667,7 +677,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
 
             <Typography>
               {+(userInfo?.referral_count || 0) > 1 && challenge.id === 'referral' ? (
-                <Typography>{userInfo?.referral_count}x referral bonus</Typography>
+                <Typography style={{ marginRight: 10 }}>{userInfo?.referral_count}x referral bonus</Typography>
               ) : (
                 ''
               )}
@@ -952,7 +962,9 @@ const transitionsLoading: ((props: AnimatedProps<{ style: CSSProperties }>) => R
         position: 'fixed',
         width: '100%',
         height: '100%',
-        zIndex: 999
+        zIndex: 999,
+        top: 0,
+        paddingTop: 80
       }}
     >
       <Loading></Loading>
@@ -1024,8 +1036,6 @@ const DelegationCampaign: FC<IProps> = (props) => {
   useEffect(() => {
     transRef.start();
   }, [transitionIndex]);
-
-  // if (fetchLoading) return <Loading></Loading>;
 
   return (
     <div className={styles.delegationCampaign}>
