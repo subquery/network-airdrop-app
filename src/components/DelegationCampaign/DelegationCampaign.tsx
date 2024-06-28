@@ -893,7 +893,7 @@ const Leaderboard = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
             </div>
 
             <div style={{ flex: 1 }}>
-              <Typography type="secondary">{summary.apy.toLocaleString()}</Typography>
+              <Typography type="secondary">{summary.apy.toLocaleString()} %</Typography>
             </div>
 
             <div style={{ flex: 1 }}>
