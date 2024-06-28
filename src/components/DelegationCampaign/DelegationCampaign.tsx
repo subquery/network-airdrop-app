@@ -1007,7 +1007,7 @@ const DelegationCampaign: FC<IProps> = (props) => {
     enter: { opacity: 1, transform: 'scale(1)' },
     leave: { opacity: 0, transform: 'scale(1)' },
     config: {
-      duration: 800
+      duration: 300
     }
   });
 
