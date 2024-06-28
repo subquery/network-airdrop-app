@@ -611,11 +611,11 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                       </div>
                     </div>
                     <div className={styles.split}></div>
-                    {+(currentSelectEra?.lootbox || 0) <= 0 ? (
+                    {myLootboxes.length <= 0 ? (
                       <Typography>Your random weekly loot boxes will appear here, please check out later.</Typography>
                     ) : (
                       <Typography>
-                        You have received {currentSelectEra?.lootbox} lootboxes from Era {currentSelectEra?.era}!
+                        You have received {myLootboxes.length} lootboxes from Era {currentSelectEra?.era}!
                       </Typography>
                     )}
 
