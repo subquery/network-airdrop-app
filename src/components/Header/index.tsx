@@ -76,7 +76,12 @@ export const Header: React.VFC = () => {
           },
           {
             label: 'Delegation Campaign',
-            link: window.location.href.includes('localhost') ? '/' : 'https://frenzy.subquery.foundation/',
+            link:
+              window.location.href.includes('frenzy') ||
+              window.location.href.includes('thechaindata') ||
+              window.location.href.includes('localhost')
+                ? '/'
+                : 'https://frenzy.subquery.foundation/',
             active: () =>
               window.location.href.includes('frenzy') ||
               window.location.href.includes('thechaindata') ||
