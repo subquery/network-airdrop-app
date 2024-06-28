@@ -649,7 +649,7 @@ interface RenderChallenge {
   description: string;
   render?: React.ReactNode;
   cta?: string;
-  cta_label?: string;
+  cta_url?: string;
 }
 
 const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
@@ -694,9 +694,9 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
             <Markdown.Preview>{challenge.description}</Markdown.Preview>
 
             {challenge.cta && (
-              <a href={challenge.cta} target="_blank" rel="noreferrer">
+              <a href={challenge.cta_url} target="_blank" rel="noreferrer">
                 <Button shape="round" size="large" type="primary" style={{ marginTop: 16, width: '100%' }}>
-                  {challenge.cta_label}
+                  {challenge.cta}
                 </Button>
               </a>
             )}
@@ -716,13 +716,13 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const challenges: RenderChallenge[] =
         res?.data?.data?.map((i) => ({
-          id: i.challenge_id,
-          reward: +i.challenge_point,
-          success: i.userChallenge_completed,
-          name: i.challenge_title,
-          description: i.challenge_description,
-          cta: i.challenge_cta_link,
-          cta_label: i.challenge_cta
+          id: i.challenge.id,
+          reward: +i.challenge.point,
+          success: !!i?.userChallenge?.completed,
+          name: i.challenge.title,
+          description: i.challenge.description,
+          cta: i.challenge.cta,
+          cta_url: i.challenge.cta_url
         })) || [];
       challenges.push({
         id: 'referral',
@@ -789,8 +789,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
           </div>
         ),
         description: '',
-        cta: '', // TODO
-        cta_label: ''
+        cta: '' // TODO
       });
       setUserChallenges(challenges);
     } finally {

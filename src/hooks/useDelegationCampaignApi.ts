@@ -38,13 +38,17 @@ export interface ISignup extends IBaseResponse {}
 
 export interface IOneoffChallenge {
   data?: {
-    challenge_cta: string;
-    challenge_cta_link?: string;
-    challenge_description: string;
-    challenge_id: number;
-    challenge_title: string;
-    challenge_point: string;
-    userChallenge_completed: boolean;
+    challenge: {
+      cta: string;
+      cta_url?: string;
+      description: string;
+      id: number;
+      title: string;
+      point: string;
+    };
+    userChallenge?: {
+      completed: boolean;
+    };
   }[];
 }
 
