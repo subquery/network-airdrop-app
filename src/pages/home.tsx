@@ -49,6 +49,10 @@ const DelegationCampaign = React.lazy(() => import('components/DelegationCampaig
 
 export function Home() {
   const activeKey: ActiveEnum = useMemo(() => {
+    // Dev
+    if (rootUrl.includes('thechaindata')) {
+      return ActiveEnum.DelegatorCampaign;
+    }
     if (rootUrl.includes('seekers')) {
       return ActiveEnum.Challenge;
     }
