@@ -897,7 +897,7 @@ const Leaderboard = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
             </div>
 
             <div style={{ flex: 1 }}>
-              <Typography type="secondary">{summary.total_reward.toLocaleString()} points</Typography>
+              <Typography type="secondary">{summary.total_reward.toLocaleString()} SQT</Typography>
             </div>
 
             <div style={{ flex: 1 }}>
