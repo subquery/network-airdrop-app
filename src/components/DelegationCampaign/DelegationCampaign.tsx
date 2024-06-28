@@ -1017,9 +1017,9 @@ const DelegationCampaign: FC<IProps> = (props) => {
         setTransitionIndex(0);
         setFetchLoading(true);
       }
-
+      if (!account) return;
       const res = await getUserInfo({
-        wallet: account || ''
+        wallet: account
       });
 
       setUserInfo(res.data.data);
