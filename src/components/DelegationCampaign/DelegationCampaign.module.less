@@ -336,6 +336,10 @@
             transition: all 0.3s linear;
             filter: none;
             &::before {
+              // this for safari & firfox or other don't support @property.
+              --myColor1: #34414b;
+              --myColor2: #34414b;
+
               transition: --myColor1 0.3s linear, --myColor2 0.3s linear;
               background: linear-gradient(315.02deg, var(--myColor1) 16.18%, var(--myColor2) 85.01%);
             }

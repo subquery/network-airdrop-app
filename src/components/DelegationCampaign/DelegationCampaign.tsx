@@ -603,7 +603,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                         <Button type="primary" shape="round" size="small">
                           +
                           {formatNumberWithLocale(
-                            myLootboxes.reduce((a, b) => a + +b.point, 0),
+                            myLootboxes.filter((i) => i.completed).reduce((a, b) => a + +b.point, 0),
                             0
                           )}{' '}
                           points
