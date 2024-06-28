@@ -561,7 +561,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                   You claimed {formatNumberWithLocale(currentSelectEra?.reward || 0, 0)} SQT of rewards for Era{' '}
                   {currentSelectEra?.era}
                 </Typography>
-                <Typography>For every 2 SQT your claim as rewards for the Era, you get 1 point!</Typography>
+                <Typography>For every SQT your claim as rewards for the Era, you get 70 points!</Typography>
               </div>
 
               <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
