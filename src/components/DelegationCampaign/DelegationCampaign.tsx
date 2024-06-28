@@ -1024,7 +1024,7 @@ const DelegationCampaign: FC<IProps> = (props) => {
 
       setUserInfo(res.data.data);
     } finally {
-      setTransitionIndex(1);
+      setTransitionIndex(0);
       setFetchLoading(false);
     }
   };
