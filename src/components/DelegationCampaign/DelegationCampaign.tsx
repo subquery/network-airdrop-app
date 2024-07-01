@@ -9,6 +9,7 @@ import { Markdown, openNotification, Spinner, Typography } from '@subql/componen
 import { useAsyncMemo } from '@subql/react-hooks';
 import { Button, Collapse, Form, Input, Modal, Skeleton } from 'antd';
 import { useForm } from 'antd/es/form/Form';
+import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
 import { useAccount as useAccountWagmi } from 'wagmi';
 
@@ -390,7 +391,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       <div className={styles.baseCard} style={{ marginTop: 280 }}>
         <Typography>Your Achievements</Typography>
 
-        <div style={{ display: 'flex', gap: 16 }}>
+        <div className={styles.achievementsLayout}>
           <div className={styles.baseLineBorder}>
             <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
               <Typography>Your Total Rank</Typography>
@@ -412,8 +413,20 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
           <div className={styles.baseLineBorder}>
             <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
               <Typography>Your Total Points</Typography>
-              <Typography variant="h4" weight={600}>
-                {formatNumberWithLocale(userInfo?.total_score || 0, 0)} Points
+              <Typography
+                variant={
+                  BigNumber(userInfo?.total_score || 0).gt(999_9999_9999)
+                    ? 'large'
+                    : BigNumber(userInfo?.total_score || 0).gt(9999_9999)
+                    ? 'h5'
+                    : 'h4'
+                }
+                weight={600}
+              >
+                {formatNumberWithLocale(userInfo?.total_score || 0, 0)}{' '}
+                <Typography variant="large" weight={600}>
+                  Points
+                </Typography>
               </Typography>
             </div>
           </div>
@@ -422,7 +435,10 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
             <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
               <Typography>Total Delegation Rewards</Typography>
               <Typography variant="h4" weight={600}>
-                {formatNumber(userInfo?.total_reward || 0)} SQT
+                {formatNumber(userInfo?.total_reward || 0)}{' '}
+                <Typography variant="large" weight={600}>
+                  SQT
+                </Typography>
               </Typography>
             </div>
           </div>
@@ -513,7 +529,6 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                         </div>
                       </div>
                     )}
-
                     <div className={styles.split}></div>
                     <div className={styles.eraInfoCardLines}>
                       <div className={styles.eraInfoCardLine}>
@@ -552,7 +567,13 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
               ))}
             </div>
 
-            <Typography variant="large" weight={600}>
+            <Typography
+              variant="large"
+              weight={600}
+              style={{
+                padding: '0 20px'
+              }}
+            >
               Era {currentSelectEra?.era}
             </Typography>
 
@@ -755,7 +776,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
               onChange={() => ({})}
             />
 
-            <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div className={styles.referralButtons}>
               <Button
                 shape="round"
                 ghost
@@ -819,7 +840,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       <div className={styles.naviLine}>
         <div style={{ width: 24, height: 24, background: 'var(--sq-blue600)', borderRadius: '50%' }}></div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 24, width: '100%' }}>
+      <div className={styles.challengesCollapse}>
         <Typography variant="h5">One-off Challenges</Typography>
         <Collapse className={styles.darkCollapse} ghost items={renderChallenges} defaultActiveKey={['referral']} />
       </div>
@@ -883,7 +904,8 @@ const Leaderboard = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         ''
       )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* overflow auto, a quick fix for mobile version,  */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, overflow: 'auto' }}>
         {userLeaderboard.data?.data?.top7?.map((summary, index) => (
           <div
             key={`${summary.wallet}${index}`}

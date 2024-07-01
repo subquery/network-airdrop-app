@@ -50,6 +50,7 @@
   width: 296px;
   gap: 8px;
   height: 100%;
+  justify-content: space-between;
 }
 
 .colorfulButtonBorder {
@@ -106,6 +107,13 @@
   margin: 40px auto 0 auto;
   width: 100%;
   max-width: var(--main-pc-width);
+
+  &Collapse {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+  }
 
   .naviLine {
     position: relative;
@@ -208,6 +216,13 @@
       justify-content: center;
     }
   }
+
+  .referralButtons {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+  }
 }
 
 .lootboxItem {
@@ -243,8 +258,8 @@
     width: 600px;
     position: fixed;
     top: 50%;
+    left: 50%;
     animation: enter 600ms ease forwards;
-    transform: translateY(-50%);
   }
 }
 
@@ -321,6 +336,7 @@
           max-width: var(--main-pc-width);
           overflow: hidden;
           scroll-behavior: smooth;
+          padding: 20px;
 
           .previousEraTitle {
             display: flex;
@@ -382,6 +398,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 16px;
+        padding: 0 20px;
       }
 
       .split {
@@ -390,6 +407,11 @@
         height: 1px;
       }
     }
+
+    .achievementsLayout {
+      display: flex;
+      gap: 16px;
+    }
   }
 }
 
@@ -397,11 +419,77 @@
 @keyframes enter {
   0% {
     opacity: 0;
-    transform: translateY(-50%) scale(0);
+    transform: translate(-50%, -50%) scale(0);
   }
 
   100% {
     opacity: 1;
-    transform: translateY(-50%) scale(1);
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  :global {
+    .subql-typography__h1 {
+      font-size: 40px;
+    }
+  }
+
+  .delegationCampaign {
+    &Main {
+      .mainInner {
+        .mainTitle {
+          width: 100%;
+          padding: 0 20px;
+        }
+
+        .eraInfoCardLayout {
+          overflow: auto;
+        }
+  
+        .eraEarnedInfo {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+      .achievementsLayout {
+        flex-direction: column;
+        .achieveCard {
+          width: 100%;
+        }
+      }
+
+    }
+
+    .challenges {
+      padding: 0 10px;
+
+      &Collapse {
+        width: 1px;
+        flex: 1;
+      }
+
+      .referralButtons {
+        flex-direction: column;
+      }
+    }
+  }
+  .lootboxModal {
+    .lootboxWrapper {
+      width: calc(100vw - 40px);
+    }
+  }
+
+  @keyframes enter {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
   }
 }
