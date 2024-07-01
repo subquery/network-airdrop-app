@@ -443,21 +443,25 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         ) : (
           <>
             <div className={styles.eraInfoOperator}>
-              <div className={styles.eraInfoOperatorArrow}>
-                <FaChevronLeft
-                  style={{ color: '#fff' }}
-                  onClick={() => {
-                    scrollLeft();
-                  }}
-                ></FaChevronLeft>
+              <div
+                className={styles.eraInfoOperatorArrow}
+                onClick={() => {
+                  scrollLeft();
+                }}
+                role="button"
+                tabIndex={0}
+              >
+                <FaChevronLeft style={{ color: '#fff' }}></FaChevronLeft>
               </div>
-              <div className={styles.eraInfoOperatorArrow}>
-                <FaChevronRight
-                  style={{ color: '#fff' }}
-                  onClick={() => {
-                    scrollRight();
-                  }}
-                ></FaChevronRight>
+              <div
+                className={styles.eraInfoOperatorArrow}
+                onClick={() => {
+                  scrollRight();
+                }}
+                role="button"
+                tabIndex={0}
+              >
+                <FaChevronRight style={{ color: '#fff' }}></FaChevronRight>
               </div>
             </div>
 
