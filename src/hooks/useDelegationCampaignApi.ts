@@ -78,7 +78,7 @@ export interface IMyEraInfoItem {
   era: string;
   point: string;
   apy: string;
-  apyRank: string;
+  rank: string;
   lootbox: string;
 }
 

@@ -281,6 +281,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
     alert: false
   });
   const ref = useRef<HTMLDivElement>(null);
+  const eraCardRefs = useRef<HTMLDivElement[]>([]);
   const [myEraInfo, setMyEraInfo] = useState<IMyEraInfoItem[]>([]);
   const [currentSelectEra, setCurrentSelectEra] = useState<IMyEraInfoItem>();
   const [myLootboxes, setMyLootboxes] = useState<IMyLootboxItem[]>([]);
@@ -332,7 +333,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
               reward: '0',
               delegation: '0',
               apy: '0',
-              apyRank: '0',
+              rank: '0',
               lootbox: '0'
             }
           );
@@ -468,9 +469,17 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                     styles.baseLineBorder,
                     currentSelectEra?.id === item.id ? styles.selectedCard : styles.plainCard
                   )}
+                  ref={(cardRef) => {
+                    if (cardRef) {
+                      eraCardRefs.current[index] = cardRef;
+                    }
+                  }}
                   onClick={async () => {
                     if (eraInfoLoading || fetchingLootboxLoading) return;
                     setCurrentSelectEra(item);
+                    eraCardRefs.current[index]?.scrollIntoView({
+                      block: 'nearest'
+                    });
                     await fetchLootboxes(item.era);
                   }}
                   role="button"
@@ -495,7 +504,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                         </Typography>
                         <div className={styles.colorfulButtonBorder}>
                           <Button type="primary" shape="round" size="small">
-                            Ranked {formatWithBlank(item.apyRank || '0', '#', 'left')}
+                            Ranked {formatWithBlank(item.rank || '0', '#', 'left')}
                           </Button>
                         </div>
                       </div>

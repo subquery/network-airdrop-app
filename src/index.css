@@ -112,6 +112,12 @@ code {
   margin-bottom: 0;
 }
 
+@media screen and (max-width: 768px) {
+  :root {
+    --main-pc-width: 100vw;
+  }
+}
+
 :root {
   --animate-duration: 1s;
   --animate-delay: 1s;
