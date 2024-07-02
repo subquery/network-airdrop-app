@@ -585,8 +585,8 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                 <Typography variant="large">Points for Each Delegated SQT</Typography>
                 <div className={styles.split}></div>
                 <Typography>
-                  You delegated {formatNumberWithLocale(currentSelectEra?.delegation || 0, 0)} SQT for Era{' '}
-                  {currentSelectEra?.era}
+                  You delegated {formatNumberWithLocale(Math.floor(parseFloat(currentSelectEra?.delegation || '0')), 0)}{' '}
+                  SQT for Era {currentSelectEra?.era}
                 </Typography>
 
                 <Typography>For every 10 SQT your delegate for the complete Era, you get 1 point!</Typography>
@@ -595,8 +595,8 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                 <Typography variant="large">Points for SQT Rewards</Typography>
                 <div className={styles.split}></div>
                 <Typography>
-                  You claimed {formatNumberWithLocale(currentSelectEra?.reward || 0, 0)} SQT of rewards for Era{' '}
-                  {currentSelectEra?.era}
+                  You claimed {formatNumberWithLocale(Math.floor(parseFloat(currentSelectEra?.reward || '0')), 0)} SQT
+                  of rewards for Era {currentSelectEra?.era}
                 </Typography>
                 <Typography>For every SQT your claim as rewards for the Era, you get 70 points!</Typography>
               </div>
