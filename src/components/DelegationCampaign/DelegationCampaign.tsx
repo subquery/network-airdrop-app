@@ -401,7 +401,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         </Typography>
       </div>
 
-      <div className={styles.baseCard} style={{ marginTop: 280 }}>
+      <div className={styles.baseCard} style={{ marginTop: 120 }}>
         <Typography>Your Achievements</Typography>
 
         <div className={styles.achievementsLayout}>
@@ -1070,10 +1070,10 @@ const DelegationCampaign: FC<IProps> = (props) => {
 
   const height = useMemo(() => {
     if (!isConnected || userStage === 0 || userStage === 1) {
-      return 991;
+      return 700;
     }
 
-    return 774;
+    return 600;
   }, [userStage, isConnected]);
 
   const transRef = useSpringRef();
