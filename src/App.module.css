@@ -13,6 +13,11 @@
   background-image: url('https://static.subquery.network/design/images/homeFooter.png');
   @supports (background-image: url('https://static.subquery.network/design/images/homeFooter.webp')) {
     background-image: url('https://static.subquery.network/design/images/homeFooter.webp');
+    /* safari have bugs. */
+    background-repeat: no-repeat;
+    background-position: center 98%;
+    background-size: 2543px 793px;
+    background-size: max(2543px, 100%) 793px;
   }
   background-repeat: no-repeat;
   background-position: center 98%;
