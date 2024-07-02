@@ -40,7 +40,9 @@ const useAccount = () => {
   };
 };
 
-const rankPointRule = (rank: number) => {
+const minDelegationAmount = 3000;
+const rankPointRule = (rank: number, delegation: string) => {
+  if (BigNumber(delegation).lt(minDelegationAmount)) return 0;
   if (rank === 1) return 15_000;
   if (rank === 2) return 10_000;
   if (rank === 3) return 5_000;
@@ -50,8 +52,14 @@ const rankPointRule = (rank: number) => {
   return 0;
 };
 
-const delegationAmountPoint = (amount: string) => BigNumber(amount).decimalPlaces(0).div(10).toFixed(0);
-const rewardsAmountPoint = (amount: string) => BigNumber(amount).decimalPlaces(0).multipliedBy(70).toFixed(0);
+const delegationAmountPoint = (amount: string) => {
+  if (BigNumber(amount).lt(minDelegationAmount)) return '0';
+  return BigNumber(amount).decimalPlaces(0).div(10).toFixed(0);
+};
+const rewardsAmountPoint = (amount: string, delegation: string) => {
+  if (BigNumber(delegation).lt(minDelegationAmount)) return '0';
+  return BigNumber(amount).decimalPlaces(0).multipliedBy(70).toFixed(0);
+};
 
 const FirstStep = (props: { userInfo?: IDelegationUserInfo['data']; refresh: () => void }) => {
   const { userInfo, refresh } = props;
@@ -622,7 +630,12 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                   <Typography variant="large">Points for SQT Rewards</Typography>
                   <div className={styles.colorfulButtonBorder}>
                     <Button type="primary" shape="round" size="small">
-                      +{formatNumberWithLocale(rewardsAmountPoint(currentSelectEra?.reward || '0'), 0)} points
+                      +
+                      {formatNumberWithLocale(
+                        rewardsAmountPoint(currentSelectEra?.reward || '0', currentSelectEra?.delegation || '0'),
+                        0
+                      )}{' '}
+                      points
                     </Button>
                   </div>
                 </div>
@@ -639,7 +652,12 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                   <Typography variant="large">Best Performing Delegators</Typography>
                   <div className={styles.colorfulButtonBorder}>
                     <Button type="primary" shape="round" size="small">
-                      +{formatNumberWithLocale(rankPointRule(+(currentSelectEra?.rank || 99999999)), 0)} points
+                      +
+                      {formatNumberWithLocale(
+                        rankPointRule(+(currentSelectEra?.rank || 99999999), currentSelectEra?.delegation || '0'),
+                        0
+                      )}{' '}
+                      points
                     </Button>
                   </div>
                 </div>
