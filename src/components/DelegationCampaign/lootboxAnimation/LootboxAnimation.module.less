@@ -1,0 +1,105 @@
+.boxGroup {
+  width: 162px;
+  height: 252px;
+
+  position: relative;
+
+  .boxTop, .boxBottom, .boxCoin, .boxCoin2 {
+    position: absolute;
+  }
+
+  .boxBottom {
+    top: 0;
+    left: 0;
+    animation: upDown 2s ease-in-out infinite;
+
+  }
+
+  .boxTop {
+    top: -112px;
+    right: -50px;
+    z-index: 4;
+    animation: rotates 4s linear infinite;
+  }
+
+  .boxCoin {
+    width: 75px;
+    left: -70px;
+    top: -50px;
+    animation: coin1 3s cubic-bezier(.84,1.46,.98,.88) infinite;
+  }
+
+  .boxCoin2 {
+    width: 75px;
+    top: -50px;
+    left: 25px;
+    animation: coin2 3s cubic-bezier(.84,1.46,.98,.88) infinite;
+
+  }
+}
+
+@keyframes upDown {
+  0% {
+    transform: translateY(0);
+  }
+
+
+  50% {
+    transform: translateY(20px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes rotates {
+  0% {
+    transform: translateY(0) rotate(360deg);
+  }
+
+  25% {
+    transform: translateY(-20px) rotate(345deg);
+  }
+
+  50% {
+    transform: translateY(-30px) rotateZ(330deg);
+  }
+
+  75% {
+    transform: translateY(-15px) rotateZ(345deg);
+  }
+
+  100% {
+    transform: translateY(0) rotateZ(360deg)
+  }
+}
+
+@keyframes coin1 {
+  0% {
+    transform: translateY(0) rotate(360deg);
+  }
+
+  50% {
+    transform: translateY(-30px) rotateZ(250deg);
+  }
+
+  100% {
+    transform: translateY(0) rotateZ(360deg)
+  }
+}
+
+@keyframes coin2 {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+
+  50% {
+    transform: translateY(30px) rotateZ(60deg);
+  }
+
+  100% {
+    transform: translateY(0) rotateZ(0)
+  }
+}
+

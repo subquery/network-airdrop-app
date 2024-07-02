@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 12px;
+}
+
+
 :root {
   --sq-primary-pink: #ff4581;
   --sq-primary-blue: #4388dd;
@@ -50,6 +55,8 @@
 
   --sq-font-body: 16px;
   --sq-line-body: 24px;
+
+  --main-pc-width: 1280px;
 }
 
 body {
@@ -75,4 +82,78 @@ code {
   border-color: var(--sq-primary-blue);
   background: transparent;
   color: var(--sq-primary-blue);
+}
+
+.darkInput {
+  width: 100%;
+  height: 48px;
+  padding: 12px 8px 12px 14px;
+  border: 1px solid var(--sq-gray600);
+  border-radius: 48px;
+  background: transparent!important;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.darkInput::placeholder {
+  color: #919eab;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.darkInput:hover {
+  background: transparent;
+  border: 1px solid var(--sq-gray600);
+}
+
+
+.ant-form-item.ant-form-item {
+  margin-bottom: 0;
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --main-pc-width: 100vw;
+  }
+}
+
+:root {
+  --animate-duration: 1s;
+  --animate-delay: 1s;
+  --animate-repeat: 1;
+}
+.animate__animated {
+  animation-duration: var(--animate-duration);
+  animation-duration: 2s;
+  animation-fill-mode: both;
+}
+
+.animate__fadeIn {
+  animation-name: fadeIn;
+}
+
+
+.animate__fadeOut {
+  animation-name: fadeOut;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }

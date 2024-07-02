@@ -1,0 +1,494 @@
+// for gradint color transition.
+// see plainCard hover css
+@property --myColor1 {
+  syntax: '<color>';
+  initial-value: #34414b;
+  inherits: false;
+}
+
+@property --myColor2 {
+  syntax: '<color>';
+  initial-value: #34414b;
+  inherits: false;
+}
+
+.baseCard {
+  border-radius: 8px;
+  background: var(--dark-mode-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: var(--main-pc-width);
+  border: 1px solid var(--dark-mode-border);
+
+  &.nestedBaseCard {
+    background: #4388dd0f;
+  }
+}
+.baseLineBorder {
+  position: relative;
+  padding: 1px;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(315.02deg, #ff1e66 16.18%, #1980ff 85.01%);
+    border-radius: 8px;
+  }
+}
+.baseLineGradint {
+  background: linear-gradient(315.02deg, rgba(121, 18, 68) 16.18%, rgba(21, 61, 145) 85.01%);
+  border: none;
+  position: relative;
+}
+.achieveCard {
+  width: 296px;
+  gap: 8px;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.colorfulButtonBorder {
+  position: relative;
+  padding: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(315.02deg, rgb(255, 30, 102) 16.18%, #1980ff 85.01%);
+    border-radius: 24px;
+  }
+
+  :global {
+    .ant-btn-primary {
+      background: linear-gradient(315.02deg, #8e245a 16.18%, rgba(23, 85, 166) 85.01%);
+      border: none;
+      box-shadow: none;
+
+      &:hover {
+        background: linear-gradient(315.02deg, #8e245a 16.18%, rgba(23, 85, 166) 85.01%) !important;
+
+      }
+    }
+  }
+}
+
+.tableItem {
+  display: flex;
+  gap: 16px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  background-color: transparent;
+  &:hover {
+    background-color: var(--sq-blue600);
+  }
+}
+
+.mine.tableItem {
+  background-color: var(--sq-blue600);
+}
+
+.challenges {
+  display: flex;
+  gap: 16px;
+  margin: 40px auto 0 auto;
+  width: 100%;
+  max-width: var(--main-pc-width);
+
+  &Collapse {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+  }
+
+  .naviLine {
+    position: relative;
+    &::before {
+      position: absolute;
+      content: '';
+      height: 100%;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 2px;
+      background-repeat: repeat-y;
+      background-image: linear-gradient(0deg, rgba(175, 70, 70, 0) 50%, var(--sq-blue600) 50%);
+      background-size: 100% 8px;
+    }
+  }
+
+  .darkCollapse {
+    :global {
+      .ant-collapse-item {
+        .ant-collapse-header {
+          padding: 16px 24px;
+          color: #fff;
+          background: var(--dark-mode-card);
+
+          flex-direction: row-reverse;
+          border-radius: 8px;
+          align-items: center;
+
+          .ant-collapse-expand-icon {
+            color: var(--sq-blue600);
+            transform: rotate(-90deg);
+            padding-inline-end: 0;
+            height: 36px;
+            background: #4388dd0d;
+            width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+          }
+        }
+
+        &-active {
+          .ant-collapse-header {
+            border-radius: 8px 8px 0 0 !important;
+            .ant-collapse-expand-icon {
+              transform: rotate(0);
+            }
+          }
+        }
+
+        &:last-child {
+          .ant-collapse-header {
+            border-radius: 8px;
+          }
+        }
+
+        & + .ant-collapse-item {
+          margin-top: 16px;
+        }
+
+        .ant-collapse-content {
+          color: #fff;
+          background: var(--dark-mode-card);
+          border-radius: 0 0 8px 8px;
+          .ant-collapse-content-box {
+            padding: 16px 24px;
+            position: relative;
+            &::before {
+              content: ' ';
+              position: absolute;
+              top: 0;
+              left: 50%;
+              width: calc(100% - 48px);
+              height: 1px;
+              transform: translateX(-50%);
+              background: var(--dark-mode-border);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .check {
+    color: #fff;
+    width: 27px;
+    height: 27px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    margin-right: 10px;
+
+    &Active {
+      background: linear-gradient(315deg, #ff1e66 16.18%, #1980ff 85.01%);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .referralButtons {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+  }
+}
+
+.lootboxItem {
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--dark-mode-background);
+  display: flex;
+  justify-content: space-between;
+
+  :global {
+    .ant-btn-primary:disabled {
+      background: var(--dark-mode-card);
+      border: 1px solid transparent;
+      color:var(--sq-gray700);
+    }
+  }
+}
+
+.lootboxModal {
+  width: 100vw;
+  height: 100vh;
+  :global {
+    .ant-modal-content {
+      background-color: unset;
+    }
+  }
+
+  .lootboxWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    width: 600px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    animation: enter 600ms ease forwards;
+  }
+}
+
+.delegationCampaign {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+  // TODO: add background style for it.
+  &Bg {
+    width: 100%;
+    position: absolute;
+    z-index: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &Main {
+    position: relative;
+
+    .actionModal {
+      border-radius: 8px;
+      background: #1b2545e5;
+      display: flex;
+      flex-direction: column;
+      width: 600px;
+      padding: 24px;
+      gap: 16px;
+    }
+
+    .mainInner {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 40px;
+      .mainTitle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 722px;
+        gap: 16px;
+        margin-top: 208px;
+      }
+
+      .eraInfo {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        &Operator {
+          display: flex;
+          gap: 8px;
+          padding: 0 20px;
+          &Arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--sq-blue600);
+            cursor: pointer;
+          }
+        }
+
+        &CardLayout {
+          display: flex;
+          gap: 16px;
+          max-width: var(--main-pc-width);
+          overflow: hidden;
+          scroll-behavior: smooth;
+          padding: 20px;
+
+          .previousEraTitle {
+            display: flex;
+            justify-content: space-between;
+            height: 50px;
+            align-items: center;
+          }
+
+          .baseLineBorder {
+            filter: drop-shadow(0px 2px 8px #d5e4f04d);
+          }
+
+          .plainCard {
+            transition: all 0.3s linear;
+            filter: none;
+            &::before {
+              // this for safari & firfox or other don't support @property.
+              --myColor1: #34414b;
+              --myColor2: #34414b;
+
+              transition: --myColor1 0.3s linear, --myColor2 0.3s linear;
+              background: linear-gradient(315.02deg, var(--myColor1) 16.18%, var(--myColor2) 85.01%);
+            }
+
+            &:hover {
+              filter: drop-shadow(0px 2px 8px #d5e4f04d);
+              &::before {
+                --myColor1: #ff1e66;
+                --myColor2: #1980ff;
+              }
+            }
+          }
+
+          .eraInfoCard {
+            min-width: 319px;
+            height: 100%;
+          }
+
+          .eraInfoCardLines {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+
+            .eraInfoCardLine {
+              display: flex;
+              justify-content: space-between;
+              width: 100%;
+            }
+          }
+        }
+
+        &Card {
+          background: var(--dark-mode-background);
+        }
+      }
+
+      .eraEarnedInfo {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding: 0 20px;
+      }
+
+      .split {
+        width: 100%;
+        background: var(--dark-mode-border);
+        height: 1px;
+      }
+    }
+
+    .achievementsLayout {
+      display: flex;
+      gap: 16px;
+    }
+  }
+}
+
+
+@keyframes enter {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  :global {
+    .subql-typography__h1 {
+      font-size: 40px;
+    }
+  }
+
+  .delegationCampaign {
+    &Main {
+      .mainInner {
+        .mainTitle {
+          width: 100%;
+          padding: 0 20px;
+        }
+
+        .eraInfoCardLayout {
+          overflow: auto;
+        }
+  
+        .eraEarnedInfo {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+      .achievementsLayout {
+        flex-direction: column;
+        .achieveCard {
+          width: 100%;
+        }
+      }
+
+    }
+
+    .challenges {
+      padding: 0 10px;
+
+      &Collapse {
+        width: 1px;
+        flex: 1;
+      }
+
+      .referralButtons {
+        flex-direction: column;
+      }
+    }
+  }
+  .lootboxModal {
+    .lootboxWrapper {
+      width: calc(100vw - 40px);
+    }
+  }
+
+  @keyframes enter {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+  }
+}

@@ -50,6 +50,7 @@ export const Header: React.VFC = () => {
         navigate={(link) => {
           navigate(link);
         }}
+        active={() => true}
         appNavigation={[
           {
             label: 'Home',
@@ -61,11 +62,30 @@ export const Header: React.VFC = () => {
           },
           {
             label: 'SubQuery Seekers',
-            link: 'https://seekers.subquery.foundation/'
+            link: window.location.href.includes('seekers.subquery.foundation')
+              ? '/'
+              : 'https://seekers.subquery.foundation/',
+            active: () => window.location.href.includes('seekers.subquery.foundation')
           },
           {
             label: 'SQT Claim',
-            link: 'https://claim.subquery.foundation/'
+            link: window.location.href.includes('claim.subquery.foundation')
+              ? '/'
+              : 'https://claim.subquery.foundation/',
+            active: () => window.location.href.includes('claim.subquery.foundation')
+          },
+          {
+            label: 'Delegation Campaign',
+            link:
+              window.location.href.includes('frenzy') ||
+              window.location.href.includes('thechaindata') ||
+              window.location.href.includes('localhost')
+                ? '/'
+                : 'https://frenzy.subquery.foundation/',
+            active: () =>
+              window.location.href.includes('frenzy') ||
+              window.location.href.includes('thechaindata') ||
+              window.location.href.includes('localhost')
           },
           {
             label: 'Blog',

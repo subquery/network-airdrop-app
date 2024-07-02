@@ -3,23 +3,30 @@ import { useNavigate, useParams } from 'react-router';
 import { openNotification, Spinner } from '@subql/components';
 import { useMount } from 'ahooks';
 
-import { useChallengesApi } from 'hooks/useChallengesApi';
+import { Loading } from 'components/Loading/Loading';
+import { useDelegationCampaignApi } from 'hooks/useDelegationCampaignApi';
 
 interface IProps {}
 
 const Onboard: FC<IProps> = (props) => {
-  const { verifyEmail } = useChallengesApi();
+  const { verify } = useDelegationCampaignApi({
+    alert: true
+  });
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   useMount(async () => {
     try {
-      await verifyEmail(params.id);
-      openNotification({
-        type: 'success',
-        description: 'Your email has been verified',
-        duration: 10
+      const res = await verify({
+        verifyEmailCode: params.id || ''
       });
+      if (res.data.code === 0) {
+        openNotification({
+          type: 'success',
+          description: 'Your email has been verified',
+          duration: 10
+        });
+      }
     } finally {
       navigate('/');
     }
@@ -27,7 +34,7 @@ const Onboard: FC<IProps> = (props) => {
 
   return (
     <div>
-      <Spinner />
+      <Loading></Loading>
     </div>
   );
 };
