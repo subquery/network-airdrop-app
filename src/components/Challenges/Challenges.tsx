@@ -343,7 +343,7 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
         <a
           style={{ flex: 1 }}
           target="_blank"
-          href={`mailto:yourfriend@email.com?subject=Join%20me%20on%20the%20SubQuery%20Seekers%2050%20Million%20SQT%20Challenge%20&body=Hi%20there%2C%0D%0A%0D%0AI%20recently%20joined%20the%20SubQuery%20Seekers%2050%20Million%20SQT%20challenge%20and%20I%20want%20to%20invite%20you%20too!%0D%0A%0D%0ASubQuery%20are%20giving%20away%2050%20Million%20SQT%20to%20their%20most%20valued%20community%20members%20in%20the%20SubQuery%20Seekers%20Program.%20Simply%20register%20for%20the%20campaign%20using%20this%20referral%20link%2C%20and%20start%20exploring%20the%20challenges.%20The%20more%20challenges%20we%20complete%2C%20the%20more%20SQT%20tokens%20we%20can%20earn!%20%F0%9F%A5%B3%0D%0A%0D%0AI%E2%80%99ve%20been%20having%20a%20blast%20so%20far%2C%20learning%20about%20SubQuery%2C%20blockchain%20data%20indexing%20and%20the%20overall%20web3%20infrastructure%20revolution%20they%20have%20planned.%0D%0A%0D%0AHere%E2%80%99s%20my%20invite%20link%20if%20you%20want%20to%20sign%20up%20and%20complete%20onboarding%20to%20instantly%20earn%20200%20points%3A%20https%3A%2F%2Fseekers.subquery.foundation%2F%3Freferral%3D${props.userInfo?.referral_code}%0D%0A%0D%0ASee%20you%20there!%20%F0%9F%91%80`}
+          href={`mailto:yourfriend@email.com?subject=Join%20me%20in%20SubQuery's%20Summer%20Delegation%20Frenzy!&body=Hi%20there%2C%0D%0A%0D%0AI%20recently%20joined%20the%20SubQuery%20Summer%20Delegation%20Frenzy%20and%20I%20want%20to%20invite%20you%20too!%0D%0A%0D%0ASubQuery%20are%20giving%20away%20big%20rewards%20to%20their%20most%20valued%20community%20members%20in%20the%20delegation%20program.%0D%0ASimply%20register%20for%20the%20campaign%20using%20this%20referral%20link%2C%20and%20start%20delegating%20(staking)%20to%20receive%20points%20as%20well%20as%2014%25%20APY.%20The%20more%20challenges%20we%20complete%2C%20the%20more%20points%20we%20earn!%20%F0%9F%A5%B3%0D%0A%0D%0AI%E2%80%99ve%20been%20having%20a%20blast%20so%20far%20participating%20in%20the%20SubQuery%20Network%20and%20learning%20about%20the%20web3%20infrastructure%20revolution%20they%20have%20planned.%20The%20delegation%20rewards%20definitely%20help%20too!%0D%0A%0D%0AHere%E2%80%99s%20my%20invite%20link%20if%20you%20want%20to%20sign%20up%20and%20complete%20onboarding%20to%20instantly%20earn%202000%20points%3A%20https%3A%2F%2Fdelegation.subquery.foundation%2F%3Freferral%3D${props.userInfo?.referral_code}%0D%0A%0D%0ASee%20you%20there!%20%F0%9F%91%80`}
           rel="noreferrer"
         >
           <Button shape="round" ghost type="primary" size="large" style={{ width: '100%' }}>
@@ -354,7 +354,7 @@ const Referral = (props: { userInfo?: IUserInfo }) => {
           style={{ flex: 1 }}
           target="_blank"
           rel="noreferrer"
-          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`@SubQueryNetwork is running the SubQuery Seekers campaign where you can complete fun quests to earn points and receive SQT tokens in their 50 million $SQT airdrop #SQTSeekers
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`@SubQueryNetwork is running the SubQuery Summer Delegation Frenzy campaign where you can delegate to earn points and receive SQT tokens #SQTSummerFrenzy
 
 Join me here to get a bonus: ${rootUrl}/?referral=${props.userInfo?.referral_code}`)}`}
         >
