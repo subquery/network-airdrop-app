@@ -604,7 +604,9 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                 </Typography>
               </>
             ) : (
-              <Typography>The SubQuery Delegation Frenzy Program starts on Era 21, please check back later!</Typography>
+              <Typography>
+                The SubQuery Delegation Frenzy Program starts on Era 21 (from Friday 5th July), please check back later!
+              </Typography>
             )}
 
             <div className={styles.eraEarnedInfo}>
@@ -670,11 +672,11 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                   <br />
                   3rd: 5,000 points
                   <br />
-                  top 10: 2,000 points
+                  Top 10: 2,000 points
                   <br />
-                  top 20: 1,000 points
+                  Top 20: 1,000 points
                   <br />
-                  top 100: 500 points
+                  Top 100: 500 points
                 </Typography>
               </div>
 
@@ -707,7 +709,9 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                     </div>
                     <div className={styles.split}></div>
                     {myLootboxes.length <= 0 ? (
-                      <Typography>Your random weekly lootboxes will appear here, please check out later.</Typography>
+                      <Typography>
+                        Weekly lootboxes will appear here, please check them out later and claim them.
+                      </Typography>
                     ) : (
                       <Typography>
                         You have received {myLootboxes.length} lootboxes from Era {currentSelectEra?.era}!
