@@ -384,7 +384,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
           SubQuery Summer Delegation Frenzy
         </Typography>
         <Typography variant="h5" style={{ textAlign: 'center' }}>
-          The more points you earn, the more winnings you&apos;ll receive from the SQT prize pool!
+          The more points you earn, the more rewards you&apos;ll receive from the SQT prize pool!
         </Typography>
       </div>
 
