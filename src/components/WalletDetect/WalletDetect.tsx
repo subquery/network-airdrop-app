@@ -24,7 +24,7 @@ export const ContactUs: React.FC<{ mode?: Mode }> = ({ mode }) => (
       )}
       {mode === 'delegationCampaign' && (
         <Typography.Link type="info" href="https://discord.com/invite/subquery">
-          #delegation-campaign
+          #delegation-frenzy
         </Typography.Link>
       )}{' '}
       channel on our Discord
