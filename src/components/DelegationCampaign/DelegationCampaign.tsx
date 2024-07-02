@@ -435,7 +435,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
             <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
               <Typography>Total Delegation Rewards</Typography>
               <Typography variant="h4" weight={600}>
-                {formatNumber(userInfo?.total_reward || 0)}{' '}
+                {formatNumber(Math.floor(parseFloat(userInfo?.total_reward || '0')))}{' '}
                 <Typography variant="large" weight={600}>
                   SQT
                 </Typography>
@@ -546,7 +546,10 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                               Delegation Rewards
                             </Typography>
                             <Typography variant="medium">
-                              {formatWithBlank(formatNumberWithLocale(item.reward, 0), 'SQT')}
+                              {formatWithBlank(
+                                formatNumberWithLocale(Math.floor(parseFloat(item.reward || '0')), 0),
+                                'SQT'
+                              )}
                             </Typography>
                           </div>
                           <div className={styles.eraInfoCardLine}>
@@ -554,7 +557,10 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                               Delegated Amount
                             </Typography>
                             <Typography variant="medium">
-                              {formatWithBlank(formatNumberWithLocale(item.delegation, 0), 'SQT')}
+                              {formatWithBlank(
+                                formatNumberWithLocale(Math.floor(parseFloat(item.delegation || '0')), 0),
+                                'SQT'
+                              )}
                             </Typography>
                           </div>
                           <div className={styles.eraInfoCardLine}>
