@@ -238,29 +238,123 @@ export const FAQ: React.FC<{
     if (type === ActiveEnum.DelegatorCampaign) {
       return [
         {
-          question: 'Q1 Delegation',
+          question: 'What is the SubQuery Summer Delegator Frenzy Campaign?',
           answer: (
             <>
               <span>
-                Throughout years of building SubQuery, our thriving community has been at the forefront of everything we
-                do. You&apos;ve been supporting us, sharing our vision with your friends, and helping us reach thousands
-                of web3 natives. With your support, we&apos;re not just a company - we&apos;re a movement driving an
-                inclusive and decentralised web3 era.
+                The campaign is all about turbocharging your delegation rewards! In addition to your regular rewards,
+                this campaign lets you earn points for completing various network tasks. Accumulate points to rise up
+                the leaderboard and claim your share of a substantial SQT prize pool. Plus, we&apos;re adding an extra
+                layer of excitement with plenty of random loot box giveaways that can propel you even higher in the
+                rankings!
               </span>
               <span>
-                We&apos;ve been running Zealy campaigns for some time, but as we get closer to the public sale and TGE,
-                we&apos;re launching the SubQuery Seekers Challenge to reward our most valued community members and to
-                help decentralise our token and network.
+                Delegators already have a current APY of 14%, so there is absolutely no downside in participating in
+                this campaign.
+              </span>
+            </>
+          )
+        },
+        {
+          question: 'How much is up for grabs?',
+          answer: (
+            <>
+              <span>
+                The campaign is all about turbocharging your delegation rewards! In addition to your regular rewards,
+                this campaign lets you earn points for completing various network tasks. Accumulate points to rise up
+                the leaderboard and claim your share of a substantial SQT prize pool. Plus, we&apos;re adding an extra
+                layer of excitement with plenty of random loot box giveaways that can propel you even higher in the
+                rankings!
               </span>
               <span>
-                We are giving away 50 Million SQT to our most valued community members in the SubQuery Seekers Program.
-                Simply register for the campaign, and start exploring the challenges. The more challenges you complete,
-                the more SQT tokens you can earn!
+                <ul>
+                  <li>If we reach 3,000 valid delegators, the prize pool will be 3M SQT!</li>
+                  <li>If we reach 4,500 valid delegators, the prize pool will increase to 5M SQT!</li>
+                  <li>If we reach 6,000 valid delegators, the prize pool will increase to 7M SQT!</li>
+                  <li>If we reach 10,000 valid delegators, the prize pool will increase to 10M SQT!</li>
+                </ul>
               </span>
               <span>
-                There will be a lot of announcements, reveals, and exciting alpha for members of our community
-                throughout this program, so sign up and complete onboarding asap and start receiving points towards the
-                SubQuery Seekers Challenge.
+                <i>
+                  Note: Valid Delegators are Delegators who delegate at least 3,000 SQT for 2 full eras during the
+                  program and have verified their email address. We want new frens in the Network!
+                </i>
+              </span>
+            </>
+          )
+        },
+        {
+          question: 'How long does the campaign run for?',
+          answer: (
+            <>
+              <span>
+                The campaign is set to run from Era 21 to Era 35 - this is 15 weeks in total and will commence this
+                Friday 5th July! Meaning anyone who is not yet delegating should secure some SQT asap and start now!
+              </span>
+              <span>
+                The campaign concludes at the end of Summer, on Friday 18th October when the prize pool will then be
+                distributed to all eligible participants. Stay tuned for regular updates, announcements, and surprises
+                throughout the campaign.
+              </span>
+            </>
+          )
+        },
+        {
+          question: 'Who can participate?',
+          answer: (
+            <>
+              <span>
+                Anyone can participate! Simply get yourself some SQT through one of the methods below if you don&apos;t
+                already have any and then register for the Frenzy campaign and start completing delegation challenges
+                here.
+              </span>
+              <span>
+                <strong>
+                  In order to get rewards at the end, you must be a Valid Delegator. Valid Delegators are Delegators who
+                  delegate at least 3,000 SQT for 2 full eras during the program, and have verified their email address.
+                </strong>
+              </span>
+              <span>
+                You can acquire SQT to use in the delegation campaign through any of our official exchange pools, the
+                more you delegate, the more points you can earn and the higher you can climb the leaderboard.{' '}
+                <a href="https://academy.subquery.network/subquery_network/token/token.html#where-is-sqt-traded">
+                  Find out where you can get SQT.
+                </a>
+              </span>
+            </>
+          )
+        },
+        {
+          question: 'What is delegating?',
+          answer: (
+            <>
+              <span>
+                SubQuery&apos;s native token, SQT, serves as the fuel powering our ecosystem. The token was designed as
+                a utility token that provides an incentive for participation, as well as serving as a medium of exchange
+                for transactions within the SubQuery Network. Through staking (termed ‘delegating’ in the SubQuery
+                Network), users receive staking rewards in the form of additional SQT tokens. This means that by
+                participating in this campaign, users will receive rewards simply via the reward mechanisms in the
+                network AND can become eligible for the Summer Delegation Frenzy prize pool.
+              </span>
+              <span>
+                <a href="https://academy.subquery.network/subquery_network/delegators/introduction.html">
+                  Learn how to delegate here.
+                </a>
+              </span>
+            </>
+          )
+        },
+        {
+          question: 'How are points converted to SQT?',
+          answer: (
+            <>
+              <span>
+                Wondering how your efforts will translate into SQT rewards? Through completing challenges, participants
+                will earn points and battle it out for the top spots on the leaderboard. Once the program concludes on
+                the 18th of October, we will distribute all of the SQT token pool to all valid participants who have
+                received a certain threshold on the program. The distribution will be proportional to the points
+                accumulated by each participant. So, keep an eye on the leaderboard and strive to climb your way to the
+                top for a chance to earn more SQT!
               </span>
             </>
           )
