@@ -459,6 +459,10 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         ) : (
           <>
             <div className={styles.eraInfoOperator}>
+              <Typography variant="medium" type="secondary">
+                *In order to get any points, you must be delegating a minimum amount of 3,000 SQT in that Era
+              </Typography>
+              <span style={{ flex: 1 }}></span>
               <div
                 className={styles.eraInfoOperatorArrow}
                 onClick={() => {
