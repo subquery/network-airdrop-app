@@ -94,7 +94,7 @@ const FirstStep = (props: { userInfo?: IDelegationUserInfo['data']; refresh: () 
             >
               <Typography variant="h5">Email Verification</Typography>
               <Typography variant="medium" type="secondary">
-                Please verify your email to register for the Summer Delegation Frenzy
+                Please verify your email address to register for the Summer Delegation Frenzy
               </Typography>
             </div>
 
@@ -821,7 +821,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                 style={{ flex: 1 }}
                 target="_blank"
                 rel="noreferrer"
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`@SubQueryNetwork is running the SubQuery Summer Delegation Frenzy campaign where you can delegate to earn points and receive SQT tokens #SQTSummerFrenzy
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`@SubQueryNetwork is running the SubQuery Summer Delegation Frenzy campaign where you can delegate to earn points and receive SQT tokens #SQTDelegationFrenzy
   
   Join me here to get a bonus: ${rootUrl}/?referral=${userInfo?.referral_code}`)}`}
               >
