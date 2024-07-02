@@ -384,7 +384,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
           SubQuery Summer Delegation Frenzy
         </Typography>
         <Typography variant="h5" style={{ textAlign: 'center' }}>
-          The more points you earn, the more winnings you’ll receive from the SQT prize pool!
+          The more points you earn, the more winnings you&apos;ll receive from the SQT prize pool!
         </Typography>
       </div>
 
@@ -461,10 +461,6 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
             {myEraInfo.length ? (
               <>
                 <div className={styles.eraInfoOperator}>
-                  <Typography variant="medium" type="secondary">
-                    *In order to get any points, you must be delegating a minimum amount of 3,000 SQT in that Era
-                  </Typography>
-                  <span style={{ flex: 1 }}></span>
                   <div
                     className={styles.eraInfoOperatorArrow}
                     onClick={() => {
@@ -573,20 +569,15 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                   ))}
                 </div>
 
-                <Typography
-                  variant="large"
-                  weight={600}
-                  style={{
-                    padding: '0 20px'
-                  }}
-                >
+                <Typography variant="large" weight={600}>
                   Era {currentSelectEra?.era}
+                </Typography>
+                <Typography variant="medium" type="secondary">
+                  *In order to get any points, you must be delegating a minimum amount of 3,000 SQT in that Era
                 </Typography>
               </>
             ) : (
-              <Typography style={{ padding: '0 20px' }}>
-                The SubQuery Delegation Frenzy Program starts on Era 21, please check back later!
-              </Typography>
+              <Typography>The SubQuery Delegation Frenzy Program starts on Era 21, please check back later!</Typography>
             )}
 
             <div className={styles.eraEarnedInfo}>
