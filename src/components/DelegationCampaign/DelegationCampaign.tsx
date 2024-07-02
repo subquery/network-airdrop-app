@@ -458,128 +458,136 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
           ></Skeleton>
         ) : (
           <>
-            <div className={styles.eraInfoOperator}>
-              <Typography variant="medium" type="secondary">
-                *In order to get any points, you must be delegating a minimum amount of 3,000 SQT in that Era
-              </Typography>
-              <span style={{ flex: 1 }}></span>
-              <div
-                className={styles.eraInfoOperatorArrow}
-                onClick={() => {
-                  scrollLeft();
-                }}
-                role="button"
-                tabIndex={0}
-              >
-                <FaChevronLeft style={{ color: '#fff' }}></FaChevronLeft>
-              </div>
-              <div
-                className={styles.eraInfoOperatorArrow}
-                onClick={() => {
-                  scrollRight();
-                }}
-                role="button"
-                tabIndex={0}
-              >
-                <FaChevronRight style={{ color: '#fff' }}></FaChevronRight>
-              </div>
-            </div>
-
-            <div ref={ref} className={styles.eraInfoCardLayout}>
-              {myEraInfo.map((item, index) => (
-                <div
-                  key={item.id}
-                  className={clsx(
-                    styles.baseLineBorder,
-                    currentSelectEra?.id === item.id ? styles.selectedCard : styles.plainCard
-                  )}
-                  ref={(cardRef) => {
-                    if (cardRef) {
-                      eraCardRefs.current[index] = cardRef;
-                    }
-                  }}
-                  onClick={async () => {
-                    if (eraInfoLoading || fetchingLootboxLoading) return;
-                    setCurrentSelectEra(item);
-                    eraCardRefs.current[index]?.scrollIntoView({
-                      block: 'nearest'
-                    });
-                    await fetchLootboxes(item.era);
-                  }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.eraInfoCard)}>
-                    {index === 0 ? (
-                      <Typography variant="medium" type="secondary">
-                        <div style={{ display: 'inline-flex', gap: 8 }}>
-                          <img src="/static/location.svg" alt=""></img>
-                          Era {item.era}
-                        </div>
-                        <br></br>
-                        <Typography variant="small" type="secondary">
-                          *Check back after the era ends for your results
-                        </Typography>
-                      </Typography>
-                    ) : (
-                      <div className={styles.previousEraTitle}>
-                        <Typography variant="medium" type="secondary">
-                          Era {item.era}
-                        </Typography>
-                        <div className={styles.colorfulButtonBorder}>
-                          <Button type="primary" shape="round" size="small">
-                            Ranked {formatWithBlank(item.rank || '0', '#', 'left')}
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                    <div className={styles.split}></div>
-                    <div className={styles.eraInfoCardLines}>
-                      <div className={styles.eraInfoCardLine}>
-                        <Typography variant="medium" type="secondary">
-                          Points Earned
-                        </Typography>
-                        <Typography variant="medium">
-                          {formatWithBlank(formatNumberWithLocale(item.point, 0), 'points')}
-                        </Typography>
-                      </div>
-                      <div className={styles.eraInfoCardLine}>
-                        <Typography variant="medium" type="secondary">
-                          Delegation Rewards
-                        </Typography>
-                        <Typography variant="medium">
-                          {formatWithBlank(formatNumberWithLocale(item.reward, 0), 'SQT')}
-                        </Typography>
-                      </div>
-                      <div className={styles.eraInfoCardLine}>
-                        <Typography variant="medium" type="secondary">
-                          Delegated Amount
-                        </Typography>
-                        <Typography variant="medium">
-                          {formatWithBlank(formatNumberWithLocale(item.delegation, 0), 'SQT')}
-                        </Typography>
-                      </div>
-                      <div className={styles.eraInfoCardLine}>
-                        <Typography variant="medium" type="secondary">
-                          APY
-                        </Typography>
-                        <Typography variant="medium">{formatWithBlank(item.apy, '%')}</Typography>
-                      </div>
-                    </div>
+            {myEraInfo.length ? (
+              <>
+                <div className={styles.eraInfoOperator}>
+                  <Typography variant="medium" type="secondary">
+                    *In order to get any points, you must be delegating a minimum amount of 3,000 SQT in that Era
+                  </Typography>
+                  <span style={{ flex: 1 }}></span>
+                  <div
+                    className={styles.eraInfoOperatorArrow}
+                    onClick={() => {
+                      scrollLeft();
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <FaChevronLeft style={{ color: '#fff' }}></FaChevronLeft>
+                  </div>
+                  <div
+                    className={styles.eraInfoOperatorArrow}
+                    onClick={() => {
+                      scrollRight();
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <FaChevronRight style={{ color: '#fff' }}></FaChevronRight>
                   </div>
                 </div>
-              ))}
-            </div>
 
-            <Typography
-              variant="large"
-              weight={600}
-              style={{
-                padding: '0 20px'
-              }}
-            >
-              Era {currentSelectEra?.era}
-            </Typography>
+                <div ref={ref} className={styles.eraInfoCardLayout}>
+                  {myEraInfo.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className={clsx(
+                        styles.baseLineBorder,
+                        currentSelectEra?.id === item.id ? styles.selectedCard : styles.plainCard
+                      )}
+                      ref={(cardRef) => {
+                        if (cardRef) {
+                          eraCardRefs.current[index] = cardRef;
+                        }
+                      }}
+                      onClick={async () => {
+                        if (eraInfoLoading || fetchingLootboxLoading) return;
+                        setCurrentSelectEra(item);
+                        eraCardRefs.current[index]?.scrollIntoView({
+                          block: 'nearest'
+                        });
+                        await fetchLootboxes(item.era);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.eraInfoCard)}>
+                        {index === 0 ? (
+                          <Typography variant="medium" type="secondary">
+                            <div style={{ display: 'inline-flex', gap: 8 }}>
+                              <img src="/static/location.svg" alt=""></img>
+                              Era {item.era}
+                            </div>
+                            <br></br>
+                            <Typography variant="small" type="secondary">
+                              *Check back after the era ends for your results
+                            </Typography>
+                          </Typography>
+                        ) : (
+                          <div className={styles.previousEraTitle}>
+                            <Typography variant="medium" type="secondary">
+                              Era {item.era}
+                            </Typography>
+                            <div className={styles.colorfulButtonBorder}>
+                              <Button type="primary" shape="round" size="small">
+                                Ranked {formatWithBlank(item.rank || '0', '#', 'left')}
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                        <div className={styles.split}></div>
+                        <div className={styles.eraInfoCardLines}>
+                          <div className={styles.eraInfoCardLine}>
+                            <Typography variant="medium" type="secondary">
+                              Points Earned
+                            </Typography>
+                            <Typography variant="medium">
+                              {formatWithBlank(formatNumberWithLocale(item.point, 0), 'points')}
+                            </Typography>
+                          </div>
+                          <div className={styles.eraInfoCardLine}>
+                            <Typography variant="medium" type="secondary">
+                              Delegation Rewards
+                            </Typography>
+                            <Typography variant="medium">
+                              {formatWithBlank(formatNumberWithLocale(item.reward, 0), 'SQT')}
+                            </Typography>
+                          </div>
+                          <div className={styles.eraInfoCardLine}>
+                            <Typography variant="medium" type="secondary">
+                              Delegated Amount
+                            </Typography>
+                            <Typography variant="medium">
+                              {formatWithBlank(formatNumberWithLocale(item.delegation, 0), 'SQT')}
+                            </Typography>
+                          </div>
+                          <div className={styles.eraInfoCardLine}>
+                            <Typography variant="medium" type="secondary">
+                              APY
+                            </Typography>
+                            <Typography variant="medium">{formatWithBlank(item.apy, '%')}</Typography>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <Typography
+                  variant="large"
+                  weight={600}
+                  style={{
+                    padding: '0 20px'
+                  }}
+                >
+                  Era {currentSelectEra?.era}
+                </Typography>
+              </>
+            ) : (
+              <Typography style={{ padding: '0 20px' }}>
+                The SubQuery Delegation Frenzy Program starts on Era 21, please check back later!
+              </Typography>
+            )}
 
             <div className={styles.eraEarnedInfo}>
               <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
@@ -974,11 +982,11 @@ const Leaderboard = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
             </div>
 
             <div style={{ flex: 1 }}>
-              <Typography type="secondary">{summary.apy.toLocaleString()}</Typography>
+              <Typography type="secondary">{summary.apy.toLocaleString()} %</Typography>
             </div>
 
             <div style={{ flex: 1 }}>
-              <Typography type="secondary">{summary.total_reward.toLocaleString()} points</Typography>
+              <Typography type="secondary">{summary.total_reward.toLocaleString()} SQT</Typography>
             </div>
 
             <div style={{ flex: 1 }}>
