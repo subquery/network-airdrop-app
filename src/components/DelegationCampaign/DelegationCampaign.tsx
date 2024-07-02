@@ -40,6 +40,19 @@ const useAccount = () => {
   };
 };
 
+const rankPointRule = (rank: number) => {
+  if (rank === 1) return 15_000;
+  if (rank === 2) return 10_000;
+  if (rank === 3) return 5_000;
+  if (rank <= 10) return 2_000;
+  if (rank <= 20) return 1_000;
+  if (rank <= 100) return 500;
+  return 0;
+};
+
+const delegationAmountPoint = (amount: string) => BigNumber(amount).decimalPlaces(0).div(10).toFixed(0);
+const rewardsAmountPoint = (amount: string) => BigNumber(amount).decimalPlaces(0).multipliedBy(70).toFixed(0);
+
 const FirstStep = (props: { userInfo?: IDelegationUserInfo['data']; refresh: () => void }) => {
   const { userInfo, refresh } = props;
 
@@ -582,7 +595,14 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
 
             <div className={styles.eraEarnedInfo}>
               <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
-                <Typography variant="large">Points for Each Delegated SQT</Typography>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="large">Points for Each Delegated SQT</Typography>
+                  <div className={styles.colorfulButtonBorder}>
+                    <Button type="primary" shape="round" size="small">
+                      +{formatNumberWithLocale(delegationAmountPoint(currentSelectEra?.delegation || '0'), 0)} points
+                    </Button>
+                  </div>
+                </div>
                 <div className={styles.split}></div>
                 <Typography>
                   You delegated {formatNumberWithLocale(currentSelectEra?.delegation || 0, 0)} SQT for Era{' '}
@@ -592,7 +612,14 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                 <Typography>For every 10 SQT your delegate for the complete Era, you get 1 point!</Typography>
               </div>
               <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
-                <Typography variant="large">Points for SQT Rewards</Typography>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="large">Points for SQT Rewards</Typography>
+                  <div className={styles.colorfulButtonBorder}>
+                    <Button type="primary" shape="round" size="small">
+                      +{formatNumberWithLocale(rewardsAmountPoint(currentSelectEra?.reward || '0'), 0)} points
+                    </Button>
+                  </div>
+                </div>
                 <div className={styles.split}></div>
                 <Typography>
                   You claimed {formatNumberWithLocale(currentSelectEra?.reward || 0, 0)} SQT of rewards for Era{' '}
@@ -602,7 +629,14 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
               </div>
 
               <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
-                <Typography variant="large">Best Performing Delegators</Typography>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="large">Best Performing Delegators</Typography>
+                  <div className={styles.colorfulButtonBorder}>
+                    <Button type="primary" shape="round" size="small">
+                      +{formatNumberWithLocale(rankPointRule(+(currentSelectEra?.rank || 99999999)), 0)} points
+                    </Button>
+                  </div>
+                </div>
                 <div className={styles.split}></div>
                 <Typography>Rank as a top performing delegator in this Era to earn bonus points</Typography>
                 <Typography>
