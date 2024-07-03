@@ -348,7 +348,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
 
           return (
             eraInfo || {
-              id: era,
+              id: +new Date(),
               user_id: account || '',
               era: era.toString(),
               point: '0',
