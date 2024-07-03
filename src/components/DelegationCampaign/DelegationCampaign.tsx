@@ -348,7 +348,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
 
           return (
             eraInfo || {
-              id: era,
+              id: +new Date(),
               user_id: account || '',
               era: era.toString(),
               point: '0',
@@ -1151,8 +1151,8 @@ const DelegationCampaign: FC<IProps> = (props) => {
               minHeight: height
             }}
           >
-            <source srcSet="/static/currentEraBg.webp" type="image/webp" />
-            <img src="/static/currentEraBg.png" alt="" />
+            <source srcSet="/static/currentEraBg3.webp" type="image/webp" />
+            <img src="/static/currentEraBg3.png" alt="" />
           </picture>
           <div
             className={styles.delegationCampaignMain}
