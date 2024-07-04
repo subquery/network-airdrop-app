@@ -35,7 +35,7 @@ export interface IDelegationUserInfo extends IBaseResponse {
       delegation: string;
       era: number;
     };
-    isQualified: boolean;
+    eligible: boolean;
   };
 }
 

@@ -216,6 +216,21 @@
         }
       }
     }
+
+    &.withoutSplit {
+      :global {
+        .ant-collapse-item {
+          .ant-collapse-content {
+            &-box {
+              padding-top: 0;
+              &::before {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   .check {

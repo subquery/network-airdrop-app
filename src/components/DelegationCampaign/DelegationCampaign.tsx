@@ -8,6 +8,7 @@ import { useAsyncMemo } from '@subql/react-hooks';
 import { Button, Collapse, Input, Modal, Skeleton } from 'antd';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
+import rehypeRaw from 'rehype-raw';
 import { useAccount as useAccountWagmi } from 'wagmi';
 
 import { Loading } from 'components/Loading/Loading';
@@ -275,7 +276,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       <div className={styles.challenges} style={{ marginTop: 120 }}>
         <div className={styles.challengesCollapse}>
           <Collapse
-            className={styles.darkCollapse}
+            className={clsx(styles.darkCollapse, styles.withoutSplit)}
             ghost
             items={[
               {
@@ -312,7 +313,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                     </div>
 
                     <iframe
-                      width="1260"
+                      width="100%"
                       height="706"
                       src="https://www.youtube.com/embed/7GKWO5wEdtc?si=QeqtFcIXmA9yy6e5"
                       title="YouTube video player"
@@ -394,19 +395,19 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         <div style={{ display: 'flex', gap: 6 }}>
           <div style={{ padding: 5 }}>
             <img
-              src={userInfo?.isQualified ? '/static/validUser.svg' : '/static/invalidUser.svg'}
+              src={userInfo?.eligible ? '/static/validUser.svg' : '/static/invalidUser.svg'}
               alt=""
               style={{ width: 32, height: 38 }}
             ></img>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Typography>
-              {userInfo?.isQualified
+              {userInfo?.eligible
                 ? 'Yes, you are a valid participant !'
                 : 'Sorry, you are not yet a valid participant.'}
             </Typography>
             <Typography type="secondary" variant="small" style={{ lineHeight: '18px' }}>
-              {userInfo?.isQualified ? (
+              {userInfo?.eligible ? (
                 'You have successfully delegated 3,000 SQT for two entire Eras. '
               ) : (
                 <>
@@ -783,7 +784,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         ),
         children: challenge.render || (
           <div className={styles.markdownWrapper}>
-            <Markdown.Preview>{challenge.description}</Markdown.Preview>
+            <Markdown.Preview rehypePlugins={[rehypeRaw]}>{`${challenge.description}`}</Markdown.Preview>
 
             {challenge.cta && (
               <a href={challenge.cta_url} target="_blank" rel="noreferrer">

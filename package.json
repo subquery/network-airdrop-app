@@ -71,6 +71,7 @@
     "react-router": "^6.3.0",
     "react-router-dom": "6",
     "react-scripts": "5.0.0",
+    "rehype-raw": "^7.0.0",
     "remark-breaks": "^3.0.2",
     "remark-gfm": "^3.0.1",
     "swr": "^1.2.2",
