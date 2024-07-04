@@ -31,6 +31,11 @@ export interface IDelegationUserInfo extends IBaseResponse {
       key: 'start_era' | 'end_era' | 'current_era';
       value: string;
     }[];
+    delegation?: {
+      delegation: string;
+      era: number;
+    };
+    eligible: boolean;
   };
 }
 

@@ -47,10 +47,11 @@
   position: relative;
 }
 .achieveCard {
-  width: 296px;
+  width: 233px;
   gap: 8px;
   height: 100%;
   justify-content: space-between;
+  padding: 24px 16px 24px 24px;
 }
 
 .colorfulButtonBorder {
@@ -76,14 +77,32 @@
       background: linear-gradient(315.02deg, #8e245a 16.18%, rgba(23, 85, 166) 85.01%);
       border: none;
       box-shadow: none;
-
+      cursor: default;
       &:hover {
         background: linear-gradient(315.02deg, #8e245a 16.18%, rgba(23, 85, 166) 85.01%) !important;
+      }
 
+      >div {
+        display: none;
+      }
+    }
+  }
+
+  &.disableColorful {
+    &::before {
+      background: var(--sq-gray500);
+    }
+
+    :global {
+      .ant-btn-primary {
+        background: var(--sq-gray600);
+        color: var(--sq-gray500);
       }
     }
   }
 }
+
+
 
 .tableItem {
   display: flex;
@@ -192,6 +211,21 @@
               height: 1px;
               transform: translateX(-50%);
               background: var(--dark-mode-border);
+            }
+          }
+        }
+      }
+    }
+
+    &.withoutSplit {
+      :global {
+        .ant-collapse-item {
+          .ant-collapse-content {
+            &-box {
+              padding-top: 0;
+              &::before {
+                display: none;
+              }
             }
           }
         }

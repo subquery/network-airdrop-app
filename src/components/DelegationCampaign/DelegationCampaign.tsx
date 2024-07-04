@@ -2,15 +2,13 @@
 import React, { CSSProperties, FC, useEffect, useMemo, useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { IoMdCheckmark } from 'react-icons/io';
-import { MdOutlineMail } from 'react-icons/md';
-import { useLocation } from 'react-router-dom';
 import { animated, AnimatedProps, useSpringRef, useTransition } from '@react-spring/web';
 import { Markdown, openNotification, Spinner, Typography } from '@subql/components';
 import { useAsyncMemo } from '@subql/react-hooks';
-import { Button, Collapse, Form, Input, Modal, Skeleton } from 'antd';
-import { useForm } from 'antd/es/form/Form';
+import { Button, Collapse, Input, Modal, Skeleton } from 'antd';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
+import rehypeRaw from 'rehype-raw';
 import { useAccount as useAccountWagmi } from 'wagmi';
 
 import { Loading } from 'components/Loading/Loading';
@@ -26,6 +24,7 @@ import { formatNumber, formatNumberWithLocale, formatWithBlank } from 'utils';
 import heartFireworks from './heartFireworks/heartFireworks';
 import LootboxAnimation from './lootboxAnimation/LootboxAnimation';
 import styles from './DelegationCampaign.module.less';
+import { FirstStep } from './Register';
 
 interface IProps {}
 
@@ -59,141 +58,6 @@ const delegationAmountPoint = (amount: string) => {
 const rewardsAmountPoint = (amount: string, delegation: string) => {
   if (BigNumber(delegation).lt(minDelegationAmount)) return '0';
   return BigNumber(amount).decimalPlaces(0).multipliedBy(70).toFixed(0);
-};
-
-const FirstStep = (props: { userInfo?: IDelegationUserInfo['data']; refresh: () => void }) => {
-  const { userInfo, refresh } = props;
-
-  const { search } = useLocation();
-  const { address: account } = useAccount();
-  const query = useMemo(() => new URLSearchParams(search), [search]);
-  const [form] = useForm();
-  const [loading, setLoading] = useState(false);
-  const { signup, sendVerifyEmail } = useDelegationCampaignApi({
-    alert: true
-  });
-
-  const haveSubmitEmial = useMemo(() => {
-    if (!userInfo?.email) return false;
-    return true;
-  }, [userInfo]);
-
-  const signupWithCode = async () => {
-    try {
-      setLoading(true);
-      await form.validateFields();
-      if (!account) return false;
-      const referralCode = query.get('referral') || '';
-
-      const res = await signup({
-        wallet: account,
-        referralCode: referralCode || undefined,
-        email: form.getFieldValue('email')
-      });
-
-      await refresh();
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 48, marginTop: 80 }}>
-      <Typography variant="h3" style={{ width: 600, textAlign: 'center' }}>
-        SubQuery Summer Delegation Frenzy
-      </Typography>
-      <div className={styles.actionModal}>
-        {!haveSubmitEmial && (
-          <>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 16
-              }}
-            >
-              <Typography variant="h5">Email Verification</Typography>
-              <Typography variant="medium" type="secondary">
-                Please verify your email address to register for the Summer Delegation Frenzy
-              </Typography>
-            </div>
-
-            <Form form={form}>
-              <Form.Item
-                name="email"
-                rules={[
-                  {
-                    async validator(rule, value) {
-                      if (!value) {
-                        return Promise.reject(new Error('Email is required'));
-                      }
-                      if (!/^\S+@\S+\.\S+$/.test(value)) {
-                        return Promise.reject(new Error('Email is invalid'));
-                      }
-
-                      return Promise.resolve();
-                    }
-                  }
-                ]}
-              >
-                <Input className="darkInput" style={{ marginBottom: 0 }} placeholder="Enter your email" />
-              </Form.Item>
-            </Form>
-
-            <Typography variant="medium" type="secondary">
-              By entering your email you have read and agree to our{' '}
-              <Typography.Link active href="https://subquery.network/privacy" target="_blank" variant="medium">
-                privacy policy
-              </Typography.Link>
-            </Typography>
-
-            <Button type="primary" shape="round" size="large" onClick={signupWithCode} loading={loading}>
-              Submit
-            </Button>
-          </>
-        )}
-
-        {/* second step */}
-
-        {haveSubmitEmial && (
-          <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 16 }}>
-            <MdOutlineMail style={{ fontSize: '47px', color: '#fff' }} />
-            <Typography variant="h5">Email Verification</Typography>
-            <Typography type="secondary" style={{ textAlign: 'center' }}>
-              We’ve just sent an onboarding email to your email address ({userInfo?.email})
-            </Typography>
-            <Typography type="secondary" style={{ textAlign: 'center' }}>
-              Click the link on the email you have received from us, make sure to check for it in your spam!
-            </Typography>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Typography type="secondary" style={{ textAlign: 'center' }}>
-                Didn&apos;t receive an email?{' '}
-                <Typography.Link
-                  onClick={async () => {
-                    const res = await sendVerifyEmail({ wallet: account || '' });
-                    if (res.data.code === 0) {
-                      openNotification({
-                        type: 'success',
-                        description:
-                          'We have sent you a new verification link, please check your email address (including your spam account)',
-                        duration: 10
-                      });
-                    }
-                  }}
-                  type="info"
-                >
-                  Request another one
-                </Typography.Link>
-              </Typography>
-            </div>
-          </div>
-        )}
-
-        <ContactUs mode="delegationCampaign" />
-      </div>
-    </div>
-  );
 };
 
 const LootboxItem = (props: { item: IMyLootboxItem; refresh: () => void }) => {
@@ -409,14 +273,72 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         </Typography>
       </div>
 
-      <div className={styles.baseCard} style={{ marginTop: 120 }}>
+      <div className={styles.challenges} style={{ marginTop: 120 }}>
+        <div className={styles.challengesCollapse}>
+          <Collapse
+            className={clsx(styles.darkCollapse, styles.withoutSplit)}
+            ghost
+            items={[
+              {
+                key: 'default',
+                label: <Typography variant="large">🎉 Become a delegator and receive rewards today !</Typography>,
+                children: (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <Typography type="secondary">
+                      A Delegator is a non-technical network role in the SubQuery Network and is a great way to start
+                      participating in the SubQuery Network. This role enables Delegators to “delegate” their SQT to one
+                      or more Node Operator (RPC Providers or Data Indexers) and earn rewards (similar to staking).
+                    </Typography>
+
+                    <div style={{ display: 'flex', gap: 16 }}>
+                      <Button type="primary" shape="round" size="large">
+                        <a
+                          href="https://app.subquery.network/delegator/node-operators/all"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Delegate Now
+                        </a>
+                      </Button>
+
+                      <Button type="primary" shape="round" size="large" ghost>
+                        <a
+                          href="https://academy.subquery.network/subquery_network/delegators/delegating.html"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Learn More
+                        </a>
+                      </Button>
+                    </div>
+
+                    <iframe
+                      width="100%"
+                      height="706"
+                      src="https://www.youtube.com/embed/7GKWO5wEdtc?si=QeqtFcIXmA9yy6e5"
+                      title="YouTube video player"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                )
+              }
+            ]}
+            defaultActiveKey={['default']}
+          />
+        </div>
+      </div>
+
+      <div className={styles.baseCard}>
         <Typography>Your Achievements</Typography>
 
         <div className={styles.achievementsLayout}>
           <div className={styles.baseLineBorder}>
             <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
               <Typography>Your Total Rank</Typography>
-              <Typography variant="h4" weight={600}>
+              <Typography variant="h5" weight={600}>
                 # {userInfo?.rank || userInfo?.id}
               </Typography>
             </div>
@@ -425,7 +347,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
           <div className={styles.baseLineBorder}>
             <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
               <Typography>Programme APY</Typography>
-              <Typography variant="h4" weight={600}>
+              <Typography variant="h5" weight={600}>
                 {userInfo?.apy}%
               </Typography>
             </div>
@@ -437,17 +359,24 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
               <Typography
                 variant={
                   BigNumber(userInfo?.total_score || 0).gt(999_9999_9999)
+                    ? 'text'
+                    : BigNumber(userInfo?.total_score || 0).gt(99_999_999)
                     ? 'large'
-                    : BigNumber(userInfo?.total_score || 0).gt(9999_9999)
-                    ? 'h5'
-                    : 'h4'
+                    : 'h5'
                 }
                 weight={600}
               >
-                {formatNumberWithLocale(userInfo?.total_score || 0, 0)}{' '}
-                <Typography variant="large" weight={600}>
-                  Points
-                </Typography>
+                {formatNumberWithLocale(userInfo?.total_score || 0, 0)} <Typography weight={600}>Points</Typography>
+              </Typography>
+            </div>
+          </div>
+
+          <div className={styles.baseLineBorder}>
+            <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
+              <Typography>Current Delegation</Typography>
+              <Typography variant="h5" weight={600}>
+                {formatNumberWithLocale(userInfo?.delegation?.delegation || 0, 0)}{' '}
+                <Typography weight={600}>SQT</Typography>
               </Typography>
             </div>
           </div>
@@ -455,13 +384,49 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
           <div className={styles.baseLineBorder}>
             <div className={clsx(styles.baseCard, styles.baseLineGradint, styles.achieveCard)}>
               <Typography>Total Delegation Rewards</Typography>
-              <Typography variant="h4" weight={600}>
+              <Typography variant="h5" weight={600}>
                 {formatNumber(Math.floor(parseFloat(userInfo?.total_reward || '0')))}{' '}
-                <Typography variant="large" weight={600}>
-                  SQT
-                </Typography>
+                <Typography weight={600}>SQT</Typography>
               </Typography>
             </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 6 }}>
+          <div style={{ padding: 5 }}>
+            <img
+              src={userInfo?.eligible ? '/static/validUser.svg' : '/static/invalidUser.svg'}
+              alt=""
+              style={{ width: 32, height: 38 }}
+            ></img>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography>
+              {userInfo?.eligible
+                ? 'Yes, you are a valid participant !'
+                : 'Sorry, you are not yet a valid participant.'}
+            </Typography>
+            <Typography type="secondary" variant="small" style={{ lineHeight: '18px' }}>
+              {userInfo?.eligible ? (
+                'You have successfully delegated 3,000 SQT for two entire Eras. '
+              ) : (
+                <>
+                  You must actively delegate at least 3,000 SQT for two entire Eras during the program to become a valid
+                  participant.{' '}
+                  <Typography.Link
+                    href="https://app.subquery.network/delegator/node-operators/all"
+                    type="info"
+                    target="_blank"
+                    variant="small"
+                    style={{
+                      textDecoration: 'underline'
+                    }}
+                  >
+                    Delegate Now
+                  </Typography.Link>
+                </>
+              )}
+            </Typography>
           </div>
         </div>
       </div>
@@ -599,9 +564,6 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                 <Typography variant="large" weight={600}>
                   Era {currentSelectEra?.era}
                 </Typography>
-                <Typography variant="medium" type="secondary">
-                  *In order to get any points, you must be delegating a minimum amount of 3,000 SQT in that Era
-                </Typography>
               </>
             ) : (
               <Typography>
@@ -613,24 +575,40 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
               <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="large">Points for Each Delegated SQT</Typography>
-                  <div className={styles.colorfulButtonBorder}>
+
+                  <div
+                    className={clsx(
+                      styles.colorfulButtonBorder,
+                      delegationAmountPoint(currentSelectEra?.delegation || '0') === '0' ? styles.disableColorful : ''
+                    )}
+                  >
                     <Button type="primary" shape="round" size="small">
                       +{formatNumberWithLocale(delegationAmountPoint(currentSelectEra?.delegation || '0'), 0)} points
                     </Button>
                   </div>
                 </div>
                 <div className={styles.split}></div>
-                <Typography>
-                  You delegated {formatNumberWithLocale(Math.floor(parseFloat(currentSelectEra?.delegation || '0')), 0)}{' '}
-                  SQT for Era {currentSelectEra?.era}
-                </Typography>
+                {currentSelectEra && currentSelectEra?.id !== myEraInfo?.[0]?.id && (
+                  <Typography>
+                    You delegated{' '}
+                    {formatNumberWithLocale(Math.floor(parseFloat(currentSelectEra?.delegation || '0')), 0)} SQT for Era{' '}
+                    {currentSelectEra?.era}
+                  </Typography>
+                )}
 
                 <Typography>For every 10 SQT your delegate for the complete Era, you get 1 point!</Typography>
               </div>
               <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="large">Points for SQT Rewards</Typography>
-                  <div className={styles.colorfulButtonBorder}>
+                  <div
+                    className={clsx(
+                      styles.colorfulButtonBorder,
+                      rewardsAmountPoint(currentSelectEra?.reward || '0', currentSelectEra?.delegation || '0') === '0'
+                        ? styles.disableColorful
+                        : ''
+                    )}
+                  >
                     <Button type="primary" shape="round" size="small">
                       +
                       {formatNumberWithLocale(
@@ -642,17 +620,26 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                   </div>
                 </div>
                 <div className={styles.split}></div>
-                <Typography>
-                  You claimed {formatNumberWithLocale(Math.floor(parseFloat(currentSelectEra?.reward || '0')), 0)} SQT
-                  of rewards for Era {currentSelectEra?.era}
-                </Typography>
+                {currentSelectEra && currentSelectEra?.id !== myEraInfo?.[0]?.id && (
+                  <Typography>
+                    You claimed {formatNumberWithLocale(Math.floor(parseFloat(currentSelectEra?.reward || '0')), 0)} SQT
+                    of rewards for Era {currentSelectEra?.era}
+                  </Typography>
+                )}
                 <Typography>For every SQT your claim as rewards for the Era, you get 70 points!</Typography>
               </div>
 
               <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="large">Best Performing Delegators</Typography>
-                  <div className={styles.colorfulButtonBorder}>
+                  <div
+                    className={clsx(
+                      styles.colorfulButtonBorder,
+                      rankPointRule(+(currentSelectEra?.rank || 99999999), currentSelectEra?.delegation || '0') === 0
+                        ? styles.disableColorful
+                        : ''
+                    )}
+                  >
                     <Button type="primary" shape="round" size="small">
                       +
                       {formatNumberWithLocale(
@@ -696,7 +683,14 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography variant="large">Random Weekly Lootboxes!</Typography>
 
-                      <div className={styles.colorfulButtonBorder}>
+                      <div
+                        className={clsx(
+                          styles.colorfulButtonBorder,
+                          myLootboxes.filter((i) => i.completed).reduce((a, b) => a + +b.point, 0)
+                            ? ''
+                            : styles.disableColorful
+                        )}
+                      >
                         <Button type="primary" shape="round" size="small">
                           +
                           {formatNumberWithLocale(
@@ -790,7 +784,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         ),
         children: challenge.render || (
           <div className={styles.markdownWrapper}>
-            <Markdown.Preview>{challenge.description}</Markdown.Preview>
+            <Markdown.Preview rehypePlugins={[rehypeRaw]}>{`${challenge.description}`}</Markdown.Preview>
 
             {challenge.cta && (
               <a href={challenge.cta_url} target="_blank" rel="noreferrer">
@@ -939,7 +933,7 @@ const Leaderboard = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       </div>
       {userLeaderboard.loading ? null : (
         <Typography variant="medium" type="secondary">
-          You are ranked {userInfo?.rank || userInfo?.id} of {userLeaderboard.data?.data?.count}, participants
+          You are ranked {userInfo?.rank || userInfo?.id} of {userLeaderboard.data?.data?.count} participants
         </Typography>
       )}
 
