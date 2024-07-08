@@ -212,7 +212,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
 
           return (
             eraInfo || {
-              id: +new Date(),
+              id: +new Date() + Math.random() + index,
               user_id: account || '',
               era: era.toString(),
               point: '0',
@@ -395,17 +395,13 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         <div style={{ display: 'flex', gap: 6 }}>
           <div style={{ padding: 5 }}>
             <img
-              src={userInfo?.eligible ? '/static/validUser.svg' : '/static/invalidUser.svg'}
+              src={userInfo?.eligible ? '/static/validUser.svg' : '/static/invalidUser2.svg'}
               alt=""
               style={{ width: 32, height: 38 }}
             ></img>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography>
-              {userInfo?.eligible
-                ? 'Yes, you are a valid participant !'
-                : 'Sorry, you are not yet a valid participant.'}
-            </Typography>
+            <Typography>{userInfo?.eligible ? 'Yes, you are a valid participant !' : 'Pending Validation'}</Typography>
             <Typography type="secondary" variant="small" style={{ lineHeight: '18px' }}>
               {userInfo?.eligible ? (
                 'You have successfully delegated 3,000 SQT for two entire Eras. '
