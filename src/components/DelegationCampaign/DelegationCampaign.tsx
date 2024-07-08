@@ -40,7 +40,8 @@ const useAccount = () => {
 };
 
 const minDelegationAmount = 3000;
-const rankPointRule = (rank: number, delegation: string) => {
+const rankPointRule = (rank: number, delegation: string, isCurEra: boolean) => {
+  if (isCurEra) return 0;
   if (BigNumber(delegation).lt(minDelegationAmount)) return 0;
   if (rank === 1) return 15_000;
   if (rank === 2) return 10_000;
@@ -53,11 +54,11 @@ const rankPointRule = (rank: number, delegation: string) => {
 
 const delegationAmountPoint = (amount: string) => {
   if (BigNumber(amount).lt(minDelegationAmount)) return '0';
-  return BigNumber(amount).decimalPlaces(0).div(10).toFixed(0);
+  return Math.ceil(Math.floor(+amount / 10)).toFixed(0);
 };
 const rewardsAmountPoint = (amount: string, delegation: string) => {
   if (BigNumber(delegation).lt(minDelegationAmount)) return '0';
-  return BigNumber(amount).decimalPlaces(0).multipliedBy(70).toFixed(0);
+  return Math.ceil(70 * Math.floor(+amount)).toFixed(0);
 };
 
 const LootboxItem = (props: { item: IMyLootboxItem; refresh: () => void }) => {
@@ -176,6 +177,8 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
   // one scroll chunk is 337px 321 width + 16 gap
   const [scrollChunk] = useState(337 * 2);
 
+  const curEra = useMemo(() => userInfo?.era_config.find((i) => i.key === 'current_era'), [userInfo]);
+
   const fetchLootboxes = async (era: number | string, shouldLoading = true) => {
     try {
       if (shouldLoading) {
@@ -201,26 +204,26 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         wallet: account || ''
       });
 
-      const startEra = userInfo?.era_config.find((i) => i.key === 'start_era');
-      const curEra = userInfo?.era_config.find((i) => i.key === 'current_era');
-
-      const eraInfos = new Array(+(curEra?.value || 0) - +(startEra?.value || 0) + 1)
+      const startEraTemp = userInfo?.era_config.find((i) => i.key === 'start_era');
+      const curEraTemp = userInfo?.era_config.find((i) => i.key === 'current_era');
+      const counts = +(curEraTemp?.value || 0) - +(startEraTemp?.value || 0) + 1;
+      const eraInfos = new Array(counts < 0 ? 0 : counts)
         .fill(0)
         .map((_, index) => {
-          const era = index + +(startEra?.value || 0);
+          const era = index + +(startEraTemp?.value || 0);
           const eraInfo = res.data.data?.find((i) => +i.era === era);
 
           return (
             eraInfo || {
               id: +new Date() + Math.random() + index,
-              user_id: account || '',
-              era: era.toString(),
-              point: '0',
+              user_id: account || 0,
+              era,
+              point: 0,
               reward: '0',
               delegation: '0',
               apy: '0',
-              rank: '0',
-              lootbox: '0'
+              rank: 0,
+              lootbox: 0
             }
           );
         })
@@ -631,7 +634,11 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                   <div
                     className={clsx(
                       styles.colorfulButtonBorder,
-                      rankPointRule(+(currentSelectEra?.rank || 99999999), currentSelectEra?.delegation || '0') === 0
+                      rankPointRule(
+                        +(currentSelectEra?.rank || 99999999),
+                        currentSelectEra?.delegation || '0',
+                        currentSelectEra?.era === +(curEra?.value || currentSelectEra?.era || 0)
+                      ) === 0
                         ? styles.disableColorful
                         : ''
                     )}
@@ -639,7 +646,11 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                     <Button type="primary" shape="round" size="small">
                       +
                       {formatNumberWithLocale(
-                        rankPointRule(+(currentSelectEra?.rank || 99999999), currentSelectEra?.delegation || '0'),
+                        rankPointRule(
+                          +(currentSelectEra?.rank || 99999999),
+                          currentSelectEra?.delegation || '0',
+                          currentSelectEra?.era === +(curEra?.value || currentSelectEra?.era || 0)
+                        ),
                         0
                       )}{' '}
                       points
