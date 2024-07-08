@@ -49,7 +49,7 @@ export interface IOneoffChallenge {
       description: string;
       id: number;
       title: string;
-      point: string;
+      point: number;
     };
     userChallenge?: {
       completed: boolean;
@@ -61,7 +61,7 @@ interface IRankInfo {
   id: number;
   wallet: string;
   apy: string;
-  total_score: string;
+  total_score: number;
   total_reward: string;
   rank: string;
 }
@@ -77,14 +77,14 @@ export interface ILeaderboardRecord {
 
 export interface IMyEraInfoItem {
   id: number;
-  user_id: string;
+  user_id: number | string;
   delegation: string;
   reward: string;
-  era: string;
-  point: string;
+  era: number;
+  point: number;
   apy: string;
-  rank: string;
-  lootbox: string;
+  rank: number;
+  lootbox: number;
 }
 
 export interface IMyEraInfo {
@@ -95,12 +95,12 @@ export interface IMyLootboxItem {
   created_at: string;
   updated_at: string;
   id: number;
-  user_id: string;
-  challenge_id: string;
-  type: string;
-  era: string;
-  num: string;
-  point: string;
+  user_id: number;
+  challenge_id: number;
+  type: number;
+  era: number;
+  num: number;
+  point: number;
   completed: boolean;
   completed_at: string;
 }
@@ -155,7 +155,7 @@ export const useDelegationCampaignApi = (props: { alert?: boolean }) => {
     return res;
   }, []);
 
-  const openLootbox = useCallback(async (params: { wallet: string; era: number | string; num: string }) => {
+  const openLootbox = useCallback(async (params: { wallet: string; era: number | string; num: number }) => {
     const res = await instance.post<IBaseResponse>(`/challenge/mark-lootbox`, params);
 
     return res;
