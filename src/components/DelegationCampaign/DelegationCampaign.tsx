@@ -125,7 +125,7 @@ const LootboxItem = (props: { item: IMyLootboxItem; refresh: () => void }) => {
               <LootboxAnimation></LootboxAnimation>
             </div>
 
-            <Typography variant="h4">Lootbox for Era 11</Typography>
+            <Typography variant="h4">Lootbox for Era {item.era}</Typography>
 
             <Typography variant="medium" type="secondary" style={{ textAlign: 'center' }}>
               By staking more SQT, you get more opportunities to win with lootboxes. Check back at the end of each Era
@@ -810,6 +810,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
     try {
       if (!account) return;
       setLoading(true);
+
       const res = await getOneoffChallenges({
         wallet: account
       });
@@ -1124,8 +1125,12 @@ const DelegationCampaign: FC<IProps> = (props) => {
 
       setUserInfo(res.data.data);
     } finally {
-      setTransitionIndex(1);
       setFetchLoading(false);
+      setTimeout(() => {
+        setTransitionIndex(1);
+        const scrollY = localStorage.getItem('prevScrolled');
+        window.scrollTo(0, scrollY ? +scrollY : 0);
+      }, 300);
     }
   };
 
@@ -1136,6 +1141,17 @@ const DelegationCampaign: FC<IProps> = (props) => {
   useEffect(() => {
     transRef.start();
   }, [transitionIndex]);
+
+  useEffect(() => {
+    const savePrevScrolled = () => {
+      localStorage.setItem('prevScrolled', window.scrollY.toString());
+    };
+    window.addEventListener('beforeunload', savePrevScrolled);
+
+    return () => {
+      window.removeEventListener('beforeunload', savePrevScrolled);
+    };
+  }, []);
 
   return (
     <div className={styles.delegationCampaign}>
