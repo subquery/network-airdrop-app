@@ -50,9 +50,11 @@ export interface IOneoffChallenge {
       id: number;
       title: string;
       point: number;
+      key: string;
     };
     userChallenge?: {
       completed: boolean;
+      point?: number;
     };
   }[];
 }

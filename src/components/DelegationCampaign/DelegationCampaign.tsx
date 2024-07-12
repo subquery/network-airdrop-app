@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { CSSProperties, FC, useEffect, useMemo, useRef, useState } from 'react';
+import React, { CSSProperties, FC, forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { IoMdCheckmark } from 'react-icons/io';
 import { animated, AnimatedProps, useSpringRef, useTransition } from '@react-spring/web';
@@ -61,105 +61,117 @@ const rewardsAmountPoint = (amount: string, delegation: string) => {
   return Math.ceil(70 * Math.floor(+amount)).toFixed(0);
 };
 
-const LootboxItem = (props: { item: IMyLootboxItem; refresh: () => void }) => {
-  const { item, refresh } = props;
-  const { address: account } = useAccount();
-  const [isOpen, setIsOpen] = useState(false);
-  const [animationOff, setAnimationOff] = useState(false);
-  const [opening, setOpening] = useState(false);
-  const { openLootbox } = useDelegationCampaignApi({
-    alert: true
-  });
+interface LootboxItemRef {
+  open: () => void;
+}
 
-  return (
-    <div className={styles.lootboxItem}>
-      <Typography variant="medium">Lootbox {item.num}</Typography>
-      {item.completed ? (
-        <Typography>+{formatNumberWithLocale(item.point, 0)} points!</Typography>
-      ) : (
-        <Button
-          size="small"
-          shape="round"
-          type="primary"
-          onClick={async () => {
-            heartFireworks();
-            setTimeout(() => {
-              setIsOpen(true);
-            }, 1500);
-          }}
-          iconPosition="end"
-          disabled={item.completed}
-          loading={opening}
-        >
-          Open Lootbox
-        </Button>
-      )}
+const LootboxItem = forwardRef<LootboxItemRef, { item: IMyLootboxItem; customTitle?: string; refresh: () => void }>(
+  (props, ref) => {
+    const { item, customTitle, refresh } = props;
+    const { address: account } = useAccount();
+    const [isOpen, setIsOpen] = useState(false);
+    const [animationOff, setAnimationOff] = useState(false);
+    const [opening, setOpening] = useState(false);
+    const { openLootbox } = useDelegationCampaignApi({
+      alert: true
+    });
 
-      <Modal
-        open={isOpen}
-        onCancel={() => {
-          setIsOpen(false);
-        }}
-        okButtonProps={{
-          style: { display: 'none' }
-        }}
-        cancelButtonProps={{ style: { display: 'none' } }}
-        closeIcon={<></>}
-        destroyOnClose
-        className={styles.lootboxModal}
-        afterOpenChange={(val) => {
-          setAnimationOff(val);
-        }}
-        width={600}
-      >
-        {animationOff && (
-          <div
-            className={clsx(styles.baseCard, styles.lootboxWrapper)}
-            onClick={() => {
-              setIsOpen(false);
-            }}
-            role="button"
-            tabIndex={0}
+    const openLootboxFunc = async () => {
+      heartFireworks();
+      setTimeout(() => {
+        setIsOpen(true);
+      }, 1500);
+    };
+
+    useImperativeHandle(ref, () => ({
+      open: openLootboxFunc
+    }));
+
+    return (
+      <div className={styles.lootboxItem}>
+        <Typography variant="medium">Lootbox {item.num}</Typography>
+        {item.completed ? (
+          <Typography>+{formatNumberWithLocale(item.point, 0)} points!</Typography>
+        ) : (
+          <Button
+            size="small"
+            shape="round"
+            type="primary"
+            onClick={openLootboxFunc}
+            iconPosition="end"
+            disabled={item.completed}
+            loading={opening}
           >
-            <div style={{ height: 300, marginTop: 120, transform: 'translateY(45px)' }}>
-              <LootboxAnimation></LootboxAnimation>
-            </div>
-
-            <Typography variant="h4">Lootbox for Era {item.era}</Typography>
-
-            <Typography variant="medium" type="secondary" style={{ textAlign: 'center' }}>
-              By staking more SQT, you get more opportunities to win with lootboxes. Check back at the end of each Era
-              for new lootboxes that you can open and win.
-            </Typography>
-
-            <Button
-              onClick={async () => {
-                try {
-                  setOpening(true);
-                  await openLootbox({
-                    wallet: account || '',
-                    era: item.era,
-                    num: item.num
-                  });
-                  await refresh();
-
-                  setIsOpen(false);
-                } finally {
-                  setOpening(false);
-                }
-              }}
-              shape="round"
-              type="primary"
-              loading={opening}
-            >
-              Collect the Points!
-            </Button>
-          </div>
+            Open Lootbox
+          </Button>
         )}
-      </Modal>
-    </div>
-  );
-};
+
+        <Modal
+          open={isOpen}
+          onCancel={() => {
+            setIsOpen(false);
+          }}
+          okButtonProps={{
+            style: { display: 'none' }
+          }}
+          cancelButtonProps={{ style: { display: 'none' } }}
+          closeIcon={<></>}
+          destroyOnClose
+          className={styles.lootboxModal}
+          afterOpenChange={(val) => {
+            setAnimationOff(val);
+          }}
+          width={600}
+        >
+          {animationOff && (
+            <div
+              className={clsx(styles.baseCard, styles.lootboxWrapper)}
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              role="button"
+              tabIndex={0}
+            >
+              <div style={{ height: 300, marginTop: 120, transform: 'translateY(45px)' }}>
+                <LootboxAnimation></LootboxAnimation>
+              </div>
+
+              <Typography variant="h4">{customTitle || `Lootbox for Era ${item.era}`}</Typography>
+
+              <Typography variant="medium" type="secondary" style={{ textAlign: 'center' }}>
+                By staking more SQT, you get more opportunities to win with lootboxes. Check back at the end of each Era
+                for new lootboxes that you can open and win.
+              </Typography>
+
+              <Button
+                onClick={async () => {
+                  try {
+                    setOpening(true);
+                    await openLootbox({
+                      wallet: account || '',
+                      era: item.era,
+                      num: item.num
+                    });
+                    await refresh();
+
+                    setIsOpen(false);
+                  } finally {
+                    setOpening(false);
+                  }
+                }}
+                shape="round"
+                type="primary"
+                loading={opening}
+              >
+                Collect the Points!
+              </Button>
+            </div>
+          )}
+        </Modal>
+      </div>
+    );
+  }
+);
 
 const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
   const { userInfo } = props;
@@ -750,6 +762,7 @@ interface RenderChallenge {
   render?: React.ReactNode;
   cta?: string;
   cta_url?: string;
+  key?: string;
 }
 
 const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
@@ -762,49 +775,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
     alert: false
   });
 
-  const renderChallenges = useMemo(
-    () =>
-      userChallenges.map((challenge) => ({
-        key: challenge.id,
-        label: (
-          <div style={{ display: 'flex', alignItems: 'center', marginRight: 10 }}>
-            <div className={clsx(styles.check, challenge.success ? styles.checkActive : '')}>
-              {challenge.success && <IoMdCheckmark style={{ fontSize: 21 }} />}
-            </div>
-            <Typography variant="large">{challenge.name}</Typography>
-
-            <span style={{ flex: 1 }} />
-
-            <Typography>
-              {+(userInfo?.referral_count || 0) > 1 && challenge.id === 'referral' ? (
-                <Typography style={{ marginRight: 10 }}>{userInfo?.referral_count}x referral bonus</Typography>
-              ) : (
-                ''
-              )}
-            </Typography>
-            <div className={styles.colorfulButtonBorder}>
-              <Button type="primary" shape="round" size="small">
-                +{challenge.reward} Points!
-              </Button>
-            </div>
-          </div>
-        ),
-        children: challenge.render || (
-          <div className={styles.markdownWrapper}>
-            <Markdown.Preview rehypePlugins={[rehypeRaw]}>{`${challenge.description}`}</Markdown.Preview>
-
-            {challenge.cta && (
-              <a href={challenge.cta_url} target="_blank" rel="noreferrer">
-                <Button shape="round" size="large" type="primary" style={{ marginTop: 16, width: '100%' }}>
-                  {challenge.cta}
-                </Button>
-              </a>
-            )}
-          </div>
-        )
-      })),
-    [userChallenges]
-  );
+  const lootboxRef = useRef<LootboxItemRef>(null);
 
   const initChallenges = async () => {
     try {
@@ -818,12 +789,13 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       const challenges: RenderChallenge[] =
         res?.data?.data?.map((i) => ({
           id: i.challenge.id,
-          reward: +i.challenge.point,
+          reward: +(i.userChallenge?.point || 0) || +i.challenge.point,
           success: !!i?.userChallenge?.completed,
           name: i.challenge.title,
           description: i.challenge.description,
           cta: i.challenge.cta,
-          cta_url: i.challenge.cta_url
+          cta_url: i.challenge.cta_url,
+          key: i.challenge.key
         })) || [];
       challenges.push({
         id: 'referral',
@@ -897,6 +869,94 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
       setLoading(false);
     }
   };
+
+  const renderChallenges = useMemo(() => {
+    const renderWelcome = (challenge: RenderChallenge) => {
+      if (challenge.key !== 'random.1') return null;
+
+      return (
+        <div>
+          <Button
+            shape="round"
+            size="large"
+            type="primary"
+            style={{ marginTop: 16, width: '100%' }}
+            ghost={challenge.success}
+            disabled={challenge.success}
+            onClick={() => {
+              lootboxRef.current?.open();
+            }}
+          >
+            {challenge.success ? 'Lootbox Claimed' : 'Open Lootbox Now!'}
+          </Button>
+          <div style={{ display: 'none' }}>
+            <LootboxItem
+              ref={lootboxRef}
+              item={{
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                id: 1,
+                user_id: 1,
+                challenge_id: 1,
+                type: 1,
+                era: 0,
+                num: 0,
+                point: 0,
+                completed: challenge.success,
+                completed_at: new Date().toISOString()
+              }}
+              refresh={initChallenges}
+              customTitle="New Delegator Welcome!"
+            ></LootboxItem>
+          </div>
+        </div>
+      );
+    };
+
+    return userChallenges.map((challenge) => ({
+      key: challenge.key || challenge.id,
+      label: (
+        <div style={{ display: 'flex', alignItems: 'center', marginRight: 10 }}>
+          <div className={clsx(styles.check, challenge.success ? styles.checkActive : '')}>
+            {challenge.success && <IoMdCheckmark style={{ fontSize: 21 }} />}
+          </div>
+          <Typography variant="large">{challenge.name}</Typography>
+
+          <span style={{ flex: 1 }} />
+
+          <Typography>
+            {+(userInfo?.referral_count || 0) > 1 && challenge.id === 'referral' ? (
+              <Typography style={{ marginRight: 10 }}>{userInfo?.referral_count}x referral bonus</Typography>
+            ) : (
+              ''
+            )}
+          </Typography>
+          {challenge.reward ? (
+            <div className={styles.colorfulButtonBorder}>
+              <Button type="primary" shape="round" size="small">
+                +{challenge.reward} Points!
+              </Button>
+            </div>
+          ) : (
+            ''
+          )}
+        </div>
+      ),
+      children: challenge.render || (
+        <div className={styles.markdownWrapper}>
+          <Markdown.Preview rehypePlugins={[rehypeRaw]}>{`${challenge.description}`}</Markdown.Preview>
+          {renderWelcome(challenge)}
+          {challenge.cta && (
+            <a href={challenge.cta_url} target="_blank" rel="noreferrer">
+              <Button shape="round" size="large" type="primary" style={{ marginTop: 16, width: '100%' }}>
+                {challenge.cta}
+              </Button>
+            </a>
+          )}
+        </div>
+      )
+    }));
+  }, [userChallenges, initChallenges]);
 
   useEffect(() => {
     initChallenges();
@@ -1124,13 +1184,15 @@ const DelegationCampaign: FC<IProps> = (props) => {
       });
 
       setUserInfo(res.data.data);
-    } finally {
-      setFetchLoading(false);
       setTimeout(() => {
         setTransitionIndex(1);
-        const scrollY = localStorage.getItem('prevScrolled');
-        window.scrollTo(0, scrollY ? +scrollY : 0);
+        if (res.data.data && res.data.data.email_verified) {
+          const scrollY = localStorage.getItem('prevScrolled');
+          window.scrollTo(0, scrollY ? +scrollY : 0);
+        }
       }, 300);
+    } finally {
+      setFetchLoading(false);
     }
   };
 
