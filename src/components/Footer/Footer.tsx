@@ -14,12 +14,11 @@ export const Footer: React.FC = () => (
           <a href="https://subquery.foundation/">Home</a>
         </Typography>
         <Typography style={{ margin: 8 }}>
-          <a href="https://subquery.foundation/sale">Public Sale</a>
+          <a href="https://claim.subquery.foundation">SQT Claim</a>
         </Typography>
         <Typography style={{ margin: 8 }}>
-          <a href="/">SQT Claim</a>
+          <a href="https://frenzy.subquery.foundation">Summer Frenzy Delegation Campaign</a>
         </Typography>
-
         <Typography style={{ margin: 8 }}>
           <a href="https://blog.subquery.network">Blog</a>
         </Typography>
