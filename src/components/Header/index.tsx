@@ -57,17 +57,6 @@ export const Header: React.VFC = () => {
             link: 'https://subquery.foundation/'
           },
           {
-            label: 'Public Sale',
-            link: 'https://subquery.foundation/sale'
-          },
-          {
-            label: 'SubQuery Seekers',
-            link: window.location.href.includes('seekers.subquery.foundation')
-              ? '/'
-              : 'https://seekers.subquery.foundation/',
-            active: () => window.location.href.includes('seekers.subquery.foundation')
-          },
-          {
             label: 'SQT Claim',
             link: window.location.href.includes('claim.subquery.foundation')
               ? '/'
@@ -75,7 +64,7 @@ export const Header: React.VFC = () => {
             active: () => window.location.href.includes('claim.subquery.foundation')
           },
           {
-            label: 'Delegation Campaign',
+            label: 'Summer Frenzy Delegation Campaign',
             link:
               window.location.href.includes('frenzy') ||
               window.location.href.includes('thechaindata') ||
