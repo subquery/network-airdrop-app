@@ -805,8 +805,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         render: (
           <div style={{ display: 'flex', flexDirection: 'column', border: 'none', borderRadius: 8, gap: 16 }}>
             <Typography>
-              When your friend signs up and onboards with your referral link, you both increase the multiplier on your
-              score.
+              When your friend signs up and onboards with your referral link, you both receive an extra 500 points.
             </Typography>
 
             <Input
