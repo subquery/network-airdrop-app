@@ -21,6 +21,7 @@ export interface IDelegationUserInfo extends IBaseResponse {
     email_verified: true;
     referral_code: string;
     referral_count: string;
+    pending_referral_count: string;
     kyc_referral_count: string;
     kyc_verified: false;
     apy: string;
