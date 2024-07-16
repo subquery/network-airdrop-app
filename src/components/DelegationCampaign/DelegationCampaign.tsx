@@ -1,11 +1,13 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { CSSProperties, FC, forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { BsInfoCircle } from 'react-icons/bs';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { IoMdCheckmark } from 'react-icons/io';
 import { animated, AnimatedProps, useSpringRef, useTransition } from '@react-spring/web';
 import { Markdown, openNotification, Spinner, Typography } from '@subql/components';
 import { useAsyncMemo } from '@subql/react-hooks';
-import { Button, Collapse, Input, Modal, Skeleton } from 'antd';
+import { useSize } from 'ahooks';
+import { Button, Collapse, Input, Modal, Skeleton, Tooltip } from 'antd';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
 import rehypeRaw from 'rehype-raw';
@@ -774,6 +776,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
   const { getOneoffChallenges } = useDelegationCampaignApi({
     alert: false
   });
+  const size = useSize(document.body);
 
   const lootboxRef = useRef<LootboxItemRef>(null);
 
@@ -915,21 +918,38 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
     return userChallenges.map((challenge) => ({
       key: challenge.key || challenge.id,
       label: (
-        <div style={{ display: 'flex', alignItems: 'center', marginRight: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginRight: 10, gap: 10, flexWrap: 'wrap' }}>
           <div className={clsx(styles.check, challenge.success ? styles.checkActive : '')}>
             {challenge.success && <IoMdCheckmark style={{ fontSize: 21 }} />}
           </div>
           <Typography variant="large">{challenge.name}</Typography>
 
-          <span style={{ flex: 1 }} />
+          <span style={{ flex: 1, display: (size?.width || 999) >= 768 ? 'block' : 'none' }} />
 
-          <Typography>
-            {+(userInfo?.referral_count || 0) > 1 && challenge.id === 'referral' ? (
-              <Typography style={{ marginRight: 10 }}>{userInfo?.referral_count}x referral bonus</Typography>
-            ) : (
-              ''
-            )}
-          </Typography>
+          {challenge.id === 'referral' ? (
+            <Typography variant="medium" style={{ color: 'var(--sq-gray200)', marginRight: 8 }}>
+              {userInfo?.pending_referral_count || userInfo?.referral_count ? (
+                <span style={{ display: 'inline-flex', gap: 8, alignItems: 'center' }}>
+                  {userInfo?.pending_referral_count ? (
+                    <span style={{ display: 'inline-flex', gap: 8, alignItems: 'center' }}>
+                      {userInfo?.pending_referral_count || 0} Pending referrals
+                      <Tooltip title="The referral has not yet met the eligibility criteria. To become valid, the referral must delegate 3,000 SQT for at least 2 eras.">
+                        <BsInfoCircle style={{ color: 'var(--sq-gray500)', fontSize: 14 }}></BsInfoCircle>
+                      </Tooltip>
+                      <span style={{ color: 'var(--sq-gray400)' }}>|</span>
+                    </span>
+                  ) : (
+                    ''
+                  )}
+                  <span>{userInfo?.referral_count || 0} Valid Referrals</span>
+                </span>
+              ) : (
+                ''
+              )}
+            </Typography>
+          ) : (
+            ''
+          )}
           {challenge.reward ? (
             <div className={styles.colorfulButtonBorder}>
               <Button type="primary" shape="round" size="small">
