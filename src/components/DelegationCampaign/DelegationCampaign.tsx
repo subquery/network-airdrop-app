@@ -67,113 +67,116 @@ interface LootboxItemRef {
   open: () => void;
 }
 
-const LootboxItem = forwardRef<LootboxItemRef, { item: IMyLootboxItem; customTitle?: string; refresh: () => void }>(
-  (props, ref) => {
-    const { item, customTitle, refresh } = props;
-    const { address: account } = useAccount();
-    const [isOpen, setIsOpen] = useState(false);
-    const [animationOff, setAnimationOff] = useState(false);
-    const [opening, setOpening] = useState(false);
-    const { openLootbox } = useDelegationCampaignApi({
-      alert: true
-    });
+const LootboxItem = forwardRef<
+  LootboxItemRef,
+  { currentEra?: string; item: IMyLootboxItem; customTitle?: string; refresh: () => void }
+>((props, ref) => {
+  const { item, customTitle, currentEra, refresh } = props;
+  const { address: account } = useAccount();
+  const [isOpen, setIsOpen] = useState(false);
+  const [animationOff, setAnimationOff] = useState(false);
+  const [opening, setOpening] = useState(false);
+  const { openLootbox } = useDelegationCampaignApi({
+    alert: true
+  });
 
-    const openLootboxFunc = async () => {
-      heartFireworks();
-      setTimeout(() => {
-        setIsOpen(true);
-      }, 1500);
-    };
+  const openLootboxFunc = async () => {
+    heartFireworks();
+    setTimeout(() => {
+      setIsOpen(true);
+    }, 1500);
+  };
 
-    useImperativeHandle(ref, () => ({
-      open: openLootboxFunc
-    }));
+  const expired = useMemo(() => +(currentEra || 0) > item.era + 1, [currentEra, item.era]);
 
-    return (
-      <div className={styles.lootboxItem}>
-        <Typography variant="medium">Lootbox {item.num}</Typography>
-        {item.completed ? (
-          <Typography>+{formatNumberWithLocale(item.point, 0)} points!</Typography>
-        ) : (
-          <Button
-            size="small"
-            shape="round"
-            type="primary"
-            onClick={openLootboxFunc}
-            iconPosition="end"
-            disabled={item.completed}
-            loading={opening}
-          >
-            Open Lootbox
-          </Button>
-        )}
+  useImperativeHandle(ref, () => ({
+    open: openLootboxFunc
+  }));
 
-        <Modal
-          open={isOpen}
-          onCancel={() => {
-            setIsOpen(false);
-          }}
-          okButtonProps={{
-            style: { display: 'none' }
-          }}
-          cancelButtonProps={{ style: { display: 'none' } }}
-          closeIcon={<></>}
-          destroyOnClose
-          className={styles.lootboxModal}
-          afterOpenChange={(val) => {
-            setAnimationOff(val);
-          }}
-          width={600}
+  return (
+    <div className={styles.lootboxItem}>
+      <Typography variant="medium">Lootbox {item.num}</Typography>
+      {item.completed ? (
+        <Typography>+{formatNumberWithLocale(item.point, 0)} points!</Typography>
+      ) : (
+        <Button
+          size="small"
+          shape="round"
+          type="primary"
+          onClick={openLootboxFunc}
+          iconPosition="end"
+          disabled={item.completed || expired}
+          loading={opening}
         >
-          {animationOff && (
-            <div
-              className={clsx(styles.baseCard, styles.lootboxWrapper)}
-              onClick={() => {
-                setIsOpen(false);
-              }}
-              role="button"
-              tabIndex={0}
-            >
-              <div style={{ height: 300, marginTop: 120, transform: 'translateY(45px)' }}>
-                <LootboxAnimation></LootboxAnimation>
-              </div>
+          {expired ? 'Lootbox Expired' : 'Open Lootbox'}
+        </Button>
+      )}
 
-              <Typography variant="h4">{customTitle || `Lootbox for Era ${item.era}`}</Typography>
-
-              <Typography variant="medium" type="secondary" style={{ textAlign: 'center' }}>
-                By staking more SQT, you get more opportunities to win with lootboxes. Check back at the end of each Era
-                for new lootboxes that you can open and win.
-              </Typography>
-
-              <Button
-                onClick={async () => {
-                  try {
-                    setOpening(true);
-                    await openLootbox({
-                      wallet: account || '',
-                      era: item.era,
-                      num: item.num
-                    });
-                    await refresh();
-
-                    setIsOpen(false);
-                  } finally {
-                    setOpening(false);
-                  }
-                }}
-                shape="round"
-                type="primary"
-                loading={opening}
-              >
-                Collect the Points!
-              </Button>
+      <Modal
+        open={isOpen}
+        onCancel={() => {
+          setIsOpen(false);
+        }}
+        okButtonProps={{
+          style: { display: 'none' }
+        }}
+        cancelButtonProps={{ style: { display: 'none' } }}
+        closeIcon={<></>}
+        destroyOnClose
+        className={styles.lootboxModal}
+        afterOpenChange={(val) => {
+          setAnimationOff(val);
+        }}
+        width={600}
+      >
+        {animationOff && (
+          <div
+            className={clsx(styles.baseCard, styles.lootboxWrapper)}
+            onClick={() => {
+              setIsOpen(false);
+            }}
+            role="button"
+            tabIndex={0}
+          >
+            <div style={{ height: 300, marginTop: 120, transform: 'translateY(45px)' }}>
+              <LootboxAnimation></LootboxAnimation>
             </div>
-          )}
-        </Modal>
-      </div>
-    );
-  }
-);
+
+            <Typography variant="h4">{customTitle || `Lootbox for Era ${item.era}`}</Typography>
+
+            <Typography variant="medium" type="secondary" style={{ textAlign: 'center' }}>
+              By staking more SQT, you get more opportunities to win with lootboxes. Check back at the end of each Era
+              for new lootboxes that you can open and win.
+            </Typography>
+
+            <Button
+              onClick={async () => {
+                try {
+                  setOpening(true);
+                  await openLootbox({
+                    wallet: account || '',
+                    era: item.era,
+                    num: item.num
+                  });
+                  await refresh();
+
+                  setIsOpen(false);
+                } finally {
+                  setOpening(false);
+                }
+              }}
+              shape="round"
+              type="primary"
+              loading={opening}
+            >
+              Collect the Points!
+            </Button>
+          </div>
+        )}
+      </Modal>
+    </div>
+  );
+});
 
 const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
   const { userInfo } = props;
@@ -736,6 +739,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                       {myLootboxes.map((item) => (
                         <LootboxItem
+                          currentEra={userInfo?.era_config?.find((i) => i.key === 'current_era')?.value}
                           key={item.id}
                           item={item}
                           refresh={() => {
