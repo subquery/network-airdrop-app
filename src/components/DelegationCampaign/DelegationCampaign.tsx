@@ -612,7 +612,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                   </Typography>
                 )}
 
-                <Typography>For every 10 SQT your delegate for the complete Era, you get 1 point!</Typography>
+                <Typography>For every 10 SQT you delegate for the complete Era, you get 1 point!</Typography>
               </div>
               <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -642,7 +642,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                     of rewards for Era {currentSelectEra?.era}
                   </Typography>
                 )}
-                <Typography>For every SQT your claim as rewards for the Era, you get 70 points!</Typography>
+                <Typography>For every SQT you claim as rewards for the Era, you get 70 points!</Typography>
               </div>
 
               <div className={clsx(styles.baseCard, styles.nestedBaseCard)}>
