@@ -95,7 +95,9 @@ const LootboxItem = forwardRef<
 
   return (
     <div className={styles.lootboxItem}>
-      <Typography variant="medium">Lootbox {item.num}</Typography>
+      <Typography variant="medium">
+        Lootbox {item.num} {+(currentEra || 0) === 32 ? '(Lootbox Mania!)' : ''}
+      </Typography>
       {item.completed ? (
         <Typography>+{formatNumberWithLocale(item.point, 0)} points!</Typography>
       ) : (
@@ -514,7 +516,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                           <Typography variant="medium" type="secondary">
                             <div style={{ display: 'inline-flex', gap: 8 }}>
                               <img src="/static/location.svg" alt=""></img>
-                              Era {item.era}
+                              Era {item.era} {item.era === 32 ? 'Lootbox Mania!!' : ''}
                             </div>
                             <br></br>
                             <Typography variant="small" type="secondary">
@@ -726,6 +728,9 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                       </div>
                     </div>
                     <div className={styles.split}></div>
+                    {currentSelectEra?.era === 32 ? (
+                      <Typography>This era is lootbox mania! You get double the number of lootboxes!</Typography>
+                    ) : null}
                     {myLootboxes.length <= 0 ? (
                       <Typography>
                         Weekly lootboxes will appear here, please check them out later and claim them.
