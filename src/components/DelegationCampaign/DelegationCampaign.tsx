@@ -109,6 +109,7 @@ const LootboxItem = forwardRef<
           iconPosition="end"
           disabled={item.completed || expired}
           loading={opening}
+          className={styles.lootboxItemButton}
         >
           {expired ? 'Lootbox Expired' : 'Open Lootbox'}
         </Button>
@@ -170,6 +171,7 @@ const LootboxItem = forwardRef<
               shape="round"
               type="primary"
               loading={opening}
+              className={styles.lootboxItemButton}
             >
               Collect the Points!
             </Button>
@@ -707,7 +709,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
                 ) : (
                   <>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="large">Random Weekly Lootboxes!</Typography>
+                      <Typography variant="large">🎉 Random Weekly Lootboxes! 🎉</Typography>
 
                       <div
                         className={clsx(
@@ -897,6 +899,7 @@ const MainChallenges = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
             onClick={() => {
               lootboxRef.current?.open();
             }}
+            className={styles.lootboxItemButton}
           >
             {challenge.success ? 'Lootbox Claimed' : 'Open Lootbox Now!'}
           </Button>
