@@ -272,6 +272,16 @@
   display: flex;
   justify-content: space-between;
 
+  &Button {
+    background: var(--sq-pink600);
+    border-color: var(--sq-pink600);
+
+    &:not(:disabled):not(.ant-btn-disabled):hover {
+      background: var(--sq-pink500);
+      border-color: var(--sq-pink500);
+    }
+  }
+
   :global {
     .ant-btn-primary:disabled {
       background: var(--dark-mode-card);
