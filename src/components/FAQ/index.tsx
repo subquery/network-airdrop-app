@@ -297,7 +297,7 @@ export const FAQ: React.FC<{
                     <td className={styles.rankValue}>55,000</td>
                   </tr>
                   <tr>
-                    <td>6th to 10th</td>
+                    <td>6 to 10</td>
                     <td className={styles.rankValue}>35,000</td>
                   </tr>
                   <tr>
@@ -434,7 +434,7 @@ export const FAQ: React.FC<{
                     <td className={styles.rankValue}>55,000</td>
                   </tr>
                   <tr>
-                    <td>6th to 10th</td>
+                    <td>6 to 10</td>
                     <td className={styles.rankValue}>35,000</td>
                   </tr>
                   <tr>
