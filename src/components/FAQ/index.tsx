@@ -267,12 +267,60 @@ export const FAQ: React.FC<{
                 rankings!
               </span>
               <span>
-                <ul>
-                  <li>If we reach 3,000 valid delegators, the prize pool will be 3M SQT!</li>
-                  <li>If we reach 4,500 valid delegators, the prize pool will increase to 5M SQT!</li>
-                  <li>If we reach 6,000 valid delegators, the prize pool will increase to 7M SQT!</li>
-                  <li>If we reach 10,000 valid delegators, the prize pool will increase to 10M SQT!</li>
-                </ul>
+                The prize you recieve depends on the rank you get in the program, so a higher rank, the more points you
+                get, the more points you recieve!
+              </span>
+              <span>
+                <table className={styles.rankTable}>
+                  <tr>
+                    <th>Valid Delegator Rank</th>
+                    <th>Reward (SQT)</th>
+                  </tr>
+                  <tr>
+                    <td>1st</td>
+                    <td className={styles.rankValue}>300,000</td>
+                  </tr>
+                  <tr>
+                    <td>2nd</td>
+                    <td className={styles.rankValue}>200,000</td>
+                  </tr>
+                  <tr>
+                    <td>3rd</td>
+                    <td className={styles.rankValue}>120,000</td>
+                  </tr>
+                  <tr>
+                    <td>4th</td>
+                    <td className={styles.rankValue}>75,000</td>
+                  </tr>
+                  <tr>
+                    <td>5th</td>
+                    <td className={styles.rankValue}>55,000</td>
+                  </tr>
+                  <tr>
+                    <td>Top 10</td>
+                    <td className={styles.rankValue}>35,000</td>
+                  </tr>
+                  <tr>
+                    <td>Top 20</td>
+                    <td className={styles.rankValue}>20,000</td>
+                  </tr>
+                  <tr>
+                    <td>Top 50</td>
+                    <td className={styles.rankValue}>12,000</td>
+                  </tr>
+                  <tr>
+                    <td>Top 100</td>
+                    <td className={styles.rankValue}>8,000</td>
+                  </tr>
+                  <tr>
+                    <td>Top 200</td>
+                    <td className={styles.rankValue}>3,000</td>
+                  </tr>
+                  <tr>
+                    <td>Everyone else</td>
+                    <td className={styles.rankValue}>1,000</td>
+                  </tr>
+                </table>
               </span>
               <span>
                 <i>
@@ -351,10 +399,71 @@ export const FAQ: React.FC<{
               <span>
                 Wondering how your efforts will translate into SQT rewards? Through completing challenges, participants
                 will earn points and battle it out for the top spots on the leaderboard. Once the program concludes on
-                the 18th of October, we will distribute all of the SQT token pool to all valid participants who have
-                received a certain threshold on the program. The distribution will be proportional to the points
-                accumulated by each participant. So, keep an eye on the leaderboard and strive to climb your way to the
-                top for a chance to earn more SQT!
+                the 18th of October, we will distribute all of the SQT token pool to all Valid Delegators. The
+                distribution will be proportional to the points accumulated by each participant. So, keep an eye on the
+                leaderboard and strive to climb your way to the top for a chance to earn more SQT!
+              </span>
+              <span>
+                The prize you recieve depends on the rank you get in the program, so a higher rank, the more points you
+                get, the more points you recieve!
+              </span>
+              <span>
+                <table className={styles.rankTable}>
+                  <tr>
+                    <th>Valid Delegator Rank</th>
+                    <th>Reward (SQT)</th>
+                  </tr>
+                  <tr>
+                    <td>1st</td>
+                    <td className={styles.rankValue}>300,000</td>
+                  </tr>
+                  <tr>
+                    <td>2nd</td>
+                    <td className={styles.rankValue}>200,000</td>
+                  </tr>
+                  <tr>
+                    <td>3rd</td>
+                    <td className={styles.rankValue}>120,000</td>
+                  </tr>
+                  <tr>
+                    <td>4th</td>
+                    <td className={styles.rankValue}>75,000</td>
+                  </tr>
+                  <tr>
+                    <td>5th</td>
+                    <td className={styles.rankValue}>55,000</td>
+                  </tr>
+                  <tr>
+                    <td>Top 10</td>
+                    <td className={styles.rankValue}>35,000</td>
+                  </tr>
+                  <tr>
+                    <td>Top 20</td>
+                    <td className={styles.rankValue}>20,000</td>
+                  </tr>
+                  <tr>
+                    <td>Top 50</td>
+                    <td className={styles.rankValue}>12,000</td>
+                  </tr>
+                  <tr>
+                    <td>Top 100</td>
+                    <td className={styles.rankValue}>8,000</td>
+                  </tr>
+                  <tr>
+                    <td>Top 200</td>
+                    <td className={styles.rankValue}>3,000</td>
+                  </tr>
+                  <tr>
+                    <td>Everyone else</td>
+                    <td className={styles.rankValue}>1,000</td>
+                  </tr>
+                </table>
+              </span>
+              <span>
+                <i>
+                  Note: Valid Delegators are Delegators who delegate at least 3,000 SQT for 2 full eras during the
+                  program and have verified their email address. We want new frens in the Network!
+                </i>
               </span>
             </>
           )
