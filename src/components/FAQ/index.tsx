@@ -256,82 +256,6 @@ export const FAQ: React.FC<{
           )
         },
         {
-          question: 'How much is up for grabs?',
-          answer: (
-            <>
-              <span>
-                The campaign is all about turbocharging your delegation rewards! In addition to your regular rewards,
-                this campaign lets you earn points for completing various network tasks. Accumulate points to rise up
-                the leaderboard and claim your share of a substantial SQT prize pool. Plus, we&apos;re adding an extra
-                layer of excitement with plenty of random loot box giveaways that can propel you even higher in the
-                rankings!
-              </span>
-              <span>
-                The prize you recieve depends on the rank you get in the program, so a higher rank, the more points you
-                get, the more points you recieve!
-              </span>
-              <span>
-                <table className={styles.rankTable}>
-                  <tr>
-                    <th>Valid Delegator Rank</th>
-                    <th>Reward (SQT)</th>
-                  </tr>
-                  <tr>
-                    <td>1st</td>
-                    <td className={styles.rankValue}>300,000</td>
-                  </tr>
-                  <tr>
-                    <td>2nd</td>
-                    <td className={styles.rankValue}>200,000</td>
-                  </tr>
-                  <tr>
-                    <td>3rd</td>
-                    <td className={styles.rankValue}>120,000</td>
-                  </tr>
-                  <tr>
-                    <td>4th</td>
-                    <td className={styles.rankValue}>75,000</td>
-                  </tr>
-                  <tr>
-                    <td>5th</td>
-                    <td className={styles.rankValue}>55,000</td>
-                  </tr>
-                  <tr>
-                    <td>6 to 10</td>
-                    <td className={styles.rankValue}>35,000</td>
-                  </tr>
-                  <tr>
-                    <td>11 to 20</td>
-                    <td className={styles.rankValue}>20,000</td>
-                  </tr>
-                  <tr>
-                    <td>21 to 50</td>
-                    <td className={styles.rankValue}>12,000</td>
-                  </tr>
-                  <tr>
-                    <td>51 to 100</td>
-                    <td className={styles.rankValue}>8,000</td>
-                  </tr>
-                  <tr>
-                    <td>101 to 200</td>
-                    <td className={styles.rankValue}>3,000</td>
-                  </tr>
-                  <tr>
-                    <td>Everyone else</td>
-                    <td className={styles.rankValue}>1,000</td>
-                  </tr>
-                </table>
-              </span>
-              <span>
-                <i>
-                  Note: Valid Delegators are Delegators who delegate at least 3,000 SQT for 2 full eras during the
-                  program and have verified their email address. We want new frens in the Network!
-                </i>
-              </span>
-            </>
-          )
-        },
-        {
           question: 'How long does the campaign run for?',
           answer: (
             <>
@@ -393,15 +317,15 @@ export const FAQ: React.FC<{
           )
         },
         {
-          question: 'How are points converted to SQT?',
+          question: 'How will rewards be distributed?',
           answer: (
             <>
               <span>
                 Wondering how your efforts will translate into SQT rewards? Through completing challenges, participants
                 will earn points and battle it out for the top spots on the leaderboard. Once the program concludes on
-                the 18th of October, we will distribute all of the SQT token pool to all Valid Delegators. The
-                distribution will be proportional to the points accumulated by each participant. So, keep an eye on the
-                leaderboard and strive to climb your way to the top for a chance to earn more SQT!
+                the 18th of October, we will distribute all of the SQT token pool to all Valid Delegators within one
+                week. The distribution will be proportional to the points accumulated by each participant. So, keep an
+                eye on the leaderboard and strive to climb your way to the top for a chance to earn more SQT!
               </span>
               <span>
                 The prize you recieve depends on the rank you get in the program, so a higher rank, the more points you

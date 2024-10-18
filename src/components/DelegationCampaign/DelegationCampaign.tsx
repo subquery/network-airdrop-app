@@ -87,7 +87,7 @@ const LootboxItem = forwardRef<
     }, 1500);
   };
 
-  const expired = useMemo(() => +(currentEra || 0) > item.era + 1, [currentEra, item.era]);
+  const expired = useMemo(() => +(currentEra || 0) > item.era + 1 || +(currentEra || 0) > 35, [currentEra, item.era]);
 
   useImperativeHandle(ref, () => ({
     open: openLootboxFunc
@@ -297,63 +297,92 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         </Typography>
       </div>
 
-      <div className={styles.challenges} style={{ marginTop: 120 }}>
-        <div className={styles.challengesCollapse}>
-          <Collapse
-            className={clsx(styles.darkCollapse, styles.withoutSplit)}
-            ghost
-            items={[
-              {
-                key: 'default',
-                label: <Typography variant="large">🎉 Become a delegator and receive rewards today !</Typography>,
-                children: (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                    <Typography type="secondary">
-                      A Delegator is a non-technical network role in the SubQuery Network and is a great way to start
-                      participating in the SubQuery Network. This role enables Delegators to “delegate” their SQT to one
-                      or more Node Operator (RPC Providers or Data Indexers) and earn rewards (similar to staking).
-                    </Typography>
+      {+(curEra?.value || 0) < 36 ? (
+        <div className={styles.challenges} style={{ marginTop: 120 }}>
+          <div className={styles.challengesCollapse}>
+            <Collapse
+              className={clsx(styles.darkCollapse, styles.withoutSplit)}
+              ghost
+              items={[
+                {
+                  key: 'default',
+                  label: <Typography variant="large">🎉 Become a delegator and receive rewards today !</Typography>,
+                  children: (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                      <Typography type="secondary">
+                        A Delegator is a non-technical network role in the SubQuery Network and is a great way to start
+                        participating in the SubQuery Network. This role enables Delegators to “delegate” their SQT to
+                        one or more Node Operator (RPC Providers or Data Indexers) and earn rewards (similar to
+                        staking).
+                      </Typography>
 
-                    <div style={{ display: 'flex', gap: 16 }}>
-                      <Button type="primary" shape="round" size="large">
-                        <a
-                          href="https://app.subquery.network/delegator/node-operators/all"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          Delegate Now
-                        </a>
-                      </Button>
+                      <div style={{ display: 'flex', gap: 16 }}>
+                        <Button type="primary" shape="round" size="large">
+                          <a
+                            href="https://app.subquery.network/delegator/node-operators/all"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Delegate Now
+                          </a>
+                        </Button>
 
-                      <Button type="primary" shape="round" size="large" ghost>
-                        <a
-                          href="https://academy.subquery.network/subquery_network/delegators/delegating.html"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          Learn More
-                        </a>
-                      </Button>
+                        <Button type="primary" shape="round" size="large" ghost>
+                          <a
+                            href="https://academy.subquery.network/subquery_network/delegators/delegating.html"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Learn More
+                          </a>
+                        </Button>
+                      </div>
+
+                      <iframe
+                        width="100%"
+                        height="706"
+                        src="https://www.youtube.com/embed/7GKWO5wEdtc?si=QeqtFcIXmA9yy6e5"
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                      ></iframe>
                     </div>
-
-                    <iframe
-                      width="100%"
-                      height="706"
-                      src="https://www.youtube.com/embed/7GKWO5wEdtc?si=QeqtFcIXmA9yy6e5"
-                      title="YouTube video player"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                )
-              }
-            ]}
-            defaultActiveKey={['default']}
-          />
+                  )
+                }
+              ]}
+              defaultActiveKey={['default']}
+            />
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className={styles.challenges} style={{ marginTop: 120 }}>
+          <div className={styles.challengesCollapse}>
+            <Collapse
+              className={clsx(styles.darkCollapse, styles.withoutSplit)}
+              ghost
+              items={[
+                {
+                  key: 'default',
+                  label: (
+                    <Typography variant="large">🎉 The SubQuery Delegation Frenzy Campaign has Closed!</Typography>
+                  ),
+                  children: (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                      <Typography type="secondary">
+                        Congratulations to over 6,000 participants in the campaign. We hope you enjoyed the experience
+                        and the rewards. You can read how the rewards will be distributed in the FAQs below.
+                      </Typography>
+                    </div>
+                  )
+                }
+              ]}
+              defaultActiveKey={['default']}
+            />
+          </div>
+        </div>
+      )}
 
       <div className={styles.baseCard}>
         <Typography>Your Achievements</Typography>
