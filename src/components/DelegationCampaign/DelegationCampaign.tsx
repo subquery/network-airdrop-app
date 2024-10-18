@@ -297,7 +297,7 @@ const SecondStep = (props: { userInfo?: IDelegationUserInfo['data'] }) => {
         </Typography>
       </div>
 
-      {!currentSelectEra || currentSelectEra?.era < 36 ? (
+      {+(curEra?.value || 0) < 36 ? (
         <div className={styles.challenges} style={{ marginTop: 120 }}>
           <div className={styles.challengesCollapse}>
             <Collapse
