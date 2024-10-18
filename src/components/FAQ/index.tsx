@@ -297,23 +297,23 @@ export const FAQ: React.FC<{
                     <td className={styles.rankValue}>55,000</td>
                   </tr>
                   <tr>
-                    <td>Top 10</td>
+                    <td>6th to 10th</td>
                     <td className={styles.rankValue}>35,000</td>
                   </tr>
                   <tr>
-                    <td>Top 20</td>
+                    <td>11 to 20</td>
                     <td className={styles.rankValue}>20,000</td>
                   </tr>
                   <tr>
-                    <td>Top 50</td>
+                    <td>21 to 50</td>
                     <td className={styles.rankValue}>12,000</td>
                   </tr>
                   <tr>
-                    <td>Top 100</td>
+                    <td>51 to 100</td>
                     <td className={styles.rankValue}>8,000</td>
                   </tr>
                   <tr>
-                    <td>Top 200</td>
+                    <td>101 to 200</td>
                     <td className={styles.rankValue}>3,000</td>
                   </tr>
                   <tr>
@@ -434,23 +434,23 @@ export const FAQ: React.FC<{
                     <td className={styles.rankValue}>55,000</td>
                   </tr>
                   <tr>
-                    <td>Top 10</td>
+                    <td>6th to 10th</td>
                     <td className={styles.rankValue}>35,000</td>
                   </tr>
                   <tr>
-                    <td>Top 20</td>
+                    <td>11 to 20</td>
                     <td className={styles.rankValue}>20,000</td>
                   </tr>
                   <tr>
-                    <td>Top 50</td>
+                    <td>21 to 50</td>
                     <td className={styles.rankValue}>12,000</td>
                   </tr>
                   <tr>
-                    <td>Top 100</td>
+                    <td>51 to 100</td>
                     <td className={styles.rankValue}>8,000</td>
                   </tr>
                   <tr>
-                    <td>Top 200</td>
+                    <td>101 to 200</td>
                     <td className={styles.rankValue}>3,000</td>
                   </tr>
                   <tr>
