@@ -17,5 +17,8 @@ export const airdropRoundMapping: {
   '12': 'SubQuery Juno Airdrop Campaign',
   '13': 'SubQuery’s 50k Promo',
   '14': 'Token Sale 2022 Campaign',
-  '15': 'Zealy Rewards'
-}
+  '15': 'Zealy Rewards',
+  '16': 'Airdrop Rounding 16',
+  '17': 'Airdrop Rounding 17',
+  '18': 'Frenzy Rewards'
+};
