@@ -58,7 +58,7 @@ export const FirstStep = (props: { userInfo?: IDelegationUserInfo['data']; refre
     }
   };
 
-  const closed = false;
+  const closed = true;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 48, marginTop: 80 }}>
