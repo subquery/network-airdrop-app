@@ -48,21 +48,7 @@ const Vesting = React.lazy(() => import('components/Vesting'));
 const DelegationCampaign = React.lazy(() => import('components/DelegationCampaign/DelegationCampaign'));
 
 export function Home() {
-  const activeKey: ActiveEnum = useMemo(() => {
-    // Dev
-    if (rootUrl.includes('thechaindata')) {
-      return ActiveEnum.DelegatorCampaign;
-    }
-    if (rootUrl.includes('seekers')) {
-      return ActiveEnum.Challenge;
-    }
-
-    if (rootUrl.includes('claim') || rootUrl.includes('airdrop')) {
-      return ActiveEnum.Airdrop;
-    }
-
-    return ActiveEnum.DelegatorCampaign;
-  }, []);
+  const activeKey: ActiveEnum = useMemo(() => ActiveEnum.Airdrop, []);
 
   return (
     <div>
@@ -73,13 +59,6 @@ export function Home() {
           ''
         )}
 
-        {activeKey === ActiveEnum.DelegatorCampaign ? (
-          <React.Suspense fallback={<div style={{ width: '100vw', height: '100vh' }}></div>}>
-            <DelegationCampaign />
-          </React.Suspense>
-        ) : (
-          ''
-        )}
         {(activeKey === ActiveEnum.Airdrop || activeKey === ActiveEnum.Challenge) && (
           <div style={{ position: 'relative', width: '100%', height: '100%', margin: '0 auto', padding: '80px 0' }}>
             <div className={styles.airdropContainer}>
@@ -93,21 +72,9 @@ export function Home() {
                   }}
                 >
                   <Typography variant="h4" weight={600} style={{ marginBottom: 32 }}>
-                    {activeKey === 'Challenge' ? 'SubQuery Seekers Program' : 'SubQuery Token Claim'}
+                    SubQuery Token Claim
                   </Typography>
-                  {activeKey === 'Challenge' ? (
-                    <React.Suspense fallback={<Loading></Loading>}>
-                      <SeekersPointsCard />
-                    </React.Suspense>
-                  ) : null}
                 </div>
-                {activeKey === 'Challenge' && (
-                  <WalletDetect>
-                    <React.Suspense fallback={<Loading></Loading>}>
-                      <Seekers />
-                    </React.Suspense>
-                  </WalletDetect>
-                )}
                 {activeKey === 'Airdrop' && (
                   <WalletDetect mode="airdrop">
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 64, width: '100%' }}>

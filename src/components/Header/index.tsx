@@ -64,19 +64,6 @@ export const Header: React.VFC = () => {
             active: () => window.location.href.includes('claim.subquery.foundation')
           },
           {
-            label: 'Summer Frenzy Delegation Campaign',
-            link:
-              window.location.href.includes('frenzy') ||
-              window.location.href.includes('thechaindata') ||
-              window.location.href.includes('localhost')
-                ? '/'
-                : 'https://frenzy.subquery.foundation/',
-            active: () =>
-              window.location.href.includes('frenzy') ||
-              window.location.href.includes('thechaindata') ||
-              window.location.href.includes('localhost')
-          },
-          {
             label: 'Blog',
             link: 'https://blog.subquery.network'
           }
