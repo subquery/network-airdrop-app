@@ -7,7 +7,8 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Typography } from '@subql/components';
 import { Button } from 'antd';
 import clsx from 'clsx';
-import { useAccount } from 'wagmi';
+
+import { useAccount } from 'hooks/useAccount';
 
 import styles from './WalletDetect.module.css';
 

@@ -14,12 +14,13 @@ import { BigNumber } from 'ethers';
 import { t } from 'i18next';
 import { isString } from 'lodash-es';
 import moment from 'moment';
-import { useAccount, useNetwork, useSwitchNetwork, useWalletClient } from 'wagmi';
+import { useNetwork, useSwitchNetwork, useWalletClient } from 'wagmi';
 
 import { TOKEN } from 'appConstants';
 import { l2ChainName } from 'components/Airdrop/AirdropClaimButton';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
 import { l2ChainId, useContracts } from 'hooks';
+import { useAccount } from 'hooks/useAccount';
 import { useSign } from 'hooks/useSign';
 import { convertSecondsToTimeString, formatAmount, renderAsync, roundToSix } from 'utils';
 

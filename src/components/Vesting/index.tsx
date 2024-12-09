@@ -10,13 +10,14 @@ import { blackList } from 'conf/blacklist';
 import { BigNumber } from 'ethers';
 import { t } from 'i18next';
 import moment from 'moment';
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
 
 import { TOKEN } from 'appConstants';
 import { l1ChainName } from 'components/Airdrop/AirdropClaimButton';
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
 import { VESTING } from 'containers';
-import { l1ChainId, useVestingContracts } from 'hooks';
+import { l1ChainId, useEthersProviderWithPublic, useVestingContracts } from 'hooks';
+import { useAccount } from 'hooks/useAccount';
 import { useSign } from 'hooks/useSign';
 import { convertSecondsToTimeString, formatAmount, renderAsync, roundToSix } from 'utils';
 
@@ -93,6 +94,9 @@ const Vesting: FC<IProps> = () => {
   const { switchNetwork } = useSwitchNetwork();
   const { chain } = useNetwork();
   const { hasSignedTC, onSignTC } = useSign();
+  const provider = useEthersProviderWithPublic({
+    chainId: l1ChainId
+  });
   const accountPlans = useQuery(
     gql`
       query ($account: String!) {
@@ -227,7 +231,9 @@ const Vesting: FC<IProps> = () => {
     try {
       const vestingContract = await vestingContractFactor(contractAddress);
 
-      const approvalTx = await vestingContract?.claim(planId);
+      const approvalTx = await vestingContract?.claim(planId, {
+        gasLimit: 159144
+      });
       if (!approvalTx) {
         openNotificationWithIcon({ title: 'There have something wrong, please contact developers' });
         return;

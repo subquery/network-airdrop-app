@@ -14,11 +14,12 @@ import { BigNumber } from 'ethers';
 import i18next from 'i18next';
 import { uniqWith } from 'lodash-es';
 import moment from 'moment';
-import { useAccount, useNetwork, usePublicClient, useSwitchNetwork } from 'wagmi';
+import { useNetwork, usePublicClient, useSwitchNetwork } from 'wagmi';
 
 import { DATE_FORMAT, TOKEN } from 'appConstants';
 import { GIFT } from 'containers';
 import { publicClientToProvider, useContracts } from 'hooks';
+import { useAccount } from 'hooks/useAccount';
 import { useIpfs } from 'hooks/useIpfs';
 import { mapContractError } from 'utils';
 

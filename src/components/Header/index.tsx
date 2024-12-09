@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Header as HeaderComponent } from '@subql/components';
 import { Address, Button, Dropdown } from '@subql/react-ui';
-import { useAccount, useDisconnect, useSwitchNetwork } from 'wagmi';
+import { useDisconnect, useSwitchNetwork } from 'wagmi';
+
+import { useAccount } from 'hooks/useAccount';
 
 import styles from './style.module.less';
 

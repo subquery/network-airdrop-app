@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Typography } from '@subql/components';
 import { useInterval } from 'ahooks';
-import { useAccount } from 'wagmi';
 
+import { useAccount } from 'hooks/useAccount';
 import { IUserInfo, useChallengesApi } from 'hooks/useChallengesApi';
 
 import styles from './index.module.less';
