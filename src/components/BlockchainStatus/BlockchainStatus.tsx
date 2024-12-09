@@ -2,7 +2,9 @@ import React, { useMemo } from 'react';
 import { Typography } from '@subql/components';
 import { Button } from 'antd';
 import { t } from 'i18next';
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
+
+import { useAccount } from 'hooks/useAccount';
 
 export const BlockchainStatus: React.FC<{
   tipsChainIds: {

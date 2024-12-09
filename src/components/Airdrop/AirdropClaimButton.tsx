@@ -6,10 +6,11 @@ import { Button } from 'antd';
 import assert from 'assert';
 import clsx from 'clsx';
 import { base, baseSepolia } from 'viem/chains';
-import { mainnet, sepolia, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { mainnet, sepolia, useNetwork, useSwitchNetwork } from 'wagmi';
 
 import { NotificationType, openNotificationWithIcon } from 'components/Notification';
-import { useContracts, useRootContracts } from 'hooks';
+import { l1ChainId, useContracts, useEthersProviderWithPublic, useRootContracts } from 'hooks';
+import { useAccount } from 'hooks/useAccount';
 import { useSign } from 'hooks/useSign';
 import { convertStrToNumber, mapContractError } from 'utils';
 
@@ -33,7 +34,9 @@ export const AirdropClaimButton: React.FC<{
   const { chain } = useNetwork();
   const { address } = useAccount();
   const { switchNetwork } = useSwitchNetwork();
-
+  const provider = useEthersProviderWithPublic({
+    chainId: l1ChainId
+  });
   const [hasClaimedIds, setHasClaimedIds] = React.useState<Array<string>>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isLoadingL1, setIsLoadingL1] = React.useState<boolean>(false);

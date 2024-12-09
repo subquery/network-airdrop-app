@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Typography } from '@subql/components';
 import clsx from 'clsx';
 import { BigNumber } from 'ethers';
-import { useAccount } from 'wagmi';
 
+import { useAccount } from 'hooks/useAccount';
 import { formatAmount } from 'utils';
 
 import styles from './Airdrop.module.less';
