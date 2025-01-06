@@ -357,7 +357,7 @@ const L2Vesting: FC<IProps> = () => {
         type: NotificationType.ERROR,
         title: 'Fetch data failure',
         description:
-          'Use cached data first, please refresh the page and change your RPC endpoint to make sure fetch lastest data.'
+          'Use cached data first, please refresh the page and change your RPC endpoint(make sure you in Base Network) to make sure fetch lastest data.'
       });
     }
 
@@ -388,6 +388,7 @@ const L2Vesting: FC<IProps> = () => {
 
       setCliamableTokens(res);
     } catch (e) {
+      console.warn(e);
       openNotificationWithIcon({
         type: NotificationType.ERROR,
         title: 'Fetch data failure',
