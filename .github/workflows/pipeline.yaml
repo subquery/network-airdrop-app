@@ -36,8 +36,8 @@ jobs:
         uses: reggionick/s3-deploy@v3
         with:
           folder: build
-          bucket: airdrop.thechaindata.com
-          bucket-region: ap-southeast-2
+          bucket: ${{ vars.S3_BUCKET_ADDRESS_DEV }}
+          bucket-region: ap-northeast-1
           invalidation: /*
           dist-id: ${{ secrets.CLOUDFRONT_ID_DEV_V2 }}
           delete-removed: false
@@ -53,8 +53,8 @@ jobs:
         uses: reggionick/s3-deploy@v3
         with:
           folder: build
-          bucket: airdrop.subquery.foundation
-          bucket-region: ap-southeast-2
+          bucket: ${{ vars.S3_BUCKET_ADDRESS_PROD }}
+          bucket-region: ap-northeast-1
           invalidation: /*
           dist-id: ${{ secrets.CLOUDFRONT_ID_PROD_V2 }}
           delete-removed: false
