@@ -323,6 +323,10 @@ const Vesting: FC<IProps> = () => {
           const amount = claimTokenInfo?.allocation || BigNumber.from(node.amount);
           const planTotalClaimed = claimTokenInfo?.claimed || BigNumber.from('0');
           const planClaimable = claimTokenInfo?.claimable || BigNumber.from('0');
+          const locked = amount.sub(planTotalClaimed).sub(planClaimable);
+
+          if (locked.eq(0) && planTotalClaimed.eq(0) && planClaimable.eq(0)) return null;
+
           return (
             <div className={styles.vestingChunk} key={node.id}>
               <div className={styles.vestingChunkHeader}>
@@ -371,8 +375,8 @@ const Vesting: FC<IProps> = () => {
                 )}
 
                 <div className={styles.vestingChunkContentInfo}>
-                  <Typography tooltip={formatAmount(amount.sub(planTotalClaimed).sub(planClaimable))}>
-                    Locked: {roundToSix(formatEther(amount.sub(planTotalClaimed).sub(planClaimable)))} {TOKEN}
+                  <Typography tooltip={formatAmount(locked)}>
+                    Locked: {roundToSix(formatEther(locked))} {TOKEN}
                   </Typography>
                   <Typography tooltip={formatAmount(planTotalClaimed)}>
                     Claimed: {roundToSix(formatEther(planTotalClaimed))} {TOKEN}
