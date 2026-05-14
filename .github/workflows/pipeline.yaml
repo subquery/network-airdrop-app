@@ -62,6 +62,7 @@ jobs:
           private: true
 
   clean_cloudfront_cache:
+    needs: deploy_to_s3
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_V2 }}
