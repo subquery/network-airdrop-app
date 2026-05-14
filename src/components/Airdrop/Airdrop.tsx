@@ -17,7 +17,6 @@ import moment from 'moment';
 import { useNetwork, usePublicClient, useSwitchNetwork } from 'wagmi';
 
 import { DATE_FORMAT, TOKEN } from 'appConstants';
-import { GIFT } from 'containers';
 import { publicClientToProvider, useContracts } from 'hooks';
 import { useAccount } from 'hooks/useAccount';
 import { useIpfs } from 'hooks/useIpfs';
@@ -312,10 +311,7 @@ export const Airdrop: FC = () => {
         address: account
       },
       fetchPolicy: 'network-only',
-      context: {
-        clientName: GIFT
-      },
-      pollInterval: 15000
+            pollInterval: 15000
     }
   );
 
@@ -347,10 +343,7 @@ export const Airdrop: FC = () => {
         address: account
       },
       fetchPolicy: 'network-only',
-      context: {
-        clientName: GIFT
-      },
-      pollInterval: 15000
+            pollInterval: 15000
     }
   );
 
@@ -495,10 +488,7 @@ export const Airdrop: FC = () => {
         address: account
       },
       fetchPolicy: 'network-only',
-      context: {
-        clientName: GIFT
-      },
-      pollInterval: 15000
+            pollInterval: 15000
     }
   );
 
