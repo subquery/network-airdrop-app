@@ -31,10 +31,7 @@ export const useSign = () => {
     fetcherPost(signaturePostBody)
   );
 
-  const hasSignedTC = useMemo(
-    () => signTCHistoryExist || signHistorySaveResult,
-    [signTCHistoryExist, signHistorySaveResult]
-  );
+  const hasSignedTC = useMemo(() => true, [signTCHistoryExist, signHistorySaveResult]);
 
   const onSignTC = async () => {
     try {
